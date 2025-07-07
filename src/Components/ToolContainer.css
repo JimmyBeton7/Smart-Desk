@@ -1,0 +1,6 @@
+.tool-container {
+  flex: 1;
+  padding: 40px;
+  box-sizing: border-box;
+  background-color: #082C38;
+}

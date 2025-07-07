@@ -1,0 +1,8 @@
+W terminalu #1:
+
+npm run start:dev
+
+
+W terminalu #2:
+
+npm run start:electron

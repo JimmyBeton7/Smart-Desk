@@ -1,0 +1,57 @@
+.pomodoro-container {
+  background-color: #082C38;
+  color: #FCD8B4;
+  text-align: center;
+  padding: 40px;
+}
+
+.time {
+  font-size: 64px;
+  margin: 20px 0;
+  font-weight: bold;
+}
+
+.buttons button {
+  margin: 0 10px;
+  padding: 10px 20px;
+  background-color: #C19976;
+  border: none;
+  color: #082C38;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.buttons button:hover {
+  background-color: #FCD8B4;
+}
+
+.options {
+  margin-top: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 16px;
+  color: #FCD8B4;
+  background-color: #0d3d4f;
+  padding: 12px 20px;
+  border-radius: 10px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+}
+
+.options input {
+  background-color: #FCD8B4;
+  color: #082C38;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 10px;
+  font-size: 16px;
+  width: 60px;
+  text-align: center;
+  outline: none;
+}
+
