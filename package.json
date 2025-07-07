@@ -4,11 +4,9 @@
   "description": "smartdesk",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
-    "start:dev": "webpack serve",
-    "start:electron": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack"
+    "dev": "concurrently -k \"npm run start:renderer\" \"npm run start:electron\"",
+    "start:renderer": "npx webpack serve --config webpack.config.js --mode development",
+    "start:electron": "nodemon --watch main.js --exec \"electron .\""
   },
   "repository": {
     "type": "git",
@@ -24,9 +22,18 @@
     "@babel/core": "^7.28.0",
     "@babel/preset-react": "^7.27.1",
     "babel-loader": "^10.0.0",
+    "buffer": "^6.0.3",
+    "concurrently": "^9.2.0",
+    "crypto-browserify": "^3.12.1",
     "css-loader": "^7.1.2",
     "electron": "^37.2.0",
+    "electron-reload": "^2.0.0-alpha.1",
+    "nodemon": "^3.1.10",
+    "process": "^0.11.10",
+    "stream-browserify": "^3.0.0",
     "style-loader": "^4.0.0",
+    "wait-on": "^8.0.3",
+    "webpack": "^5.99.9",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.2"
   },
@@ -34,6 +41,7 @@
     "lucide-react": "^0.525.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-quill": "^2.0.0",
     "react-router-dom": "^7.6.3"
   }
 }

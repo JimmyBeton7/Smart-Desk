@@ -65,7 +65,7 @@ export default function Calculator() {
   return (
     <div className="calculator-container">
       <div className="display history-display">{expr || '0'}</div>
-      <div className="display result-display">{isNaN(result) ? 'Błąd' : result}</div>
+      <div className="display result-display">{isNaN(result) ? ' ' : result}</div>
       <div className="keypad">
         <button onClick={handleDelete}>⌫</button><button onClick={handleClear}>AC</button>
         <button onClick={() => handleClick('(')}>(</button><button onClick={() => handleClick(')')}>)</button>

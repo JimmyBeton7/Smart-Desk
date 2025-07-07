@@ -1,20 +1,21 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   mode: 'development',
-  devtool: false,
+  devtool: 'eval',
   entry: './src/renderer.js',
   devServer: {
-  static: {
-    directory: path.join(__dirname),
+    static: {
+      directory: path.join(__dirname, 'public'),
+    },
+    devMiddleware: {
+      publicPath: '/dist/',
+    },
+    hot: true,
+    compress: true,
+    port: 3000,
   },
-  devMiddleware: {
-    publicPath: '/dist/',
-  },
-  hot: true,
-  compress: true,
-  port: 3000,
-},
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
@@ -39,6 +40,16 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.jsx', '.css'],
+    fallback: {
+      stream: require.resolve("stream-browserify"),
+      buffer: require.resolve("buffer/"),
+    }
   },
-  target: 'electron-renderer',
+  plugins: [
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
+      process: 'process/browser.js',
+    }),
+  ],
+  target: 'web', // <- KLUCZOWA ZMIANA
 };
