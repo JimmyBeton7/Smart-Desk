@@ -1,0 +1,36 @@
+.clipboard-container {
+  background-color: #082C38;
+  color: #FCD8B4;
+  padding: 20px;
+  height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.clipboard-container h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.clipboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 15px;
+}
+
+.clipboard-tile {
+  background-color: #0d3d4f;
+  color: #FCD8B4;
+  padding: 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
+  transition: background-color 0.2s ease;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.clipboard-tile:hover {
+  background-color: #C19976;
+  color: #082C38;
+}

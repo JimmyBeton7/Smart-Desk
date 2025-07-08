@@ -9,12 +9,12 @@ function Notes() {
   const [selectedNote, setSelectedNote] = useState(null);
 
   const loadNotes = async () => {
-    const res = await window.electron.invoke('load-notes');
+    const res = await window.electron.ipc.invoke('load-notes');
     setNotes(res);
   };
 
   const handleSave = async (note) => {
-    await window.electron.invoke('save-note', note);
+    await window.electron.ipc.invoke('save-note', note);
     setSelectedNote(null);
     loadNotes();
   };

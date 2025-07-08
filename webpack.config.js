@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -50,6 +51,11 @@ module.exports = {
       Buffer: ['buffer', 'Buffer'],
       process: 'process/browser.js',
     }),
+    new HtmlWebpackPlugin({
+      template: './public/index.html',
+      filename: 'index.html'
+    })
   ],
-  target: 'web', // <- KLUCZOWA ZMIANA
+  //target: 'web', // <- KLUCZOWA ZMIANA
+  target:'electron-renderer'
 };

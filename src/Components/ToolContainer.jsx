@@ -6,6 +6,7 @@ import Home from '../Pages/Home';
 import Pomodoro from '../Pages/Pomodoro';
 import Calculator from '../Pages/Calculator';
 import Notes from '../Pages/Notes'
+import Clipboard from '../Pages/Clipboard';
 
 function ToolContainer() {
   return (
@@ -15,6 +16,7 @@ function ToolContainer() {
         <Route path="/pomodoro" element={<Pomodoro />} />
         <Route path="/calculator" element={<Calculator />} />
         <Route path="/notes" element={<Notes />} />
+        <Route path="/clipboard" element={<Clipboard />} />
         {/* kolejne narzędzia */}
       </Routes>
     </div>

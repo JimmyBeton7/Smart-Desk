@@ -1,13 +1,31 @@
-require('electron-reload')(__dirname, {
-  electron: require(`${__dirname}/node_modules/electron`)
-});
+//require('electron-reload')(__dirname, {
+//  electron: require(`${__dirname}/node_modules/electron`)
+//});
 
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app } = require('electron');
+//const { app, BrowserWindow, ipcMain } = require('electron');
 const fs = require('fs');
 const path = require('path');
-const waitOn = require('wait-on');
 
-process.env.NODE_ENV = 'development';
+const isDev = !app?.isPackaged;
+process.env.NODE_ENV = isDev ? 'development' : 'production';
+
+let waitOn;
+if (isDev) {
+  waitOn = require('wait-on');
+}
+
+if (isDev) {
+  try {
+    require('electron-reload')(__dirname, {
+      electron: require(`${__dirname}/node_modules/electron`)
+    });
+  } catch (err) {
+    console.warn('electron-reload failed to load in dev mode');
+  }
+}
+
+const { BrowserWindow, ipcMain } = require('electron');
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -19,17 +37,19 @@ const createWindow = () => {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
-      nodeIntegration: false
+      nodeIntegration: false,
+      sandbox: false
     },
   });
 
-  if (process.env.NODE_ENV === 'development') {
+  if (isDev) {
     waitOn({ resources: ['http://localhost:3000'], timeout: 20000 }, () => {
       win.loadURL('http://localhost:3000');
     });
   } else {
-    win.loadFile(path.join(__dirname, 'index.html'));
+    win.loadFile(path.join(__dirname, 'dist', 'index.html'));
   }
+
 };
 
 app.whenReady().then(() => {
@@ -62,5 +82,33 @@ ipcMain.handle('save-note', (_, note) => {
   fs.writeFileSync(path.join(NOTES_DIR, `${note.id}.json`), content);
   return true;
 });
+
+const CLIPBOARD_FILE = path.join(app.getPath('userData'), 'clipboard-history.json');
+
+function loadClipboardHistory() {
+  try {
+    const data = fs.readFileSync(CLIPBOARD_FILE, 'utf-8');
+    return JSON.parse(data);
+  } catch {
+    return [];
+  }
+}
+
+function saveClipboardHistory(history) {
+  fs.writeFileSync(CLIPBOARD_FILE, JSON.stringify(history.slice(0, 50)));
+}
+
+ipcMain.handle('get-clipboard-history', () => {
+  return loadClipboardHistory();
+});
+
+ipcMain.handle('save-clipboard-entry', (_, text) => {
+  const history = loadClipboardHistory();
+  if (text && !history.includes(text)) {
+    history.unshift(text);
+    saveClipboardHistory(history);
+  }
+});
+
 
 

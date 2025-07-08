@@ -8,6 +8,33 @@ function Pomodoro() {
   const [seconds, setSeconds] = useState(25 * 60);
   const [isRunning, setIsRunning] = useState(false);
 
+  // 🧠 Load state from sessionStorage
+  useEffect(() => {
+    const saved = sessionStorage.getItem('pomodoro-state');
+    if (saved) {
+      const { duration, seconds, isRunning, timestamp } = JSON.parse(saved);
+      const now = Date.now();
+      const delta = Math.floor((now - timestamp) / 1000);
+
+      setDuration(duration);
+      setSeconds(isRunning ? Math.max(seconds - delta, 0) : seconds);
+      setIsRunning(isRunning && seconds - delta > 0);
+    }
+  }, []);
+
+  // 💾 Save state on every change
+  useEffect(() => {
+    sessionStorage.setItem(
+      'pomodoro-state',
+      JSON.stringify({
+        duration,
+        seconds,
+        isRunning,
+        timestamp: Date.now()
+      })
+    );
+  }, [duration, seconds, isRunning]);
+
   useEffect(() => {
     let timer;
     if (isRunning && seconds > 0) {
@@ -32,32 +59,30 @@ function Pomodoro() {
         <button onClick={() => setIsRunning(true)}>▶ Start</button>
         <button onClick={() => setIsRunning(false)}>⏸ Pause</button>
         <button onClick={reset}>
-            <RotateCcw size={18} style={{ marginRight: '6px' }} />
-            Reset
+          <RotateCcw size={18} style={{ marginRight: '6px' }} />
+          Reset
         </button>
       </div>
 
       <div className="options">
-            <label htmlFor="duration">⏱ Duration:</label>
-            <input
-            id="duration"
-            type="number"
-            min="1"
-            max="60"
-            value={duration}
-            onChange={(e) => {
-                const val = parseInt(e.target.value);
-                setDuration(val);
-                setSeconds(val * 60);
-                setIsRunning(false);
-                }}
-            />
-            <span>min</span>
-        </div>
-
+        <label htmlFor="duration">⏱ Duration:</label>
+        <input
+          id="duration"
+          type="number"
+          min="1"
+          max="60"
+          value={duration}
+          onChange={(e) => {
+            const val = parseInt(e.target.value);
+            setDuration(val);
+            setSeconds(val * 60);
+            setIsRunning(false);
+          }}
+        />
+        <span>min</span>
+      </div>
     </div>
   );
 }
 
 export default Pomodoro;
-

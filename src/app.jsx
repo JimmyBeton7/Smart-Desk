@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './App.css';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { HashRouter as Router } from 'react-router-dom';
 import Sidebar from './Components/Sidebar';
 import ToolContainer from './Components/ToolContainer';
 import { createRoot } from 'react-dom/client';
@@ -19,5 +19,3 @@ function App() {
 const root = createRoot(document.getElementById('root'));
 root.render(<App />);
 export default App;
-
-

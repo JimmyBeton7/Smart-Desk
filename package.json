@@ -7,7 +7,8 @@
     "dev": "concurrently -k \"npm run start:renderer\" \"npm run start:electron\"",
     "start:renderer": "npx webpack serve --config webpack.config.js --mode development",
     "start:electron": "nodemon --watch main.js --exec \"electron .\"",
-    "build": "webpack --mode production && electron-builder"
+    "clean": "rimraf dist",
+    "build": "npm run clean && webpack --mode production && electron-builder"
   },
   "repository": {
     "type": "git",
@@ -30,8 +31,10 @@
     "electron": "^37.2.0",
     "electron-builder": "^26.0.12",
     "electron-reload": "^2.0.0-alpha.1",
+    "html-webpack-plugin": "^5.6.3",
     "nodemon": "^3.1.10",
     "process": "^0.11.10",
+    "rimraf": "^6.0.1",
     "stream-browserify": "^3.0.0",
     "style-loader": "^4.0.0",
     "wait-on": "^8.0.3",
@@ -47,26 +50,28 @@
     "react-router-dom": "^7.6.3"
   },
   "build": {
-  "appId": "com.smartdesk.app",
-  "productName": "Smart Desk",
-  "directories": {
-    "buildResources": "assets"
-  },
-  "files": [
-    "dist/**/*",
-    "main.js",
-    "preload.js",
-    "package.json"
-  ],
-  "extraResources": [
-    {
-      "from": "data/",
-      "to": "data/",
-      "filter": ["**/*"]
+    "appId": "com.smartdesk.app",
+    "productName": "Smart Desk",
+    "directories": {
+      "buildResources": "assets"
+    },
+    "files": [
+      "dist/**/*",
+      "main.js",
+      "preload.js",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "data/",
+        "to": "data/",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "win": {
+      "target": "nsis"
     }
-  ],
-  "win": {
-    "target": "nsis"
   }
-}
 }
