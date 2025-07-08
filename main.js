@@ -34,6 +34,7 @@ const createWindow = () => {
     resizable: false,
     maximizable: false,
     fullscreenable: false,
+    icon: path.join(__dirname, 'assets', 'logo.ico'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,

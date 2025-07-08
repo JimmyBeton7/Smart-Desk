@@ -1,7 +1,7 @@
 import React from 'react';
 import './Sidebar.css';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Timer, ClipboardList, Lock, Bot, Home, Calculator } from 'lucide-react';
+import { Timer, ClipboardList, Lock, Bot, Home, Calculator, Settings } from 'lucide-react';
 
 const tools = [
   { path: '/', label: 'Home', icon: <Home size={20} /> },
@@ -10,6 +10,7 @@ const tools = [
   { path: '/clipboard', label: 'Clipboard', icon: <ClipboardList size={20} /> },
   { path: '/notes', label: 'Notes', icon: <Lock size={20} /> },
   { path: '/chatgpt', label: 'ChatGPT', icon: <Bot size={20} /> },
+  { path: '/settings', label: 'Settings', icon: <Settings size={20} /> },
 ];
 
 function Sidebar() {
