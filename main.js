@@ -134,5 +134,84 @@ ipcMain.handle('save-clipboard-entry', (_, text) => {
   }
 });
 
+//==============================================================================
+
+const { desktopCapturer, nativeImage, screen } = require('electron');
+
+ipcMain.handle('pick-color', async () => {
+  const sources = await desktopCapturer.getSources({ types: ['screen'] });
+  const screenShot = sources[0];
+
+  const image = nativeImage.createFromDataURL(screenShot.thumbnail.toDataURL());
+  const size = image.getSize();
+  const bounds = screen.getPrimaryDisplay().bounds;
+
+  const mouse = screen.getCursorScreenPoint();
+  const scaleX = size.width / bounds.width;
+  const scaleY = size.height / bounds.height;
+
+  const imageBuffer = image.toBitmap();
+  const x = Math.floor(mouse.x * scaleX);
+  const y = Math.floor(mouse.y * scaleY);
+  const index = (y * size.width + x) * 4;
+
+  const r = imageBuffer[index];
+  const g = imageBuffer[index + 1];
+  const b = imageBuffer[index + 2];
+  const hex = `#${[r, g, b].map(v => v.toString(16).padStart(2, '0')).join('')}`;
+  const rgb = `rgb(${r},${g},${b})`;
+
+  return { hex, rgb };
+});
+
+//==============================================================================
+
+const sharp = require('sharp');
+
+ipcMain.handle('pick-file', async () => {
+  const { canceled, filePaths } = await dialog.showOpenDialog({ properties: ['openFile'] });
+  return canceled ? null : filePaths[0];
+});
+
+ipcMain.handle('convert-file', async (_, filePath, targetFormat) => {
+  try {
+    const outputPath = filePath.replace(/\.\w+$/, `.${targetFormat}`);
+    await sharp(filePath)
+      .toFormat(targetFormat)
+      .toFile(outputPath);
+    return { success: true, output: outputPath };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+});
+
+//==============================================================================
+
+const PDFOfficeGen = require('pdf-officegen');
+
+ipcMain.handle('convert-pdf-to-docx', async (_, pdfPath) => {
+  try {
+    const generator = new PDFOfficeGen.Word({ engine: 'ghostscript' }); // lub 'mupdf'
+    const outPath = pdfPath.replace(/\.pdf$/i, '.docx');
+
+    await new Promise((resolve, reject) => {
+      generator.convertFromPdf(pdfPath, async (err, result) => {
+        if (err) {
+          console.error('❌ pdf-officegen conversion failed:', err);
+          reject(err);
+        } else {
+          fs.writeFileSync(outPath, result);
+          resolve();
+        }
+      });
+    });
+
+    return { success: true, output: outPath };
+  } catch (err) {
+    console.error('❌ Conversion error:', err);
+    return { success: false, error: err.message || String(err) };
+  }
+});
+
 
 

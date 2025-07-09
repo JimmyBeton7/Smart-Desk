@@ -1,0 +1,39 @@
+.file-converter-container {
+  padding: 20px;
+  color: #FCD8B4;
+}
+
+.file-converter-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.file-converter-controls button,
+.file-converter-controls select {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: #C19976;
+  color: #082C38;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.file-converter-controls button {
+  background-color: #fcd8b4;
+}
+
+.file-converter-controls select {
+  background-color: #0d3d4f;
+  color: #FCD8B4;
+}
+
+.file-converter-log {
+  margin-top: 12px;
+  background-color: #0d3d4f;
+  padding: 10px;
+  border-radius: 8px;
+  font-family: monospace;
+  color: #C19976;
+}

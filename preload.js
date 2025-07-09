@@ -20,5 +20,9 @@ contextBridge.exposeInMainWorld('electron', {
 
   exitApp: () => {
     ipcRenderer.send('exit-app');
-  }
+  },
+  pickColor: () => ipcRenderer.invoke('pick-color'),
+  pickFile: () => ipcRenderer.invoke('pick-file'),
+  convertFile: (filePath, targetFormat) => ipcRenderer.invoke('convert-file', filePath, targetFormat),
+  convertPdfToDocx: (pdfPath) => ipcRenderer.invoke('convert-pdf-to-docx', pdfPath),
 });

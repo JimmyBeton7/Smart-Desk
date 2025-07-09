@@ -9,6 +9,8 @@ import Notes from '../Pages/Notes'
 import Clipboard from '../Pages/Clipboard';
 import ChatGPT from '../Pages/ChatGPT';
 import Settings from '../Pages/Settings';
+import ColorPicker from '../Pages/ColorPicker';
+import FileConverter from '../Pages/FileConverter';
 
 function ToolContainer() {
   return (
@@ -19,6 +21,8 @@ function ToolContainer() {
         <Route path="/calculator" element={<Calculator />} />
         <Route path="/notes" element={<Notes />} />
         <Route path="/clipboard" element={<Clipboard />} />
+        <Route path="/colorpicker" element={<ColorPicker />} />
+        <Route path="/fileconventer" element={<FileConverter />} />
         <Route path="/chatgpt" element={<ChatGPT />} />
         <Route path="/settings" element={<Settings />} />
         {/* kolejne narzędzia */}

@@ -1,0 +1,52 @@
+.color-picker-container {
+  padding: 20px;
+  color: #fcd8b4;
+}
+
+.pick-btn {
+  background-color: #c19976;
+  color: #082c38;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+}
+
+.pick-btn:hover {
+  background-color: #fcd8b4;
+}
+
+.color-details {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.preview {
+  width: 50px;
+  height: 50px;
+  border-radius: 6px;
+  margin-right: 16px;
+  border: 2px solid #fcd8b4;
+}
+
+.color-info div {
+  cursor: pointer;
+  margin-bottom: 4px;
+}
+
+.color-history {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.color-tile {
+  width: 30px;
+  height: 30px;
+  margin: 4px;
+  border-radius: 4px;
+  border: 1px solid #fff;
+  cursor: pointer;
+}
