@@ -1,5 +1,6 @@
-const { contextBridge, ipcRenderer, clipboard } = require('electron');
+const { contextBridge, ipcRenderer, clipboard, app } = require('electron');
 //const electronClipboard = require('electron').clipboard;
+const fs = require('fs');
 
 console.log("✅ preload.js loaded");
 
@@ -11,7 +12,13 @@ contextBridge.exposeInMainWorld('electron', {
   clipboard: {
     readText: () => clipboard.readText(),
     writeText: (text) => clipboard.writeText(text)
-  }
+  },
   //clipboardReadText: () => clipboard.readText(),
   //clipboardWriteText: (text) => clipboard.writeText(text)
+  exportNote: (title, content) =>
+  ipcRenderer.invoke('export-note', title, content),
+
+  exitApp: () => {
+    ipcRenderer.send('exit-app');
+  }
 });

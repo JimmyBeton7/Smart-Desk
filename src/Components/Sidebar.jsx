@@ -1,7 +1,7 @@
 import React from 'react';
 import './Sidebar.css';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Timer, ClipboardList, Lock, Bot, Home, Calculator, Settings } from 'lucide-react';
+import { Timer, ClipboardList, Lock, Bot, Home, Calculator, Settings, MoveLeft } from 'lucide-react';
 
 const tools = [
   { path: '/', label: 'Home', icon: <Home size={20} /> },
@@ -30,6 +30,12 @@ function Sidebar() {
           <span>{label}</span>
         </div>
       ))}
+      
+      <div className="sidebar-item" onClick={() => window.electron.exitApp()}>
+        <MoveLeft size={16} style={{marginRight: 6}} />
+        <span>Exit</span>
+      </div>
+
     </div>
   );
 }

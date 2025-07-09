@@ -34,6 +34,7 @@ const createWindow = () => {
     resizable: false,
     maximizable: false,
     fullscreenable: false,
+    //setMenuBarVisibility: false,
     icon: path.join(__dirname, 'assets', 'logo.ico'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -65,6 +66,11 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
 
+ipcMain.on('exit-app', () => {
+  app.quit();
+});
+
+
 // IPC: NOTES
 
 const NOTES_DIR = path.join(app.getPath('userData'), 'notes');
@@ -83,6 +89,23 @@ ipcMain.handle('save-note', (_, note) => {
   fs.writeFileSync(path.join(NOTES_DIR, `${note.id}.json`), content);
   return true;
 });
+
+const { dialog } = require('electron');
+
+ipcMain.handle('export-note', async (_, title, content) => {
+  const { filePath } = await dialog.showSaveDialog({
+    title: 'Export Note',
+    defaultPath: `${title}.txt`,
+    filters: [{ name: 'Text Files', extensions: ['txt'] }]
+  });
+
+  if (filePath) {
+    fs.writeFileSync(filePath, content, 'utf-8');
+  }
+
+  return filePath;
+});
+
 
 const CLIPBOARD_FILE = path.join(app.getPath('userData'), 'clipboard-history.json');
 
