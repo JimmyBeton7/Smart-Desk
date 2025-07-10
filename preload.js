@@ -10,6 +10,7 @@ contextBridge.exposeInMainWorld('electron', {
     invoke: (channel, ...args) => ipcRenderer.invoke(channel, ...args),
     on: (channel, listener) => ipcRenderer.on(channel, listener)
   },
+  
   clipboard: {
     readText: () => clipboard.readText(),
     writeText: (text) => clipboard.writeText(text)
@@ -22,9 +23,16 @@ contextBridge.exposeInMainWorld('electron', {
   exitApp: () => {
     ipcRenderer.send('exit-app');
   },
-  pickColor: () => ipcRenderer.invoke('pick-color'),
+  //pickColor: () => ipcRenderer.invoke('pick-color'),
   pickFile: () => ipcRenderer.invoke('pick-file'),
   convertFile: (filePath, targetFormat) => ipcRenderer.invoke('convert-file', filePath, targetFormat),
   convertPdfToDocx: (pdfPath) => ipcRenderer.invoke('convert-pdf-to-docx', pdfPath),
   WEATHERSTACK_KEY: process.env.WEATHERSTACK_KEY,
+  startColorPicker: () => ipcRenderer.invoke('start-color-picker'),
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+  ipcRenderer.on('preview-color', (_, data) => {
+    window.dispatchEvent(new CustomEvent('preview-color', { detail: data }));
+  });
 });

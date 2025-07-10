@@ -1,0 +1,17 @@
+.note-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.delete-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #fcd8b4;
+  transition: color 0.2s ease;
+}
+
+.delete-btn:hover {
+  color: #fa6926;
+}

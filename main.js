@@ -93,6 +93,14 @@ ipcMain.handle('save-note', (_, note) => {
   return true;
 });
 
+ipcMain.handle('delete-note', (_, id) => {
+  const filePath = path.join(NOTES_DIR, `${id}.json`);
+  if (fs.existsSync(filePath)) {
+    fs.unlinkSync(filePath);
+  }
+  return true;
+});
+
 const { dialog } = require('electron');
 
 ipcMain.handle('export-note', async (_, title, content) => {
@@ -139,6 +147,7 @@ ipcMain.handle('save-clipboard-entry', (_, text) => {
 
 //==============================================================================
 
+/*
 const { desktopCapturer, nativeImage, screen } = require('electron');
 
 ipcMain.handle('pick-color', async () => {
@@ -166,6 +175,106 @@ ipcMain.handle('pick-color', async () => {
 
   return { hex, rgb };
 });
+*/
+
+const { desktopCapturer, nativeImage, screen } = require('electron');
+
+ipcMain.handle('start-color-picker', async () => {
+  const mainWindow = BrowserWindow.getFocusedWindow();
+  if (mainWindow) mainWindow.minimize();
+
+  const primary = screen.getPrimaryDisplay();
+  const overlay = new BrowserWindow({
+    x: primary.bounds.x,
+    y: primary.bounds.y,
+    width: primary.bounds.width,
+    height: primary.bounds.height,
+    transparent: true,
+    frame: false,
+    fullscreen: true,
+    alwaysOnTop: true,
+    hasShadow: false,
+    skipTaskbar: true,
+    enableLargerThanScreen: true,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false
+    }
+  });
+
+  overlay.setIgnoreMouseEvents(false);
+  overlay.setResizable(false);
+
+  overlay.loadURL(`data:text/html,
+    <html style="margin:0;padding:0;background:rgba(0,0,0,0.2);cursor:crosshair;">
+      <body></body>
+      <script>
+        const { ipcRenderer, screen } = require('electron');
+
+        let lastHex = '';
+        const getColor = async () => {
+          const result = await ipcRenderer.invoke('get-color-at-pointer');
+          if (result && result.hex !== lastHex) {
+            lastHex = result.hex;
+            ipcRenderer.send('preview-color', result);
+          }
+        };
+
+        setInterval(getColor, 100);
+
+        window.onclick = async () => {
+          const color = await ipcRenderer.invoke('get-color-at-pointer');
+          ipcRenderer.send('confirm-color', color);
+        };
+
+      </script>
+    </html>
+  `);
+
+  return new Promise((resolve) => {
+    ipcMain.once('confirm-color', (event, color) => {
+    overlay.close();
+    if (mainWindow) mainWindow.restore();
+    resolve(color);
+    });
+
+  });
+});
+
+
+async function getColorAtPointer() {
+  const sources = await desktopCapturer.getSources({ types: ['screen'] });
+  const screenShot = sources[0];
+
+  const image = nativeImage.createFromDataURL(screenShot.thumbnail.toDataURL());
+  const size = image.getSize();
+  const bounds = screen.getPrimaryDisplay().bounds;
+
+  const mouse = screen.getCursorScreenPoint();
+  const scaleX = size.width / bounds.width;
+  const scaleY = size.height / bounds.height;
+
+  const imageBuffer = image.toBitmap();
+  const x = Math.floor(mouse.x * scaleX);
+  const y = Math.floor(mouse.y * scaleY);
+  const index = (y * size.width + x) * 4;
+
+  const r = imageBuffer[index];
+  const g = imageBuffer[index + 1];
+  const b = imageBuffer[index + 2];
+  const hex = `#${[r, g, b].map(v => v.toString(16).padStart(2, '0')).join('')}`;
+  const rgb = `rgb(${r},${g},${b})`;
+
+  return { hex, rgb };
+}
+
+ipcMain.handle('get-color-at-pointer', getColorAtPointer);
+
+ipcMain.handle('confirm-color', async () => {
+  return await getColorAtPointer();
+});
+
+
 
 //==============================================================================
 

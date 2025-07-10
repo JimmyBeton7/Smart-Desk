@@ -13,6 +13,11 @@ function Notes() {
     setNotes(res);
   };
 
+  const handleDelete = async (id) => {
+  await window.electron.ipc.invoke('delete-note', id);
+  loadNotes(); // re-render
+  };
+
   const handleSave = async (note) => {
     await window.electron.ipc.invoke('save-note', note);
     setSelectedNote(null);
@@ -36,7 +41,7 @@ function Notes() {
       </div>
       <div className="notes-grid">
         {notes.map(note => (
-          <NoteTile key={note.id} note={note} onClick={() => setSelectedNote(note)} />
+          <NoteTile key={note.id} note={note} onClick={() => setSelectedNote(note)} onDelete={handleDelete} />
         ))}
       </div>
     </div>
