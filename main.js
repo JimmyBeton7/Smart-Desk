@@ -205,31 +205,45 @@ ipcMain.handle('start-color-picker', async () => {
   overlay.setIgnoreMouseEvents(false);
   overlay.setResizable(false);
 
-  overlay.loadURL(`data:text/html,
-    <html style="margin:0;padding:0;background:rgba(0,0,0,0.2);cursor:crosshair;">
-      <body></body>
-      <script>
-        const { ipcRenderer, screen } = require('electron');
+  overlay.loadURL(`data:text/html;charset=UTF-8,
+  <html style="margin:0;padding:0;background:rgba(0,0,0,0.2);cursor:crosshair;">
+    <body>
+      <div id="color-preview" style="position:fixed;pointer-events:none;width:36px;height:36px;border-radius:50%;border:2px solid white;box-shadow:0 0 6px black;"></div>
+    </body>
+    <script>
+      const { ipcRenderer } = require('electron');
 
-        let lastHex = '';
-        const getColor = async () => {
-          const result = await ipcRenderer.invoke('get-color-at-pointer');
-          if (result && result.hex !== lastHex) {
-            lastHex = result.hex;
-            ipcRenderer.send('preview-color', result);
-          }
-        };
+      let lastHex = '';
+      const preview = document.getElementById('color-preview');
 
-        setInterval(getColor, 100);
+      const updatePreviewPosition = (x, y) => {
+        preview.style.left = (x + 15) + 'px';
+        preview.style.top = (y + 15) + 'px';
+      };
 
-        window.onclick = async () => {
-          const color = await ipcRenderer.invoke('get-color-at-pointer');
-          ipcRenderer.send('confirm-color', color);
-        };
+      window.addEventListener('mousemove', e => {
+        updatePreviewPosition(e.clientX, e.clientY);
+      });
 
-      </script>
-    </html>
-  `);
+      const getColor = async () => {
+        const result = await ipcRenderer.invoke('get-color-at-pointer');
+        if (result && result.hex !== lastHex) {
+          lastHex = result.hex;
+          ipcRenderer.send('preview-color', result);
+          preview.style.backgroundColor = result.hex;
+        }
+      };
+
+      setInterval(getColor, 100);
+
+      window.onclick = async () => {
+        const color = await ipcRenderer.invoke('get-color-at-pointer');
+        ipcRenderer.send('confirm-color', color);
+      };
+    </script>
+  </html>
+`);
+
 
   return new Promise((resolve) => {
     ipcMain.once('confirm-color', (event, color) => {
@@ -243,16 +257,23 @@ ipcMain.handle('start-color-picker', async () => {
 
 
 async function getColorAtPointer() {
-  const sources = await desktopCapturer.getSources({ types: ['screen'] });
-  const screenShot = sources[0];
+  const { screen, desktopCapturer, nativeImage } = require('electron');
 
+  const display = screen.getPrimaryDisplay();
+  const { width, height } = display.workAreaSize;
+
+  const sources = await desktopCapturer.getSources({
+    types: ['screen'],
+    thumbnailSize: { width, height } // <- tu najważniejsza zmiana
+  });
+
+  const screenShot = sources[0];
   const image = nativeImage.createFromDataURL(screenShot.thumbnail.toDataURL());
   const size = image.getSize();
-  const bounds = screen.getPrimaryDisplay().bounds;
 
   const mouse = screen.getCursorScreenPoint();
-  const scaleX = size.width / bounds.width;
-  const scaleY = size.height / bounds.height;
+  const scaleX = size.width / display.bounds.width;
+  const scaleY = size.height / display.bounds.height;
 
   const imageBuffer = image.toBitmap();
   const x = Math.floor(mouse.x * scaleX);
@@ -267,6 +288,7 @@ async function getColorAtPointer() {
 
   return { hex, rgb };
 }
+
 
 ipcMain.handle('get-color-at-pointer', getColorAtPointer);
 
