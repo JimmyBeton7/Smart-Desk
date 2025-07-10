@@ -11,6 +11,7 @@ import ChatGPT from '../Pages/ChatGPT';
 import Settings from '../Pages/Settings';
 import ColorPicker from '../Pages/ColorPicker';
 import FileConverter from '../Pages/FileConverter';
+import TodoPlus from '../Pages/TodoPlus';
 
 function ToolContainer() {
   return (
@@ -23,6 +24,7 @@ function ToolContainer() {
         <Route path="/clipboard" element={<Clipboard />} />
         <Route path="/colorpicker" element={<ColorPicker />} />
         <Route path="/fileconventer" element={<FileConverter />} />
+        <Route path="/todoplus" element={<TodoPlus />} />
         <Route path="/chatgpt" element={<ChatGPT />} />
         <Route path="/settings" element={<Settings />} />
         {/* kolejne narzędzia */}
