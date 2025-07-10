@@ -1,6 +1,7 @@
 const { contextBridge, ipcRenderer, clipboard, app } = require('electron');
 //const electronClipboard = require('electron').clipboard;
 const fs = require('fs');
+require('dotenv').config();
 
 console.log("✅ preload.js loaded");
 
@@ -25,4 +26,5 @@ contextBridge.exposeInMainWorld('electron', {
   pickFile: () => ipcRenderer.invoke('pick-file'),
   convertFile: (filePath, targetFormat) => ipcRenderer.invoke('convert-file', filePath, targetFormat),
   convertPdfToDocx: (pdfPath) => ipcRenderer.invoke('convert-pdf-to-docx', pdfPath),
+  WEATHERSTACK_KEY: process.env.WEATHERSTACK_KEY,
 });

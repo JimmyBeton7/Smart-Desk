@@ -54,6 +54,9 @@ const createWindow = () => {
 
 };
 
+app.commandLine.appendSwitch('enable-geolocation');
+
+
 app.whenReady().then(() => {
   createWindow();
 
@@ -212,6 +215,11 @@ ipcMain.handle('convert-pdf-to-docx', async (_, pdfPath) => {
     return { success: false, error: err.message || String(err) };
   }
 });
+
+//==============================================================================
+
+process.env.WEATHERSTACK_KEY = process.env.WEATHERSTACK_KEY || require('dotenv').config().parsed.WEATHERSTACK_KEY;
+
 
 
 
