@@ -5,11 +5,20 @@ function ColorPicker() {
   const [selectedColor, setSelectedColor] = useState(null);
   const [history, setHistory] = useState([]);
 
-  const pickColor = async () => {
+  useEffect(() => {
+  window.electron.loadJSON('color-history').then(data => {
+    if (Array.isArray(data)) setHistory(data);
+  });
+}, []);
+
+
+const pickColor = async () => {
   const result = await window.electron.startColorPicker();
   if (result) {
+    const updated = [result, ...history.filter(c => c.hex !== result.hex)].slice(0, 10);
     setSelectedColor(result);
-    setHistory(prev => [result, ...prev.filter(c => c.hex !== result.hex)].slice(0, 10));
+    setHistory(updated);
+    window.electron.saveJSON('color-history', updated);
   }
 };
 
@@ -42,7 +51,13 @@ function ColorPicker() {
       <h3>History</h3>
       <div className="color-history">
         {history.map((color, i) => (
-          <div key={i} className="color-tile" style={{ backgroundColor: color.hex }} title={color.hex} />
+          <div
+            key={i}
+            className="color-tile"
+            style={{ backgroundColor: color.hex }}
+            title={color.hex}
+            onClick={() => copyToClipboard(color.hex)}
+        />
         ))}
       </div>
     </div>

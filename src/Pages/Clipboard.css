@@ -58,3 +58,28 @@
   background: #fcd8b4;
 }
 
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid #C19976;
+  border-top: 3px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.chatgpt-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin: 12px 0;
+  color: #FCD8B4;
+}
+

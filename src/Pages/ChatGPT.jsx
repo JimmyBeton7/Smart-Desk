@@ -10,6 +10,7 @@ function ChatGPT() {
   const containerRef = useRef(null);
 
   const [apiKey, setApiKey] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
   window.electron.loadJSON('settings').then(data => {
@@ -39,6 +40,8 @@ function ChatGPT() {
     setMessages(updatedMessages);
     setInput('');
 
+    setIsLoading(true);
+
     try {
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
@@ -64,6 +67,9 @@ function ChatGPT() {
     } catch (error) {
       console.error('❌ API error:', error);
     }
+    finally {
+      setIsLoading(false);
+    }
   };
 
   const handleNewChat = () => {
@@ -76,6 +82,12 @@ function ChatGPT() {
     <div className="chatgpt-container">
       <div className="chatgpt-header">
         <h2>ChatGPT</h2>
+        {isLoading && (
+          <div className="chatgpt-spinner">
+            <div className="spinner" />
+            </div>
+          )}
+
         <button className="new-chat-btn" onClick={handleNewChat}>New Chat</button>
       </div>
 

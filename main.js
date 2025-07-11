@@ -490,3 +490,10 @@ ipcMain.handle('save-chat', (_, data) => {
   return true;
 });
 
+const COLOR_HISTORY_FILE = path.join(app.getPath('userData'), 'color-history.json');
+
+ipcMain.handle('load-color-history', () => safeRead(COLOR_HISTORY_FILE, []));
+ipcMain.handle('save-color-history', (_, data) => {
+  safeWrite(COLOR_HISTORY_FILE, data);
+  return true;
+});

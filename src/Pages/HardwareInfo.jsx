@@ -8,7 +8,12 @@ function HardwareInfo() {
     window.electron.getHardwareInfo().then(setData);
   }, []);
 
-  if (!data) return <p>Loading hardware info…</p>;
+  if (!data) return (
+  <div className="hardware-loading">
+    <div className="spinner" />
+    <p>Loading hardware info…</p>
+  </div>
+  );
 
   return (
     <div className="hardware-page">
