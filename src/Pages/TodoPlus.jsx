@@ -28,20 +28,16 @@ function TodoPlus() {
 };
 
   useEffect(() => {
-  const saved = localStorage.getItem('todo-plus');
-  if (saved) setTasks(JSON.parse(saved));
-
-  const savedSort = localStorage.getItem('todo-sort-mode');
-  if (savedSort) setSortMode(savedSort);
+    window.electron.loadJSON('todo').then(setTasks);
+    window.electron.loadJSON('todo-sort').then(setSortMode);
   }, []);
 
-  // Zapisywanie sortMode gdy się zmienia
   useEffect(() => {
-    localStorage.setItem('todo-sort-mode', sortMode);
+    window.electron.saveJSON('todo-sort', sortMode);
   }, [sortMode]);
 
   useEffect(() => {
-    localStorage.setItem('todo-plus', JSON.stringify(tasks));
+    window.electron.saveJSON('todo', tasks);
   }, [tasks]);
 
   const saveTask = () => {

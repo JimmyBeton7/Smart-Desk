@@ -430,3 +430,63 @@ ipcMain.handle('get-hardware-info', async () => {
 
 
 //==============================================================================
+
+const SETTINGS_FILE = path.join(app.getPath('userData'), 'settings.json');
+const WEATHER_FILE = path.join(app.getPath('userData'), 'weather.json');
+const CURRENCY_FILE = path.join(app.getPath('userData'), 'currency.json');
+const TODO_FILE = path.join(app.getPath('userData'), 'todo-plus.json');
+const TODO_SORT_FILE = path.join(app.getPath('userData'), 'todo-sort.json');
+
+function safeRead(file, fallback = {}) {
+  try {
+    return JSON.parse(fs.readFileSync(file, 'utf-8'));
+  } catch {
+    return fallback;
+  }
+}
+
+function safeWrite(file, data) {
+  fs.writeFileSync(file, JSON.stringify(data, null, 2));
+}
+
+// SETTINGS
+ipcMain.handle('load-settings', () => safeRead(SETTINGS_FILE));
+ipcMain.handle('save-settings', (_, data) => {
+  safeWrite(SETTINGS_FILE, data);
+  return true;
+});
+
+// WEATHER
+ipcMain.handle('load-weather', () => safeRead(WEATHER_FILE));
+ipcMain.handle('save-weather', (_, data) => {
+  safeWrite(WEATHER_FILE, data);
+  return true;
+});
+
+// CURRENCY
+ipcMain.handle('load-currency', () => safeRead(CURRENCY_FILE));
+ipcMain.handle('save-currency', (_, data) => {
+  safeWrite(CURRENCY_FILE, data);
+  return true;
+});
+
+// TODO
+ipcMain.handle('load-todo', () => safeRead(TODO_FILE, []));
+ipcMain.handle('save-todo', (_, data) => {
+  safeWrite(TODO_FILE, data);
+  return true;
+});
+ipcMain.handle('load-todo-sort', () => safeRead(TODO_SORT_FILE, 'created'));
+ipcMain.handle('save-todo-sort', (_, mode) => {
+  safeWrite(TODO_SORT_FILE, mode);
+  return true;
+});
+
+const CHAT_FILE = path.join(app.getPath('userData'), 'chat.json');
+
+ipcMain.handle('load-chat', () => safeRead(CHAT_FILE, []));
+ipcMain.handle('save-chat', (_, data) => {
+  safeWrite(CHAT_FILE, data);
+  return true;
+});
+

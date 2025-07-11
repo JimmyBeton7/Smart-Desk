@@ -9,23 +9,24 @@ function ChatGPT() {
   const [input, setInput] = useState('');
   const containerRef = useRef(null);
 
-  const apiKey = localStorage.getItem(API_KEY_STORAGE_KEY);
+  const [apiKey, setApiKey] = useState('');
 
   useEffect(() => {
-    const stored = localStorage.getItem(CHAT_STORAGE_KEY);
-    if (stored) {
-      try {
-        setMessages(JSON.parse(stored));
-      } catch (e) {
-        console.warn('⚠️ Błąd parsowania historii:', e);
-      }
-    }
-  }, []);
+  window.electron.loadJSON('settings').then(data => {
+    if (data.apiKey) setApiKey(data.apiKey);
+  });
+
+  window.electron.loadJSON('chat').then(data => {
+    if (Array.isArray(data)) setMessages(data);
+  });
+}, []);
+
 
   useEffect(() => {
-    containerRef.current?.scrollTo(0, containerRef.current.scrollHeight);
-    localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messages));
+  containerRef.current?.scrollTo(0, containerRef.current.scrollHeight);
+  window.electron.saveJSON('chat', messages);
   }, [messages]);
+
 
   const sendMessage = async () => {
     if (!input.trim() || !apiKey) {
@@ -67,7 +68,7 @@ function ChatGPT() {
 
   const handleNewChat = () => {
     setMessages([]);
-    localStorage.removeItem(CHAT_STORAGE_KEY);
+    window.electron.saveJSON('chat', []);
   };
 
   return (

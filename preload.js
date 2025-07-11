@@ -30,6 +30,8 @@ contextBridge.exposeInMainWorld('electron', {
   WEATHERSTACK_KEY: process.env.WEATHERSTACK_KEY,
   startColorPicker: () => ipcRenderer.invoke('start-color-picker'),
   getHardwareInfo: () => ipcRenderer.invoke('get-hardware-info'),
+  loadJSON: (name) => ipcRenderer.invoke(`load-${name}`),
+  saveJSON: (name, data) => ipcRenderer.invoke(`save-${name}`, data),
 });
 
 window.addEventListener('DOMContentLoaded', () => {

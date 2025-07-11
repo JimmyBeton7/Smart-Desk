@@ -34,35 +34,32 @@ function CurrencyTile() {
       setRates(PLNper);
       const now = Date.now();
       setLoadedAt(now);
-      localStorage.setItem('currencyData', JSON.stringify({ rates: PLNper, loadedAt: now }));
+      window.electron.saveJSON('currency', { rates: PLNper, loadedAt: now });
+
     } catch (err) {
       console.error('Błąd pobierania kursów:', err);
     }
   };
 
   useEffect(() => {
-  const cache = localStorage.getItem('currencyData');
-  const now = Date.now();
-  const oneDay = 12 * 60 * 60 * 1000;
+  window.electron.loadJSON('currency').then(cache => {
+    const now = Date.now();
+    const oneDay = 12 * 60 * 60 * 1000;
 
-  let shouldFetch = true;
+    let shouldFetch = true;
 
-  if (cache) {
-    const { rates: cachedRates, loadedAt: ts } = JSON.parse(cache);
-    const isFresh = now - ts <= oneDay;
-
-    if (isFresh) {
+    if (cache?.rates && now - cache.loadedAt <= oneDay) {
       console.log("🪙 Kursy walut z cache");
-      setRates(cachedRates);
-      setLoadedAt(ts);
+      setRates(cache.rates);
+      setLoadedAt(cache.loadedAt);
       shouldFetch = false;
     }
-  }
 
-  if (shouldFetch) {
-    console.log("📡 Fetching fresh currency rates…");
-    fetchRates();
-  }
+    if (shouldFetch) {
+      console.log("📡 Fetching fresh currency rates…");
+      fetchRates();
+    }
+  });
 }, []);
 
 

@@ -5,7 +5,7 @@ function WeatherTile() {
   const [weather, setWeather] = useState(null);
   const [loadedAt, setLoadedAt] = useState(null);
 
-  const API_KEY = "b5454a8fb0e1660e31d3774301542e4f"; // najlepiej docelowo z window.env
+  const API_KEY = "b5454a8fb0e1660e31d3774301542e4f"; // docelowo z window.env
 
   const fetchWeather = async (query) => {
     try {
@@ -13,8 +13,12 @@ function WeatherTile() {
       const json = await res.json();
       if (json.current) {
         setWeather(json.current);
-        setLoadedAt(Date.now());
-        localStorage.setItem('weatherData', JSON.stringify({ weather: json.current, loadedAt: Date.now() }));
+        const now = Date.now();
+        setLoadedAt(now);
+        window.electron.saveJSON('weather', {
+          weather: json.current,
+          loadedAt: now
+        });
       }
     } catch (err) {
       console.error('Błąd pobierania pogody:', err);
@@ -22,42 +26,46 @@ function WeatherTile() {
   };
 
   useEffect(() => {
-  const userLocation = localStorage.getItem('weather-location')?.trim();
-  const query = userLocation || 'auto:ip';
-  const cache = localStorage.getItem('weatherData');
-  const now = Date.now();
-  const twelveHours = 12 * 60 * 60 * 1000;
+  const userLocationRef = { current: 'auto:ip' };
 
-  let shouldFetch = true;
+  const initialize = async () => {
+    const settings = await window.electron.loadJSON('settings');
+    userLocationRef.current = settings?.location?.trim() || 'auto:ip';
 
-  if (cache) {
-    const { weather, loadedAt } = JSON.parse(cache);
-    const isFresh = now - loadedAt <= twelveHours;
+    const cache = await window.electron.loadJSON('weather');
+    const now = Date.now();
+    const twelveHours = 12 * 60 * 60 * 1000;
 
-    if (isFresh) {
+    if (cache?.weather && now - cache.loadedAt <= twelveHours) {
       console.log("🕒 Using cached weather");
-      setWeather(weather);
-      setLoadedAt(loadedAt);
-      shouldFetch = false;
+      setWeather(cache.weather);
+      setLoadedAt(cache.loadedAt);
+    } else {
+      console.log("📡 Fetching fresh weather…");
+      fetchWeather(userLocationRef.current);
     }
-  }
 
-  if (shouldFetch) {
-    console.log("📡 Fetching fresh weather…");
-    fetchWeather(query);
-  }
+    const handleLocationChange = () => {
+      const loc = userLocationRef.current;
+      console.log("📍 Location changed to:", loc);
+      fetchWeather(loc);
+    };
 
-  const handleLocationChange = () => {
-    console.log("📍 Location changed");
-    fetchWeather(query);
+    window.addEventListener('weather-location-changed', handleLocationChange);
+
+    return () => {
+      window.removeEventListener('weather-location-changed', handleLocationChange);
+    };
   };
 
-  window.addEventListener('weather-location-changed', handleLocationChange);
+  const cleanupPromise = initialize();
+
   return () => {
-    window.removeEventListener('weather-location-changed', handleLocationChange);
+    cleanupPromise.then(cleanup => {
+      if (typeof cleanup === 'function') cleanup();
+    });
   };
 }, []);
-
 
 
   return (
@@ -70,7 +78,6 @@ function WeatherTile() {
           <small>
             Updated: {new Date(loadedAt).toLocaleDateString()} {new Date(loadedAt).toLocaleTimeString()}
           </small>
-
         </div>
       ) : (
         <p>Loading weather info…</p>

@@ -6,24 +6,25 @@ function Settings() {
   const [location, setLocation] = useState('');
 
   useEffect(() => {
-    const savedKey = localStorage.getItem('openai-api-key');
-    const savedLocation = localStorage.getItem('weather-location');
-
-    if (savedKey) setApiKey(savedKey);
-    if (savedLocation) setLocation(savedLocation);
-  }, []);
+  window.electron.loadJSON('settings').then(data => {
+    if (data.apiKey) setApiKey(data.apiKey);
+    if (data.location) setLocation(data.location);
+  });
+}, []);
 
   const saveSettings = () => {
-    localStorage.setItem('openai-api-key', apiKey.trim());
-    const prevLocation = localStorage.getItem('weather-location');
-    const trimmedNew = location.trim();
+    window.electron.loadJSON('settings').then(prev => {
+    const trimmed = location.trim();
+    window.electron.saveJSON('settings', {
+      apiKey: apiKey.trim(),
+      location: trimmed
+    });
 
-    localStorage.setItem('weather-location', trimmedNew);
-
-    if (prevLocation !== trimmedNew) {
-      localStorage.removeItem('weatherData');
+    if (prev?.location !== trimmed) {
+      window.electron.saveJSON('weather', {}); // czyści cache
       window.dispatchEvent(new Event('weather-location-changed'));
     }
+  });
   };
 
   return (
