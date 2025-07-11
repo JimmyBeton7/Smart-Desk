@@ -357,6 +357,37 @@ ipcMain.handle('convert-pdf-to-docx', async (_, pdfPath) => {
 
 process.env.WEATHERSTACK_KEY = process.env.WEATHERSTACK_KEY || require('dotenv').config().parsed.WEATHERSTACK_KEY;
 
+//==============================================================================
+
+const si = require('systeminformation');
+
+ipcMain.handle('get-hardware-info', async () => {
+  const [cpu, mem, os, battery, netInf, disk, gpu, netStats, usb, audio] = await Promise.all([
+    si.cpu(),
+    si.mem(),
+    si.osInfo(),
+    si.battery(),
+    si.networkInterfaces(),
+    si.fsSize(),
+    si.graphics(),
+    si.networkStats(), // nowe
+    si.usb(),          // nowe
+    si.audio()         // nowe
+  ]);
+
+  return {
+    cpu,
+    mem,
+    os,
+    battery,
+    netInf,
+    disk,
+    gpu,
+    netStats,
+    usb,
+    audio
+  };
+});
 
 
-
+//==============================================================================

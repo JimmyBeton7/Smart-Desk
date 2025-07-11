@@ -32,6 +32,7 @@ function Notes() {
     <NoteEditor note={selectedNote} onSave={handleSave} onCancel={() => setSelectedNote(null)} />
   ) : (
     <div>
+      <div className="tab-content">
       <div className="notes-header">
         <h2><StickyNote size={20} style={{ marginRight: 8 }} /> Your notes</h2>
         <button onClick={() => setSelectedNote({ id: Date.now(), title: '', content: '' })}>
@@ -44,6 +45,7 @@ function Notes() {
           <NoteTile key={note.id} note={note} onClick={() => setSelectedNote(note)} onDelete={handleDelete} />
         ))}
       </div>
+    </div>
     </div>
   );
 }

@@ -29,6 +29,7 @@ contextBridge.exposeInMainWorld('electron', {
   convertPdfToDocx: (pdfPath) => ipcRenderer.invoke('convert-pdf-to-docx', pdfPath),
   WEATHERSTACK_KEY: process.env.WEATHERSTACK_KEY,
   startColorPicker: () => ipcRenderer.invoke('start-color-picker'),
+  getHardwareInfo: () => ipcRenderer.invoke('get-hardware-info'),
 });
 
 window.addEventListener('DOMContentLoaded', () => {

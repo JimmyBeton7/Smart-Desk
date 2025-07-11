@@ -96,6 +96,7 @@ const editTask = (task) => {
   };
 
   return (
+    <div className="tab-content">
     <div className="todo-container">
       <h2>TODO+</h2>
 
@@ -154,6 +155,7 @@ const editTask = (task) => {
           </li>
         ))}
       </ul>
+    </div>
     </div>
   );
 }

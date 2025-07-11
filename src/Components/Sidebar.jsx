@@ -1,7 +1,7 @@
 import React from 'react';
 import './Sidebar.css';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Timer, ClipboardList, Lock, Bot, Home, Calculator, Settings, MoveLeft, Droplet, ToolCase, Check } from 'lucide-react';
+import { Timer, ClipboardList, Lock, Bot, Home, Calculator, Settings, MoveLeft, Droplet, ToolCase, Check, HardDrive } from 'lucide-react';
 
 const tools = [
   { path: '/', label: 'Home', icon: <Home size={20} /> },
@@ -12,6 +12,7 @@ const tools = [
   { path: '/colorpicker', label: 'Color Picker', icon: <Droplet size={20} /> },
   { path: '/fileconventer', label: 'File Converter', icon: <ToolCase size={20} /> },
   { path: '/todoplus', label: 'TODO+', icon: <Check size={20} /> },
+  { path: '/hardwareinfo', label: 'Hardware info', icon: <HardDrive size={20} /> },
   { path: '/chatgpt', label: 'ChatGPT', icon: <Bot size={20} /> },
   { path: '/settings', label: 'Settings', icon: <Settings size={20} /> },
 ];

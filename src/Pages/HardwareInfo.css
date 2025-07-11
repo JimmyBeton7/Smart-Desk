@@ -1,0 +1,43 @@
+.hardware-page {
+  height: 100%;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.hardware-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  padding: 20px;
+  color: #fcd8b4;
+}
+
+.hardware-tile {
+  background-color: #0d3d4f;
+  border: 1px solid #c19976;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.hardware-tile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 10px rgba(241, 180, 121, 0.4);
+}
+
+.hardware-tile h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  color: #fcd8b4;
+  border-bottom: 1px solid #c19976;
+  padding-bottom: 4px;
+  font-size: 16px;
+}
+
+.hardware-tile p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #fcd8b4;
+  word-break: break-word;
+}

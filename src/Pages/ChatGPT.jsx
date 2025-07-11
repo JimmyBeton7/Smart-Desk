@@ -71,6 +71,7 @@ function ChatGPT() {
   };
 
   return (
+    <div className="tab-content">
     <div className="chatgpt-container">
       <div className="chatgpt-header">
         <h2>ChatGPT</h2>
@@ -97,6 +98,7 @@ function ChatGPT() {
         />
         <button onClick={sendMessage}>Send</button>
       </div>
+    </div>
     </div>
   );
 }
