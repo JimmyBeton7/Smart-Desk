@@ -77,6 +77,15 @@
     "win": {
       "icon": "assets/logo.ico",
       "target": "nsis"
-    }
+    },
+    "nsis": {
+    "oneClick": false,
+    "perMachine": true,
+    "allowToChangeInstallationDirectory": true,
+    "runAfterFinish": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "Smart Desk"
+  }
   }
 }

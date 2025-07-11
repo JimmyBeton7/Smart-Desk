@@ -1,6 +1,8 @@
 //require('electron-reload')(__dirname, {
 //  electron: require(`${__dirname}/node_modules/electron`)
 //});
+const { Tray, Menu } = require('electron');
+let tray = null;
 
 const { app } = require('electron');
 //const { app, BrowserWindow, ipcMain } = require('electron');
@@ -27,14 +29,17 @@ if (isDev) {
 
 const { BrowserWindow, ipcMain } = require('electron');
 
+let mainWindow;
+let isQuiting = false;
+
 const createWindow = () => {
-  const win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
     resizable: false,
     maximizable: false,
     fullscreenable: false,
-    //setMenuBarVisibility: false,
+    setMenuBarVisibility: false,
     icon: path.join(__dirname, 'assets', 'logo.ico'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -42,14 +47,22 @@ const createWindow = () => {
       nodeIntegration: false,
       sandbox: false
     },
+    show: !process.argv.includes('--hidden'),
   });
+
+  mainWindow.on('close', (e) => {
+  if (!app.isQuiting) {
+    e.preventDefault();
+    mainWindow.hide();
+  }
+});
 
   if (isDev) {
     waitOn({ resources: ['http://localhost:3000'], timeout: 20000 }, () => {
-      win.loadURL('http://localhost:3000');
+      mainWindow.loadURL('http://localhost:3000');
     });
   } else {
-    win.loadFile(path.join(__dirname, 'dist', 'index.html'));
+    mainWindow.loadFile(path.join(__dirname, 'dist', 'index.html'));
   }
 
 };
@@ -63,6 +76,32 @@ app.whenReady().then(() => {
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
+
+  tray = new Tray(path.join(__dirname, 'assets', 'logo.ico')); // użyj własnej ikonki
+    const contextMenu = Menu.buildFromTemplate([
+    { label: 'Open Smart Desk', click: () => mainWindow.show() },
+    { label: 'Close', click: () => app.quit() }
+  ]);
+  tray.setToolTip('Smart Desk');
+  tray.setContextMenu(contextMenu);
+
+  tray.on('click', () => {
+    mainWindow.show();
+  });
+
+  app.setLoginItemSettings({
+  openAtLogin: true,
+  path: process.execPath,
+  args: [
+    '--hidden'
+  ],
+});
+
+});
+
+app.on('before-quit', () => {
+  isQuiting = true;
+  if (tray) tray.destroy();
 });
 
 app.on('window-all-closed', () => {
