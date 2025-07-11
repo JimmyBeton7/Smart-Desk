@@ -23,11 +23,12 @@ function WeatherTile() {
 
   useEffect(() => {
   const userLocation = localStorage.getItem('weather-location')?.trim();
-  console.log("📍 Lokalizacja użytkownika:", userLocation || "auto:ip");
-
+  const query = userLocation || 'auto:ip';
   const cache = localStorage.getItem('weatherData');
   const now = Date.now();
   const twelveHours = 12 * 60 * 60 * 1000;
+
+  let shouldFetch = true;
 
   if (cache) {
     const { weather, loadedAt } = JSON.parse(cache);
@@ -37,17 +38,18 @@ function WeatherTile() {
       console.log("🕒 Using cached weather");
       setWeather(weather);
       setLoadedAt(loadedAt);
-    } else {
-      fetchWeather(userLocation || 'auto:ip');
+      shouldFetch = false;
     }
-  } else {
-    fetchWeather(userLocation || 'auto:ip');
+  }
+
+  if (shouldFetch) {
+    console.log("📡 Fetching fresh weather…");
+    fetchWeather(query);
   }
 
   const handleLocationChange = () => {
-    console.log("📡 Location changed, refreshing weather…");
-    const newLoc = localStorage.getItem('weather-location');
-    fetchWeather(newLoc || 'auto:ip');
+    console.log("📍 Location changed");
+    fetchWeather(query);
   };
 
   window.addEventListener('weather-location-changed', handleLocationChange);
@@ -57,6 +59,7 @@ function WeatherTile() {
 }, []);
 
 
+
   return (
     <div className="weather-tile">
       <h3>Weather</h3>
@@ -64,7 +67,10 @@ function WeatherTile() {
         <div>
           <img src={weather.weather_icons[0]} alt={weather.weather_descriptions[0]} />
           <p>{weather.temperature}°C • {weather.weather_descriptions[0]}</p>
-          <small>Update: {new Date(loadedAt).toLocaleTimeString()}</small>
+          <small>
+            Updated: {new Date(loadedAt).toLocaleDateString()} {new Date(loadedAt).toLocaleTimeString()}
+          </small>
+
         </div>
       ) : (
         <p>Loading weather info…</p>

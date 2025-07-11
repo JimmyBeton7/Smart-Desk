@@ -3,6 +3,14 @@
   color: #fcd8b4;
 }
 
+.todo-sort select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #c19976;
+  background: #0d3d4f;
+  color: #fcd8b4;
+}
+
 .todo-input {
   display: flex;
   gap: 10px;
@@ -10,6 +18,15 @@
 }
 
 .todo-input input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #c19976;
+  background: #0d3d4f;
+  color: #fcd8b4;
+}
+
+.todo-input select {
   flex: 1;
   padding: 10px;
   border-radius: 8px;

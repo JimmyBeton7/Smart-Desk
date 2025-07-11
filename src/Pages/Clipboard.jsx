@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './Clipboard.css';
+import { Trash } from 'lucide-react';
 
 const Clipboard = () => {
   const [history, setHistory] = useState([]);
@@ -34,9 +35,18 @@ const Clipboard = () => {
 
   };
 
+  const clearClipboardHistory = async () => {
+    await window.electron.ipc.invoke('clear-clipboard-history');
+    setHistory([]);
+  };
+
   return (
     <div className="clipboard-container">
       <h2>Clipboard History</h2>
+      <button className="clear-btn" onClick={clearClipboardHistory}>
+          <Trash size={18} style={{ marginRight: 6 }} />
+          Clear
+        </button>
       <div className="clipboard-grid">
         {history.map((item, index) => (
           <div key={index} className="clipboard-tile" onClick={() => copyToClipboard(item)}>

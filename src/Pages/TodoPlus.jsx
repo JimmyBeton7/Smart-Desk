@@ -1,7 +1,7 @@
 // src/Pages/TodoPlus.jsx
 import React, { useEffect, useState } from 'react';
 import './TodoPlus.css';
-import { Calendar,  } from 'lucide-react';
+import { Calendar, Trash, Pen, ArrowUp } from 'lucide-react';
 
 function TodoPlus() {
   const [tasks, setTasks] = useState([]);
@@ -9,12 +9,36 @@ function TodoPlus() {
   const [priority, setPriority] = useState('medium');
   const [deadline, setDeadline] = useState('');
   const [editTaskId, setEditTaskId] = useState(null);
+  const [sortMode, setSortMode] = useState('created');
 
+  const getSortedTasks = () => {
+  const priorityValue = { high: 3, medium: 2, low: 1 };
+
+  return [...tasks].sort((a, b) => {
+    if (sortMode === 'priority') {
+      return (priorityValue[b.priority] || 0) - (priorityValue[a.priority] || 0);
+    }
+    if (sortMode === 'deadline') {
+      if (!a.deadline) return 1;
+      if (!b.deadline) return -1;
+      return new Date(a.deadline) - new Date(b.deadline);
+    }
+    return b.id - a.id; // sort by created (most recent first)
+  });
+};
 
   useEffect(() => {
-    const saved = localStorage.getItem('todo-plus');
-    if (saved) setTasks(JSON.parse(saved));
+  const saved = localStorage.getItem('todo-plus');
+  if (saved) setTasks(JSON.parse(saved));
+
+  const savedSort = localStorage.getItem('todo-sort-mode');
+  if (savedSort) setSortMode(savedSort);
   }, []);
+
+  // Zapisywanie sortMode gdy się zmienia
+  useEffect(() => {
+    localStorage.setItem('todo-sort-mode', sortMode);
+  }, [sortMode]);
 
   useEffect(() => {
     localStorage.setItem('todo-plus', JSON.stringify(tasks));
@@ -74,6 +98,18 @@ const editTask = (task) => {
   return (
     <div className="todo-container">
       <h2>TODO+</h2>
+
+      <div className="todo-sort">
+        <div style={{ marginBottom: 12, display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <label style={{ fontWeight: 'bold' }}>Sort by:</label>
+          <select value={sortMode} onChange={e => setSortMode(e.target.value)}>
+            <option value="created">Created</option>
+            <option value="priority">Priority</option>
+            <option value="deadline">Deadline</option>
+          </select>
+        </div>
+      </div>
+
       <div className="todo-input">
         <input
             value={input}
@@ -81,9 +117,9 @@ const editTask = (task) => {
             placeholder="Add a new task…"
         />
         <select value={priority} onChange={e => setPriority(e.target.value)}>
-            <option value="high">🔥High</option>
-            <option value="medium">⚖️ Medium</option>
-            <option value="low">🧊 Low</option>
+            <option value="high">🔴 High</option>
+            <option value="medium">🟡 Medium</option>
+            <option value="low">🟢 Low</option>
         </select>
         <input
             type="date"
@@ -94,7 +130,7 @@ const editTask = (task) => {
      </div>
 
       <ul className="todo-list">
-        {tasks.map(task => (
+        {getSortedTasks().map(task => (
           <li key={task.id} className={`task ${task.status}`}>
             <span onClick={() => toggleStatus(task.id)}>
                 {task.text}
@@ -112,8 +148,8 @@ const editTask = (task) => {
             </span>
 
             <div className="task-actions">
-                <button onClick={() => editTask(task)}>✏️</button>
-                <button onClick={() => removeTask(task.id)}>🗑</button>
+                <button onClick={() => editTask(task)}> <Pen size={16} style={{ marginRight: 8 }} /> </button>
+                <button onClick={() => removeTask(task.id)}> <Trash size={16} style={{ marginRight: 8 }} /> </button>
             </div>
           </li>
         ))}

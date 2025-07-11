@@ -117,6 +117,7 @@ ipcMain.handle('export-note', async (_, title, content) => {
   return filePath;
 });
 
+//==================================================================================
 
 const CLIPBOARD_FILE = path.join(app.getPath('userData'), 'clipboard-history.json');
 
@@ -143,6 +144,11 @@ ipcMain.handle('save-clipboard-entry', (_, text) => {
     history.unshift(text);
     saveClipboardHistory(history);
   }
+});
+
+ipcMain.handle('clear-clipboard-history', () => {
+  saveClipboardHistory([]); // czyści plik zapisując pustą tablicę
+  return true;
 });
 
 //==============================================================================

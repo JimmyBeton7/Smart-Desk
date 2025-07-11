@@ -34,3 +34,27 @@
   background-color: #C19976;
   color: #082C38;
 }
+
+.clipboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.clear-btn {
+  background: #c19976;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #082c38;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background 0.2s ease;
+}
+.clear-btn:hover {
+  background: #fcd8b4;
+}
+

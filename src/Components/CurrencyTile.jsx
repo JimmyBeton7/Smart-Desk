@@ -41,22 +41,30 @@ function CurrencyTile() {
   };
 
   useEffect(() => {
-    const cache = localStorage.getItem('currencyData');
-    const now = Date.now();
-    const oneDay = 24 * 60 * 60 * 1000;
+  const cache = localStorage.getItem('currencyData');
+  const now = Date.now();
+  const oneDay = 12 * 60 * 60 * 1000;
 
-    if (cache) {
-      const { rates: cachedRates, loadedAt: ts } = JSON.parse(cache);
-      if (now - ts <= oneDay) {
-        console.log("🪙 Kursy walut z cache");
-        setRates(cachedRates);
-        setLoadedAt(ts);
-        return;
-      }
+  let shouldFetch = true;
+
+  if (cache) {
+    const { rates: cachedRates, loadedAt: ts } = JSON.parse(cache);
+    const isFresh = now - ts <= oneDay;
+
+    if (isFresh) {
+      console.log("🪙 Kursy walut z cache");
+      setRates(cachedRates);
+      setLoadedAt(ts);
+      shouldFetch = false;
     }
+  }
 
+  if (shouldFetch) {
+    console.log("📡 Fetching fresh currency rates…");
     fetchRates();
-  }, []);
+  }
+}, []);
+
 
   return (
     <div className="currency-tile">
