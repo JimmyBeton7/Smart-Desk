@@ -1,6 +1,8 @@
 //require('electron-reload')(__dirname, {
 //  electron: require(`${__dirname}/node_modules/electron`)
 //});
+const { autoUpdater } = require('electron-updater');
+
 const { Tray, Menu } = require('electron');
 let tray = null;
 
@@ -71,6 +73,19 @@ app.commandLine.appendSwitch('enable-geolocation');
 
 
 app.whenReady().then(() => {
+
+  autoUpdater.checkForUpdatesAndNotify();
+
+  autoUpdater.on('update-available', () => {
+    console.log('🔄 Update available');
+  });
+  autoUpdater.on('update-downloaded', () => {
+    console.log('✅ Update downloaded. Will install on quit.');
+  });
+  autoUpdater.on('error', (err) => {
+    console.error('❌ Auto-update error:', err);
+  });
+
   createWindow();
 
   app.on('activate', () => {
