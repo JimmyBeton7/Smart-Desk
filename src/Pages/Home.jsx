@@ -7,7 +7,7 @@ function Home() {
     <div>
       <h1>Welcome to Smart Desk Companion</h1>
       <p>Select a tool from the sidebar.</p>
-      <p>Version: 1.0.2.</p>
+      <p>Version: 1.0.3.</p>
 
       <div className="tiles-container">
         <WeatherTile />
