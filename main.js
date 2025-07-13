@@ -10,6 +10,7 @@ const { app } = require('electron');
 //const { app, BrowserWindow, ipcMain } = require('electron');
 const fs = require('fs');
 const path = require('path');
+const { dialog } = require('electron');
 
 const isDev = !app?.isPackaged;
 process.env.NODE_ENV = isDev ? 'development' : 'production';
@@ -86,7 +87,6 @@ app.whenReady().then(() => {
   autoUpdater.on('update-downloaded', () => {
     console.log('✅ Update downloaded. Will install on quit.');
     
-    const { dialog } = require('electron');
     dialog.showMessageBox({
       type: 'info',
       title: 'Update Ready',
@@ -168,7 +168,7 @@ ipcMain.handle('delete-note', (_, id) => {
   return true;
 });
 
-const { dialog } = require('electron');
+
 
 ipcMain.handle('export-note', async (_, title, content) => {
   const { filePath } = await dialog.showSaveDialog({
