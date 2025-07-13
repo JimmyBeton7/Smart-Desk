@@ -9,7 +9,7 @@
     "start:electron": "nodemon --watch main.js --exec \"electron .\"",
     "clean": "rimraf dist",
     "build": "npm run clean && webpack --mode production && electron-builder",
-    "release": "electron-builder --publish always"
+    "release": "cross-env GH_TOKEN=$GH_TOKEN electron-builder --publish always"
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,7 @@
     "babel-loader": "^10.0.0",
     "buffer": "^6.0.3",
     "concurrently": "^9.2.0",
+    "cross-env": "^7.0.3",
     "crypto-browserify": "^3.12.1",
     "css-loader": "^7.1.2",
     "electron": "^37.2.0",
