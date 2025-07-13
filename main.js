@@ -74,14 +74,27 @@ app.commandLine.appendSwitch('enable-geolocation');
 
 app.whenReady().then(() => {
 
+  autoUpdater.logger = require('electron-log');
+  autoUpdater.logger.transports.file.level = 'info';
+
   autoUpdater.checkForUpdatesAndNotify();
 
   autoUpdater.on('update-available', () => {
     console.log('🔄 Update available');
   });
+
   autoUpdater.on('update-downloaded', () => {
     console.log('✅ Update downloaded. Will install on quit.');
+    
+    const { dialog } = require('electron');
+    dialog.showMessageBox({
+      type: 'info',
+      title: 'Update Ready',
+      message: 'New version downloaded. The app will update after you close it.',
+      buttons: ['OK']
+    });
   });
+
   autoUpdater.on('error', (err) => {
     console.error('❌ Auto-update error:', err);
   });
