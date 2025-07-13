@@ -67,7 +67,9 @@
         "provider": "github",
         "private": true,
         "owner": "JimmyBeton7",
-        "repo": "Smart-Desk"
+        "repo": "Smart-Desk",
+        "releaseType": "release",
+        "vPrefixedTagName": true
       }
     ],
     "files": [
