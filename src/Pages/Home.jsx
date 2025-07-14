@@ -70,25 +70,28 @@ function Home() {
         </button>
 
         {updateStatus?.includes('click to download') && (
-        <button
-          className="button flex items-center gap-2"
-          onClick={handleDownloadUpdate}
-          disabled={downloading}
-        >
+          <button
+            className="button flex items-center gap-2"
+            onClick={handleDownloadUpdate}
+            disabled={downloading}
+          >
           {downloading ? (
-          <div className="progress-bar">
-            <div className="progress-bar-fill" />
-          </div>
-          ) : (
-          <Download size={18} />
+            <div className="progress-bar"><div className="progress-bar-fill" /></div>
+            ) : (
+            <Download size={18} />
+            )}
+            Download & Restart
+          </button>
           )}
-          Download & Restart
-        </button>
-        )}
-      </div>
+
+          {updateStatus?.includes('latest version') && (
+            <p className="status-message">✅ You have the latest version.</p>
+          )}
+
+          </div>
 
 
-      {updateStatus && <p style={{ marginBottom: '12px' }}>{updateStatus}</p>}
+        {updateStatus && <p style={{ marginBottom: '12px' }}>{updateStatus}</p>}
 
       <div className="tiles-container">
         <WeatherTile />
