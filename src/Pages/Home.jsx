@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import WeatherTile from '../Components/WeatherTile';
 import CurrencyTile from '../Components/CurrencyTile';
-import { RefreshCw, Download, CheckIcon } from 'lucide-react';
+import { RefreshCw, Download, XCircle, CheckCircle, Search } from 'lucide-react';
 import './Home.css'; // <- to jest kluczowe
 
 function Home() {
@@ -44,7 +44,7 @@ function Home() {
 
   const handleCheckUpdate = async () => {
   setChecking(true);
-  setUpdateStatus('🔍 Checking for updates...');
+  setUpdateStatus(<><Search size={16} style={{ marginRight: 6 }} />Checking for updates...</>);
     const result = await window.electron.checkForUpdates();
 if (!result || !result.status) {
   setUpdateStatus('❌ Error: could not check for updates.');
@@ -52,36 +52,36 @@ if (!result || !result.status) {
 }
 
 const remote = clean(result.info?.version || '');
-const local = clean(ver);
+const local = clean(version);
 
 if (result.status === 'available') {
   if (remote === local) {
-    setUpdateStatus('✅ You have the latest version.');
+    setUpdateStatus(<><CheckCircle size={16} style={{ marginRight: 6 }} />You have the latest version.</>);
   } else {
     setLatestVersion(result.info.version);
-    setUpdateStatus(`⬇️ Update available: ${result.info.version} — click to download`);
+    setUpdateStatus(<><Download size={16} style={{ marginRight: 6 }} /> Update available: ${result.info.version} — click to download</>);
   }
 } else if (result.status === 'no-update') {
-  setUpdateStatus('✅ You have the latest version.');
+  setUpdateStatus(<><CheckCircle size={16} style={{ marginRight: 6 }} />You have the latest version.</>);
 } else {
-  setUpdateStatus(`❌ Error: ${result.message || 'Unknown issue.'}`);
+  setUpdateStatus(<><XCircle size={16} style={{ marginRight: 6 }} />Error: ${result.message || 'Unknown issue.'}</>);
 }
 };
 
 
   const handleDownloadUpdate = async () => {
     setDownloading(true);
-    setUpdateStatus('⬇️ Downloading update...');
+    setUpdateStatus(<><Download size={16} style={{ marginRight: 6 }} />Downloading update...</>);
     const result = await window.electron.downloadUpdate();
     setDownloading(false);
 
     if (result.status === 'downloading') {
-      setUpdateStatus('✅ Update downloaded. Restarting...');
+      setUpdateStatus(<><CheckCircle size={16} style={{ marginRight: 6 }} />Update downloaded. Restarting...</>);
       setTimeout(() => {
         window.electron.restartAndInstall();
       }, 1500);
     } else {
-      setUpdateStatus(`❌ Download failed: ${result.message}`);
+      setUpdateStatus(<><XCircle size={16} style={{ marginRight: 6 }} />Download failed: {result.message}</>);
     }
   };
 
@@ -96,7 +96,7 @@ if (result.status === 'available') {
       <p>Select a tool from the sidebar.</p>
       <p>Version: {version}</p>
 
-      <div className="flex gap-2 items-center mb-4">
+      <div className="buttons-row">
         <button
           className="button flex items-center gap-2"
           onClick={handleCheckUpdate}

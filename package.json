@@ -1,6 +1,6 @@
 {
   "name": "smart-desk",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "smartdesk",
   "main": "main.js",
   "scripts": {
