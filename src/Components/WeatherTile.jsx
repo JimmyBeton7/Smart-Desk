@@ -28,6 +28,7 @@ function WeatherTile() {
 
   useEffect(() => {
   window.electron.getApiKeys().then(({ WEATHERSTACK_KEY }) => {
+    console.log("🧪 WEATHERSTACK_KEY", WEATHERSTACK_KEY);
     setApiKey(WEATHERSTACK_KEY);
   });
 }, []);

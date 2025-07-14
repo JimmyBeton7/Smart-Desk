@@ -37,6 +37,7 @@ function CurrencyTile() {
 
   useEffect(() => {
   window.electron.getApiKeys().then(({ CURRENCY_KEY }) => {
+    console.log("🧪 CURRENCY_KEY", CURRENCY_KEY);
     setApiKey(CURRENCY_KEY);
   });
 }, []);

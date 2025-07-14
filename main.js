@@ -2,6 +2,8 @@
 //  electron: require(`${__dirname}/node_modules/electron`)
 //});
 require('dotenv').config();
+console.log("🌍 Loaded ENV KEYS:", process.env.WEATHERSTACK_KEY, process.env.CURRENCY_KEY);
+
 const { autoUpdater } = require('electron-updater');
 
 const { Tray, Menu } = require('electron');
@@ -11,6 +13,7 @@ const apiKeys = {
   WEATHERSTACK_KEY: process.env.WEATHERSTACK_KEY || '',
   CURRENCY_KEY: process.env.CURRENCY_KEY || ''
 };
+
 
 const { app } = require('electron');
 //const { app, BrowserWindow, ipcMain } = require('electron');
@@ -573,5 +576,6 @@ ipcMain.handle('get-app-version', () => {
 });
 
 ipcMain.handle('get-api-keys', () => {
+  console.log('🔑 Sending API keys to renderer:', apiKeys);
   return apiKeys; // zakładam, że masz `apiKeys` jako globalny obiekt
 });

@@ -15,7 +15,7 @@ function Home() {
     window.electron.getAppVersion().then(setVersion);
     window.electron.checkForUpdates().then(result => {
       if (result?.status === 'available') {
-        setLatestVersion(result.info.version);
+        setLatestVersion(result.info.version.replace(/^v/, ''));
         setUpdateStatus(`⬇️ Update available: ${result.info.version} — click to download`);
       } else if (result?.status === 'no-update') {
         setUpdateStatus('✅ You have the latest version.');
@@ -58,7 +58,8 @@ function Home() {
   };
 
   const shouldShowDownload =
-    latestVersion && version !== latestVersion && updateStatus?.includes('click to download');
+    latestVersion && version !== latestVersion.replace(/^v/, '') && updateStatus?.includes('click to download');
+
 
   return (
     <div>
