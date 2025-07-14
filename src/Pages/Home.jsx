@@ -46,10 +46,10 @@ function Home() {
       <p>Version: {version}</p>
 
       <div style={{ marginBottom: '12px' }}>
-        <button onClick={handleCheckUpdate}>🔄 Check for Updates</button>
+        <button onClick={handleCheckUpdate}>Check for Updates</button>
         {updateStatus?.includes('click to download') && (
           <button onClick={handleDownloadUpdate} style={{ marginLeft: '10px' }}>
-            📥 Download & Restart
+            Download & Restart
           </button>
         )}
         {updateStatus && <p style={{ marginTop: '8px' }}>{updateStatus}</p>}
