@@ -38,6 +38,10 @@ contextBridge.exposeInMainWorld('electron', {
   getHardwareInfo: () => ipcRenderer.invoke('get-hardware-info'),
   loadJSON: (name) => ipcRenderer.invoke(`load-${name}`),
   saveJSON: (name, data) => ipcRenderer.invoke(`save-${name}`, data),
+  checkForUpdates: () => ipcRenderer.invoke('check-for-updates-manual'),
+  downloadUpdate: () => ipcRenderer.invoke('download-update'),
+  restartAndInstall: () => ipcRenderer.send('restart-and-install'),
+  getAppVersion: () => ipcRenderer.invoke('get-app-version')
 });
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -45,3 +49,6 @@ window.addEventListener('DOMContentLoaded', () => {
     window.dispatchEvent(new CustomEvent('preview-color', { detail: data }));
   });
 });
+
+ipcRenderer.invoke = ipcRenderer.invoke || (() => Promise.resolve());
+

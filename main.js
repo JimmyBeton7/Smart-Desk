@@ -86,7 +86,7 @@ app.whenReady().then(() => {
   autoUpdater.logger = require('electron-log');
   autoUpdater.logger.transports.file.level = 'info';
 
-  autoUpdater.checkForUpdatesAndNotify();
+  //autoUpdater.checkForUpdatesAndNotify();
 
   autoUpdater.on('update-available', () => {
     console.log('🔄 Update available');
@@ -532,4 +532,37 @@ ipcMain.handle('load-color-history', () => safeRead(COLOR_HISTORY_FILE, []));
 ipcMain.handle('save-color-history', (_, data) => {
   safeWrite(COLOR_HISTORY_FILE, data);
   return true;
+});
+
+//=============================================================================
+
+ipcMain.handle('check-for-updates-manual', async () => {
+  try {
+    const result = await autoUpdater.checkForUpdates();
+    if (!result || !result.updateInfo || !result.updateInfo.version) {
+      return { status: 'no-update' };
+    }
+    return { status: 'available', info: result.updateInfo };
+  } catch (err) {
+    console.error('❌ Manual update check failed:', err);
+    return { status: 'error', message: err.message || 'Unknown error' };
+  }
+});
+
+ipcMain.handle('download-update', async () => {
+  try {
+    await autoUpdater.downloadUpdate();
+    return { status: 'downloading' };
+  } catch (err) {
+    console.error('❌ downloadUpdate error:', err);
+    return { status: 'error', message: err.message || 'Unknown error' };
+  }
+});
+
+ipcMain.on('restart-and-install', () => {
+  autoUpdater.quitAndInstall();
+});
+
+ipcMain.handle('get-app-version', () => {
+  return app.getVersion();
 });
