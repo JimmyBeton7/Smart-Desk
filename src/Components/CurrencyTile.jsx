@@ -36,10 +36,11 @@ function CurrencyTile() {
   };
 
   useEffect(() => {
-    window.electron.onApiKeys(({ CURRENCY_KEY }) => {
-      setApiKey(CURRENCY_KEY);
-    });
-  }, []);
+  window.electron.getApiKeys().then(({ CURRENCY_KEY }) => {
+    setApiKey(CURRENCY_KEY);
+  });
+}, []);
+
 
   useEffect(() => {
     if (!apiKey) return;

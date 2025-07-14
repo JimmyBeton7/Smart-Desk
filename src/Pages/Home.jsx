@@ -1,19 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import WeatherTile from '../Components/WeatherTile';
 import CurrencyTile from '../Components/CurrencyTile';
-import { RefreshCw, Download, ArrowUpRightFromCircle } from 'lucide-react'; 
+import { RefreshCw, Download } from 'lucide-react';
+import './Home.css'; // <- to jest kluczowe
 
 function Home() {
-
   const [updateStatus, setUpdateStatus] = useState(null);
   const [version, setVersion] = useState('...');
   const [checking, setChecking] = useState(false);
   const [downloading, setDownloading] = useState(false);
-
+  const [latestVersion, setLatestVersion] = useState(null);
 
   useEffect(() => {
-    // pobierz aktualną wersję z backendu
     window.electron.getAppVersion().then(setVersion);
+    window.electron.checkForUpdates().then(result => {
+      if (result?.status === 'available') {
+        setLatestVersion(result.info.version);
+        setUpdateStatus(`⬇️ Update available: ${result.info.version} — click to download`);
+      } else if (result?.status === 'no-update') {
+        setUpdateStatus('✅ You have the latest version.');
+      } else {
+        setUpdateStatus(`❌ Error: ${result.message}`);
+      }
+    });
   }, []);
 
   const handleCheckUpdate = async () => {
@@ -23,6 +32,7 @@ function Home() {
     setChecking(false);
 
     if (result.status === 'available') {
+      setLatestVersion(result.info.version);
       setUpdateStatus(`⬇️ Update available: ${result.info.version} — click to download`);
     } else if (result.status === 'no-update') {
       setUpdateStatus('✅ You have the latest version.');
@@ -30,7 +40,6 @@ function Home() {
       setUpdateStatus(`❌ Error: ${result.message}`);
     }
   };
-
 
   const handleDownloadUpdate = async () => {
     setDownloading(true);
@@ -48,6 +57,8 @@ function Home() {
     }
   };
 
+  const shouldShowDownload =
+    latestVersion && version !== latestVersion && updateStatus?.includes('click to download');
 
   return (
     <div>
@@ -61,37 +72,29 @@ function Home() {
           onClick={handleCheckUpdate}
           disabled={checking || downloading}
         >
-          {checking ? (
-            <span className="spinner" />
-          ) : (
-            <RefreshCw size={18} />
-          )}
+          {checking ? <span className="spinner" /> : <RefreshCw size={18} />}
           Check for Updates
         </button>
 
-        {updateStatus?.includes('click to download') && (
+        {shouldShowDownload && (
           <button
             className="button flex items-center gap-2"
             onClick={handleDownloadUpdate}
             disabled={downloading}
           >
-          {downloading ? (
-            <div className="progress-bar"><div className="progress-bar-fill" /></div>
+            {downloading ? (
+              <div className="progress-bar">
+                <div className="progress-bar-fill" />
+              </div>
             ) : (
-            <Download size={18} />
+              <Download size={18} />
             )}
             Download & Restart
           </button>
-          )}
+        )}
+      </div>
 
-          {updateStatus?.includes('latest version') && (
-            <p className="status-message">✅ You have the latest version.</p>
-          )}
-
-          </div>
-
-
-        {updateStatus && <p style={{ marginBottom: '12px' }}>{updateStatus}</p>}
+      {updateStatus && <p className="status-message">{updateStatus}</p>}
 
       <div className="tiles-container">
         <WeatherTile />

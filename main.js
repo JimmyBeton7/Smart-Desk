@@ -7,6 +7,11 @@ const { autoUpdater } = require('electron-updater');
 const { Tray, Menu } = require('electron');
 let tray = null;
 
+const apiKeys = {
+  WEATHERSTACK_KEY: process.env.WEATHERSTACK_KEY || '',
+  CURRENCY_KEY: process.env.CURRENCY_KEY || ''
+};
+
 const { app } = require('electron');
 //const { app, BrowserWindow, ipcMain } = require('electron');
 const fs = require('fs');
@@ -54,12 +59,12 @@ const createWindow = () => {
     show: !process.argv.includes('--hidden'),
   });
 
-  mainWindow.webContents.on('did-finish-load', () => {
-  mainWindow.webContents.send('set-api-keys', {
-    WEATHERSTACK_KEY: process.env.WEATHERSTACK_KEY || '',
-    CURRENCY_KEY: process.env.CURRENCY_KEY || ''
-  });
-});
+  //mainWindow.webContents.on('did-finish-load', () => {
+  //mainWindow.webContents.send('set-api-keys', {
+    //WEATHERSTACK_KEY: process.env.WEATHERSTACK_KEY || '',
+    //CURRENCY_KEY: process.env.CURRENCY_KEY || ''
+  //});
+//});
 
   mainWindow.on('close', (e) => {
   if (!app.isQuiting) {
@@ -565,4 +570,8 @@ ipcMain.on('restart-and-install', () => {
 
 ipcMain.handle('get-app-version', () => {
   return app.getVersion();
+});
+
+ipcMain.handle('get-api-keys', () => {
+  return apiKeys; // zakładam, że masz `apiKeys` jako globalny obiekt
 });

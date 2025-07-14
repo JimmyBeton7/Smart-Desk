@@ -7,11 +7,12 @@ console.log("✅ preload.js loaded");
 
 contextBridge.exposeInMainWorld('electron', {
 
-  onApiKeys: (callback) => {
-    ipcRenderer.on('set-api-keys', (event, keys) => {
-      callback(keys);
-    });
-  },
+  getApiKeys: () => ipcRenderer.invoke('get-api-keys'),
+  //onApiKeys: (callback) => {
+  //  ipcRenderer.on('set-api-keys', (event, keys) => {
+  //    callback(keys);
+  //  });
+  //},
 
   ipc: {
     invoke: (channel, ...args) => ipcRenderer.invoke(channel, ...args),
@@ -50,6 +51,5 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-ipcRenderer.invoke = ipcRenderer.invoke || (() => Promise.resolve());
 
 
