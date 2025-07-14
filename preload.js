@@ -1,11 +1,18 @@
 const { contextBridge, ipcRenderer, clipboard, app } = require('electron');
 //const electronClipboard = require('electron').clipboard;
 const fs = require('fs');
-require('dotenv').config();
+//require('dotenv').config();
 
 console.log("✅ preload.js loaded");
 
 contextBridge.exposeInMainWorld('electron', {
+
+  onApiKeys: (callback) => {
+    ipcRenderer.on('set-api-keys', (event, keys) => {
+      callback(keys);
+    });
+  },
+
   ipc: {
     invoke: (channel, ...args) => ipcRenderer.invoke(channel, ...args),
     on: (channel, listener) => ipcRenderer.on(channel, listener)
@@ -27,7 +34,6 @@ contextBridge.exposeInMainWorld('electron', {
   pickFile: () => ipcRenderer.invoke('pick-file'),
   convertFile: (filePath, targetFormat) => ipcRenderer.invoke('convert-file', filePath, targetFormat),
   convertPdfToDocx: (pdfPath) => ipcRenderer.invoke('convert-pdf-to-docx', pdfPath),
-  WEATHERSTACK_KEY: process.env.WEATHERSTACK_KEY,
   startColorPicker: () => ipcRenderer.invoke('start-color-picker'),
   getHardwareInfo: () => ipcRenderer.invoke('get-hardware-info'),
   loadJSON: (name) => ipcRenderer.invoke(`load-${name}`),

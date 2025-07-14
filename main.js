@@ -1,6 +1,7 @@
 //require('electron-reload')(__dirname, {
 //  electron: require(`${__dirname}/node_modules/electron`)
 //});
+require('dotenv').config();
 const { autoUpdater } = require('electron-updater');
 
 const { Tray, Menu } = require('electron');
@@ -52,6 +53,13 @@ const createWindow = () => {
     },
     show: !process.argv.includes('--hidden'),
   });
+
+  mainWindow.webContents.on('did-finish-load', () => {
+  mainWindow.webContents.send('set-api-keys', {
+    WEATHERSTACK_KEY: process.env.WEATHERSTACK_KEY || '',
+    CURRENCY_KEY: process.env.CURRENCY_KEY || ''
+  });
+});
 
   mainWindow.on('close', (e) => {
   if (!app.isQuiting) {

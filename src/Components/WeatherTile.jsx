@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import './WeatherTile.css';
 
 function WeatherTile() {
+
   const [weather, setWeather] = useState(null);
   const [loadedAt, setLoadedAt] = useState(null);
 
-  const API_KEY = "b5454a8fb0e1660e31d3774301542e4f"; // docelowo z window.env
-
-  const fetchWeather = async (query) => {
+  //const API_KEY = "b5454a8fb0e1660e31d3774301542e4f"; // docelowo z window.env
+  
+  const fetchWeather = async (query, API_KEY) => {
     try {
       const res = await fetch(`https://api.weatherstack.com/current?access_key=${API_KEY}&query=${query}&units=m`);
       const json = await res.json();
@@ -26,8 +27,10 @@ function WeatherTile() {
   };
 
   useEffect(() => {
+
   const userLocationRef = { current: 'auto:ip' };
 
+  /*
   const initialize = async () => {
     const settings = await window.electron.loadJSON('settings');
     userLocationRef.current = settings?.location?.trim() || 'auto:ip';
@@ -57,14 +60,63 @@ function WeatherTile() {
       window.removeEventListener('weather-location-changed', handleLocationChange);
     };
   };
+  */
 
-  const cleanupPromise = initialize();
+  const initialize = async (API_KEY) => {
+  const settings = await window.electron.loadJSON('settings');
+  userLocationRef.current = settings?.location?.trim() || 'auto:ip';
 
+  const cache = await window.electron.loadJSON('weather');
+  const now = Date.now();
+  const twelveHours = 12 * 60 * 60 * 1000;
+
+  if (cache?.weather && now - cache.loadedAt <= twelveHours) {
+    console.log("🕒 Using cached weather");
+    setWeather(cache.weather);
+    setLoadedAt(cache.loadedAt);
+  } else {
+    console.log("📡 Fetching fresh weather…");
+    fetchWeather(userLocationRef.current, API_KEY);
+  }
+
+  const handleLocationChange = () => {
+    const loc = userLocationRef.current;
+    console.log("📍 Location changed to:", loc);
+    fetchWeather(loc, API_KEY);
+  };
+
+  window.addEventListener('weather-location-changed', handleLocationChange);
+
+  return () => {
+    window.removeEventListener('weather-location-changed', handleLocationChange);
+  };
+};
+
+  let cleanup = null;
+
+  // tylko raz po otrzymaniu klucza
+  window.electron.onApiKeys(({ WEATHERSTACK_KEY }) => {
+    initialize(WEATHERSTACK_KEY).then(fn => {
+      cleanup = fn;
+    });
+  });
+
+  return () => {
+    if (typeof cleanup === 'function') {
+      cleanup();
+    }
+  };
+
+  //const cleanupPromise = initialize();
+
+  /*
   return () => {
     cleanupPromise.then(cleanup => {
       if (typeof cleanup === 'function') cleanup();
     });
   };
+  */
+
 }, []);
 
 
