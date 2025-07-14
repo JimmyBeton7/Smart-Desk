@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import WeatherTile from '../Components/WeatherTile';
 import CurrencyTile from '../Components/CurrencyTile';
+import { RefreshCw, Download, ArrowUpRightFromCircle } from 'lucide-react'; 
 
 function Home() {
 
   const [updateStatus, setUpdateStatus] = useState(null);
   const [version, setVersion] = useState('...');
+  const [checking, setChecking] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+
 
   useEffect(() => {
     // pobierz aktualną wersję z backendu
@@ -13,8 +17,10 @@ function Home() {
   }, []);
 
   const handleCheckUpdate = async () => {
+    setChecking(true);
     setUpdateStatus('🔍 Checking for updates...');
     const result = await window.electron.checkForUpdates();
+    setChecking(false);
 
     if (result.status === 'available') {
       setUpdateStatus(`⬇️ Update available: ${result.info.version} — click to download`);
@@ -25,9 +31,12 @@ function Home() {
     }
   };
 
+
   const handleDownloadUpdate = async () => {
+    setDownloading(true);
     setUpdateStatus('⬇️ Downloading update...');
     const result = await window.electron.downloadUpdate();
+    setDownloading(false);
 
     if (result.status === 'downloading') {
       setUpdateStatus('✅ Update downloaded. Restarting...');
@@ -39,21 +48,47 @@ function Home() {
     }
   };
 
+
   return (
     <div>
       <h1>Welcome to Smart Desk Companion</h1>
       <p>Select a tool from the sidebar.</p>
       <p>Version: {version}</p>
 
-      <div style={{ marginBottom: '12px' }}>
-        <button onClick={handleCheckUpdate}>Check for Updates</button>
+      <div className="flex gap-2 items-center mb-4">
+        <button
+          className="button flex items-center gap-2"
+          onClick={handleCheckUpdate}
+          disabled={checking || downloading}
+        >
+          {checking ? (
+            <span className="spinner" />
+          ) : (
+            <RefreshCw size={18} />
+          )}
+          Check for Updates
+        </button>
+
         {updateStatus?.includes('click to download') && (
-          <button onClick={handleDownloadUpdate} style={{ marginLeft: '10px' }}>
-            Download & Restart
-          </button>
+        <button
+          className="button flex items-center gap-2"
+          onClick={handleDownloadUpdate}
+          disabled={downloading}
+        >
+          {downloading ? (
+          <div className="progress-bar">
+            <div className="progress-bar-fill" />
+          </div>
+          ) : (
+          <Download size={18} />
+          )}
+          Download & Restart
+        </button>
         )}
-        {updateStatus && <p style={{ marginTop: '8px' }}>{updateStatus}</p>}
       </div>
+
+
+      {updateStatus && <p style={{ marginBottom: '12px' }}>{updateStatus}</p>}
 
       <div className="tiles-container">
         <WeatherTile />

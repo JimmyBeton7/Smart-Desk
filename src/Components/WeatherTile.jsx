@@ -26,11 +26,62 @@ function WeatherTile() {
     }
   };
 
+useEffect(() => {
+  const API_KEY = window.__API_KEYS__?.WEATHERSTACK_KEY;
+  if (!API_KEY) {
+    console.warn("❌ Brak klucza WEATHERSTACK_KEY");
+    return;
+  }
+
+  const userLocationRef = { current: 'auto:ip' };
+
+  const initialize = async () => {
+    const settings = await window.electron.loadJSON('settings');
+    userLocationRef.current = settings?.location?.trim() || 'auto:ip';
+
+    const cache = await window.electron.loadJSON('weather');
+    const now = Date.now();
+    const twelveHours = 12 * 60 * 60 * 1000;
+
+    if (cache?.weather && now - cache.loadedAt <= twelveHours) {
+      console.log("🕒 Using cached weather");
+      setWeather(cache.weather);
+      setLoadedAt(cache.loadedAt);
+    } else {
+      console.log("📡 Fetching fresh weather…");
+      fetchWeather(userLocationRef.current, API_KEY);
+    }
+
+    const handleLocationChange = () => {
+      const loc = userLocationRef.current;
+      console.log("📍 Location changed to:", loc);
+      fetchWeather(loc, API_KEY);
+    };
+
+    window.addEventListener('weather-location-changed', handleLocationChange);
+
+    return () => {
+      window.removeEventListener('weather-location-changed', handleLocationChange);
+    };
+  };
+
+  let cleanup = null;
+  initialize().then(fn => {
+    cleanup = fn;
+  });
+
+  return () => {
+    if (typeof cleanup === 'function') cleanup();
+  };
+}, []);
+
+
+  /*
   useEffect(() => {
 
   const userLocationRef = { current: 'auto:ip' };
 
-  /*
+  
   const initialize = async () => {
     const settings = await window.electron.loadJSON('settings');
     userLocationRef.current = settings?.location?.trim() || 'auto:ip';
@@ -60,7 +111,7 @@ function WeatherTile() {
       window.removeEventListener('weather-location-changed', handleLocationChange);
     };
   };
-  */
+  
 
   const initialize = async (API_KEY) => {
   const settings = await window.electron.loadJSON('settings');
@@ -109,15 +160,16 @@ function WeatherTile() {
 
   //const cleanupPromise = initialize();
 
-  /*
   return () => {
     cleanupPromise.then(cleanup => {
       if (typeof cleanup === 'function') cleanup();
     });
   };
-  */
+  
 
 }, []);
+
+*/
 
 
   return (

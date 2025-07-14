@@ -41,6 +41,47 @@ function CurrencyTile() {
   };
 
   useEffect(() => {
+  const API_KEY = window.__API_KEYS__?.CURRENCY_KEY;
+  if (!API_KEY) return;
+
+  const now = Date.now();
+  const oneDay = 12 * 60 * 60 * 1000;
+
+  window.electron.loadJSON('currency').then(cache => {
+    let shouldFetch = true;
+
+    if (cache?.rates && now - cache.loadedAt <= oneDay) {
+      console.log("🪙 Kursy walut z cache");
+      setRates(cache.rates);
+      setLoadedAt(cache.loadedAt);
+      shouldFetch = false;
+    }
+
+    if (shouldFetch) {
+      console.log("📡 Fetching fresh currency rates…");
+      fetch(`https://api.exchangeratesapi.io/v1/latest?access_key=${API_KEY}&symbols=PLN,USD,GBP,CHF`)
+        .then(res => res.json())
+        .then(json => {
+          if (!json.success || !json.rates?.PLN) return;
+          const rates = {
+            EUR: json.rates.PLN,
+            USD: json.rates.PLN / json.rates.USD,
+            GBP: json.rates.PLN / json.rates.GBP,
+            CHF: json.rates.PLN / json.rates.CHF
+          };
+          setRates(rates);
+          const now = Date.now();
+          setLoadedAt(now);
+          window.electron.saveJSON('currency', { rates, loadedAt: now });
+        });
+    }
+  });
+}, []);
+
+
+  /*
+
+  useEffect(() => {
   let API_KEY = '';
 
   window.electron.onApiKeys(({ CURRENCY_KEY }) => {
@@ -90,7 +131,7 @@ function CurrencyTile() {
   });
 }, []);
 
-
+*/
   /*
   useEffect(() => {
 

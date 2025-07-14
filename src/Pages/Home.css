@@ -5,16 +5,72 @@
   padding: 20px;
 }
 .button {
-  margin: 0 10px;
-  padding: 10px 20px;
   background-color: #C19976;
   border: none;
   color: #082C38;
+  padding: 10px 20px;
   font-size: 16px;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  transition: background-color 0.2s ease;
 }
 
 .button:hover {
   background-color: #FCD8B4;
+}
+
+.button svg {
+  vertical-align: middle;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #082C38;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.progress-bar {
+  width: 60px;
+  height: 6px;
+  background-color: #082C38;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-right: 8px;
+}
+
+.progress-bar-fill {
+  width: 100%;
+  height: 100%;
+  background-color: #C19976;
+  animation: fill 1s infinite alternate ease-in-out;
+}
+
+@keyframes fill {
+  from {
+    width: 10%;
+  }
+  to {
+    width: 100%;
+  }
+
+}
+
+.button {
+  white-space: nowrap;
+}
+
+.progress-bar {
+  display: inline-block;
+  vertical-align: middle;
 }
