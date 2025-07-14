@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import WeatherTile from '../Components/WeatherTile';
 import CurrencyTile from '../Components/CurrencyTile';
-import { RefreshCw, Download } from 'lucide-react';
+import { RefreshCw, Download, CheckIcon } from 'lucide-react';
 import './Home.css'; // <- to jest kluczowe
 
 function Home() {
@@ -11,36 +11,63 @@ function Home() {
   const [downloading, setDownloading] = useState(false);
   const [latestVersion, setLatestVersion] = useState(null);
 
-  useEffect(() => {
-    window.electron.getAppVersion().then(setVersion);
-    window.electron.checkForUpdates().then(result => {
-      const clean = (v) => v.replace(/^v/, '').trim();
-      if (result?.status === 'available' && clean(result.info.version) !== clean(version)) {
-          setLatestVersion(result.info.version);
-          setUpdateStatus(`⬇️ Update available: ${result.info.version} — click to download`);
-      } else if (result?.status === 'no-update') {
+  const clean = (v) => v.replace(/^v/, '').trim();
+
+ useEffect(() => {
+  const fetchVersionAndCheck = async () => {
+    const ver = await window.electron.getAppVersion();
+    const result = await window.electron.checkForUpdates();
+      if (!result || !result.status) {
+        setUpdateStatus('❌ Error: could not check for updates.');
+        return;
+      }
+
+      const remote = clean(result.info?.version || '');
+      const local = clean(ver);
+
+    if (result.status === 'available') {
+      if (remote === local) {
         setUpdateStatus('✅ You have the latest version.');
       } else {
-        setUpdateStatus(`❌ Error: ${result.message}`);
-      }
-    });
-  }, []);
-
-  const handleCheckUpdate = async () => {
-    setChecking(true);
-    setUpdateStatus('🔍 Checking for updates...');
-    const result = await window.electron.checkForUpdates();
-    setChecking(false);
-
-    if (result?.status === 'available' && result.info.version !== version) {
         setLatestVersion(result.info.version);
         setUpdateStatus(`⬇️ Update available: ${result.info.version} — click to download`);
-    } else if (result.status === 'no-update') {
-      setUpdateStatus('✅ You have the latest version.');
-    } else {
-      setUpdateStatus(`❌ Error: ${result.message}`);
-    }
+      }
+      } else if (result.status === 'no-update') {
+        setUpdateStatus('✅ You have the latest version.');
+      } else {
+        setUpdateStatus(`❌ Error: ${result.message || 'Unknown issue.'}`);
+      }
   };
+
+  fetchVersionAndCheck();
+}, []);
+
+  const handleCheckUpdate = async () => {
+  setChecking(true);
+  setUpdateStatus('🔍 Checking for updates...');
+    const result = await window.electron.checkForUpdates();
+if (!result || !result.status) {
+  setUpdateStatus('❌ Error: could not check for updates.');
+  return;
+}
+
+const remote = clean(result.info?.version || '');
+const local = clean(ver);
+
+if (result.status === 'available') {
+  if (remote === local) {
+    setUpdateStatus('✅ You have the latest version.');
+  } else {
+    setLatestVersion(result.info.version);
+    setUpdateStatus(`⬇️ Update available: ${result.info.version} — click to download`);
+  }
+} else if (result.status === 'no-update') {
+  setUpdateStatus('✅ You have the latest version.');
+} else {
+  setUpdateStatus(`❌ Error: ${result.message || 'Unknown issue.'}`);
+}
+};
+
 
   const handleDownloadUpdate = async () => {
     setDownloading(true);
@@ -58,12 +85,6 @@ function Home() {
     }
   };
 
-  useEffect(() => {
-  window.electron.getAppVersion().then(ver => {
-    console.log("📦 Renderer sees local version:", ver);
-    setVersion(ver);
-  });
-}, []);
 
   const shouldShowDownload =
     latestVersion && clean(latestVersion) !== clean(version) && updateStatus?.includes('click to download');
@@ -81,7 +102,7 @@ function Home() {
           onClick={handleCheckUpdate}
           disabled={checking || downloading}
         >
-          {checking ? <span className="spinner" /> : <RefreshCw size={18} />}
+          {checking ? <span className="spinner" /> : <RefreshCw size={16} style={{ marginRight: 8 }}/>}
           Check for Updates
         </button>
 
@@ -96,7 +117,7 @@ function Home() {
                 <div className="progress-bar-fill" />
               </div>
             ) : (
-              <Download size={18} />
+              <Download size={16} style={{ marginRight: 8 }} />
             )}
             Download & Restart
           </button>

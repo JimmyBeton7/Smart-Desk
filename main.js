@@ -563,9 +563,12 @@ ipcMain.handle('save-color-history', (_, data) => {
 ipcMain.handle('check-for-updates-manual', async () => {
   try {
     const result = await autoUpdater.checkForUpdates();
+    console.log("🔍 checkForUpdates result:", result?.updateInfo);
+    
     if (!result || !result.updateInfo || !result.updateInfo.version) {
       return { status: 'no-update' };
     }
+
     return { status: 'available', info: result.updateInfo };
   } catch (err) {
     console.error('❌ Manual update check failed:', err);
