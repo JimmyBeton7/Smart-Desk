@@ -4,6 +4,7 @@
   gap: 20px;
   padding: 20px;
 }
+
 .button {
   background-color: #C19976;
   border: none;
@@ -15,6 +16,7 @@
   display: inline-flex;
   align-items: center;
   transition: background-color 0.2s ease;
+  white-space: nowrap;
 }
 
 .button:hover {
@@ -47,6 +49,8 @@
   border-radius: 4px;
   overflow: hidden;
   margin-right: 8px;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .progress-bar-fill {
@@ -63,16 +67,6 @@
   to {
     width: 100%;
   }
-
-}
-
-.button {
-  white-space: nowrap;
-}
-
-.progress-bar {
-  display: inline-block;
-  vertical-align: middle;
 }
 
 .status-message {

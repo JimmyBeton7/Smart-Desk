@@ -6,13 +6,39 @@ function CurrencyTile() {
   const [loadedAt, setLoadedAt] = useState(null);
   const [apiKey, setApiKey] = useState(null);
 
-  useEffect(() => {
-    const key = window.__API_KEYS__?.CURRENCY_KEY;
-    if (!key) {
-      console.warn('❌ Brak CURRENCY_KEY');
-      return;
+  const fetchRates = async (key) => {
+    try {
+      const res = await fetch(`https://api.exchangeratesapi.io/v1/latest?access_key=${key}&symbols=PLN,USD,GBP,CHF`);
+      const json = await res.json();
+
+      if (!json.success || !json.rates || !json.rates.PLN) {
+        console.error("❌ API error:", json);
+        return;
+      }
+
+      const PLNper = {
+        EUR: json.rates.PLN,
+        USD: json.rates.PLN / json.rates.USD,
+        GBP: json.rates.PLN / json.rates.GBP,
+        CHF: json.rates.PLN / json.rates.CHF,
+      };
+
+      console.log("💱 Kursy z API:", PLNper);
+
+      const now = Date.now();
+      setRates(PLNper);
+      setLoadedAt(now);
+      window.electron.saveJSON('currency', { rates: PLNper, loadedAt: now });
+
+    } catch (err) {
+      console.error('Błąd pobierania kursów:', err);
     }
-    setApiKey(key);
+  };
+
+  useEffect(() => {
+    window.electron.onApiKeys(({ CURRENCY_KEY }) => {
+      setApiKey(CURRENCY_KEY);
+    });
   }, []);
 
   useEffect(() => {
@@ -22,37 +48,13 @@ function CurrencyTile() {
     const oneDay = 12 * 60 * 60 * 1000;
 
     window.electron.loadJSON('currency').then(cache => {
-      let shouldFetch = true;
-
       if (cache?.rates && now - cache.loadedAt <= oneDay) {
         console.log("🪙 Kursy walut z cache");
         setRates(cache.rates);
         setLoadedAt(cache.loadedAt);
-        shouldFetch = false;
-      }
-
-      if (shouldFetch) {
+      } else {
         console.log("📡 Fetching fresh currency rates…");
-        fetch(`https://api.exchangeratesapi.io/v1/latest?access_key=${apiKey}&symbols=PLN,USD,GBP,CHF`)
-          .then(res => res.json())
-          .then(json => {
-            if (!json.success || !json.rates?.PLN) {
-              console.error("❌ API error:", json);
-              return;
-            }
-
-            const rates = {
-              EUR: json.rates.PLN,
-              USD: json.rates.PLN / json.rates.USD,
-              GBP: json.rates.PLN / json.rates.GBP,
-              CHF: json.rates.PLN / json.rates.CHF
-            };
-
-            setRates(rates);
-            const now = Date.now();
-            setLoadedAt(now);
-            window.electron.saveJSON('currency', { rates, loadedAt: now });
-          });
+        fetchRates(apiKey);
       }
     });
   }, [apiKey]);

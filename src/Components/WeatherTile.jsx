@@ -6,13 +6,30 @@ function WeatherTile() {
   const [loadedAt, setLoadedAt] = useState(null);
   const [apiKey, setApiKey] = useState(null);
 
-  useEffect(() => {
-    const key = window.__API_KEYS__?.WEATHERSTACK_KEY;
-    if (!key) {
-      console.warn('❌ Brak WEATHERSTACK_KEY');
-      return;
+  const fetchWeather = async (query, key) => {
+    try {
+      const res = await fetch(`https://api.weatherstack.com/current?access_key=${key}&query=${query}&units=m`);
+      const json = await res.json();
+      if (json.current) {
+        const now = Date.now();
+        setWeather(json.current);
+        setLoadedAt(now);
+        window.electron.saveJSON('weather', {
+          weather: json.current,
+          loadedAt: now,
+        });
+      } else {
+        console.error('❌ Weather API response invalid:', json);
+      }
+    } catch (err) {
+      console.error('Błąd pobierania pogody:', err);
     }
-    setApiKey(key);
+  };
+
+  useEffect(() => {
+    window.electron.onApiKeys(({ WEATHERSTACK_KEY }) => {
+      setApiKey(WEATHERSTACK_KEY);
+    });
   }, []);
 
   useEffect(() => {
@@ -50,24 +67,6 @@ function WeatherTile() {
       };
     };
 
-    const fetchWeather = async (query, key) => {
-      try {
-        const res = await fetch(`https://api.weatherstack.com/current?access_key=${key}&query=${query}&units=m`);
-        const json = await res.json();
-        if (json.current) {
-          setWeather(json.current);
-          const now = Date.now();
-          setLoadedAt(now);
-          window.electron.saveJSON('weather', {
-            weather: json.current,
-            loadedAt: now
-          });
-        }
-      } catch (err) {
-        console.error('Błąd pobierania pogody:', err);
-      }
-    };
-
     let cleanup = null;
     initialize().then(fn => {
       cleanup = fn;
@@ -76,7 +75,6 @@ function WeatherTile() {
     return () => {
       if (typeof cleanup === 'function') cleanup();
     };
-
   }, [apiKey]);
 
   return (

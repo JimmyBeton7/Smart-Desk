@@ -52,6 +52,4 @@ window.addEventListener('DOMContentLoaded', () => {
 
 ipcRenderer.invoke = ipcRenderer.invoke || (() => Promise.resolve());
 
-ipcRenderer.on('set-api-keys', (_, keys) => {
-  window.__API_KEYS__ = keys;
-});
+
