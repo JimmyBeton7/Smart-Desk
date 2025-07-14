@@ -14,9 +14,10 @@ function Home() {
   useEffect(() => {
     window.electron.getAppVersion().then(setVersion);
     window.electron.checkForUpdates().then(result => {
-      if (result?.status === 'available') {
-        setLatestVersion(result.info.version.replace(/^v/, ''));
-        setUpdateStatus(`⬇️ Update available: ${result.info.version} — click to download`);
+      const clean = (v) => v.replace(/^v/, '').trim();
+      if (result?.status === 'available' && clean(result.info.version) !== clean(version)) {
+          setLatestVersion(result.info.version);
+          setUpdateStatus(`⬇️ Update available: ${result.info.version} — click to download`);
       } else if (result?.status === 'no-update') {
         setUpdateStatus('✅ You have the latest version.');
       } else {
@@ -31,9 +32,9 @@ function Home() {
     const result = await window.electron.checkForUpdates();
     setChecking(false);
 
-    if (result.status === 'available') {
-      setLatestVersion(result.info.version);
-      setUpdateStatus(`⬇️ Update available: ${result.info.version} — click to download`);
+    if (result?.status === 'available' && result.info.version !== version) {
+        setLatestVersion(result.info.version);
+        setUpdateStatus(`⬇️ Update available: ${result.info.version} — click to download`);
     } else if (result.status === 'no-update') {
       setUpdateStatus('✅ You have the latest version.');
     } else {
@@ -57,8 +58,15 @@ function Home() {
     }
   };
 
+  useEffect(() => {
+  window.electron.getAppVersion().then(ver => {
+    console.log("📦 Renderer sees local version:", ver);
+    setVersion(ver);
+  });
+}, []);
+
   const shouldShowDownload =
-    latestVersion && version !== latestVersion.replace(/^v/, '') && updateStatus?.includes('click to download');
+    latestVersion && clean(latestVersion) !== clean(version) && updateStatus?.includes('click to download');
 
 
   return (

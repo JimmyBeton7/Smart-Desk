@@ -2,23 +2,17 @@
 //  electron: require(`${__dirname}/node_modules/electron`)
 //});
 require('dotenv').config();
-console.log("🌍 Loaded ENV KEYS:", process.env.WEATHERSTACK_KEY, process.env.CURRENCY_KEY);
+const path = require('path');
+const { app } = require('electron');
+//const { app, BrowserWindow, ipcMain } = require('electron');
+const fs = require('fs');
 
 const { autoUpdater } = require('electron-updater');
 
 const { Tray, Menu } = require('electron');
 let tray = null;
 
-const apiKeys = {
-  WEATHERSTACK_KEY: process.env.WEATHERSTACK_KEY || '',
-  CURRENCY_KEY: process.env.CURRENCY_KEY || ''
-};
 
-
-const { app } = require('electron');
-//const { app, BrowserWindow, ipcMain } = require('electron');
-const fs = require('fs');
-const path = require('path');
 const { dialog } = require('electron');
 
 const isDev = !app?.isPackaged;
@@ -88,8 +82,30 @@ const createWindow = () => {
 
 app.commandLine.appendSwitch('enable-geolocation');
 
+let apiKeys = { WEATHERSTACK_KEY: '', CURRENCY_KEY: '' };
+
+let apiKeysPath = path.join(__dirname, 'apiKeys.json'); // dla dev
+if (!isDev) {
+  const exeDir = path.dirname(process.argv[0]);
+  apiKeysPath = path.join(exeDir, 'apiKeys.json');
+  console.log('📁 Szukam apiKeys.json w:', apiKeysPath);
+}
+
+try {
+  const content = fs.readFileSync(apiKeysPath, 'utf-8');
+  apiKeys = JSON.parse(content);
+  console.log('🔐 Załadowano API keys z pliku:', apiKeys);
+} catch (e) {
+  console.warn('❌ Nie udało się załadować apiKeys.json:', e.message);
+}
+
 
 app.whenReady().then(() => {
+
+  ipcMain.handle('get-api-keys', () => {
+  console.log('🔑 Sending API keys to renderer:', apiKeys);
+  return apiKeys; // zakładam, że masz `apiKeys` jako globalny obiekt
+});
 
   autoUpdater.logger = require('electron-log');
   autoUpdater.logger.transports.file.level = 'info';
@@ -572,10 +588,9 @@ ipcMain.on('restart-and-install', () => {
 });
 
 ipcMain.handle('get-app-version', () => {
-  return app.getVersion();
+  const version = app.getVersion();
+  console.log("📦 Local app version:", version);
+  return version;
 });
 
-ipcMain.handle('get-api-keys', () => {
-  console.log('🔑 Sending API keys to renderer:', apiKeys);
-  return apiKeys; // zakładam, że masz `apiKeys` jako globalny obiekt
-});
+
