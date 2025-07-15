@@ -4,7 +4,8 @@ import { Routes, Route } from 'react-router-dom';
 
 import Home from '../Pages/Home';
 import Pomodoro from '../Pages/Pomodoro';
-import Calculator from '../Pages/Calculator';
+//import Calculator from '../Pages/Calculator';
+import Calc from '../Pages/Calc';
 import Notes from '../Pages/Notes'
 import Clipboard from '../Pages/Clipboard';
 import ChatGPT from '../Pages/ChatGPT';
@@ -20,7 +21,7 @@ function ToolContainer() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/pomodoro" element={<Pomodoro />} />
-        <Route path="/calculator" element={<Calculator />} />
+        <Route path="/calc" element={<Calc />} />
         <Route path="/notes" element={<Notes />} />
         <Route path="/clipboard" element={<Clipboard />} />
         <Route path="/colorpicker" element={<ColorPicker />} />

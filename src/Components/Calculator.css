@@ -2,12 +2,14 @@
   background-color: #082C38;
   color: #FCD8B4;
   padding: 20px;
-  height: 100%;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  border: 2px solid #C19976;
+  border-radius: 12px;
+  align-self: flex-start;
 }
 
 .display {

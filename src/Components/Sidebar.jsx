@@ -6,7 +6,7 @@ import { Timer, ClipboardList, Lock, Bot, Home, Calculator, Settings, MoveLeft, 
 const tools = [
   { path: '/', label: 'Home', icon: <Home size={20} /> },
   { path: '/pomodoro', label: 'Pomodoro', icon: <Timer size={20} /> },
-  { path: '/calculator', label: 'Calculator', icon: <Calculator size={20}/>},
+  { path: '/calc', label: 'Calculator', icon: <Calculator size={20}/>},
   { path: '/clipboard', label: 'Clipboard', icon: <ClipboardList size={20} /> },
   { path: '/notes', label: 'Notes', icon: <Lock size={20} /> },
   { path: '/colorpicker', label: 'Color Picker', icon: <Droplet size={20} /> },
