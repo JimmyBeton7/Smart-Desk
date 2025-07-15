@@ -4,8 +4,7 @@
   border-radius: 12px;
   color: #fcd8b4;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  margin: 8px;
-  max-width: 240px;
+  max-width: 400px;
   font-family: inherit;
   transition: transform 0.2s ease;
 }

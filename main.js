@@ -82,6 +82,7 @@ const createWindow = () => {
 
 app.commandLine.appendSwitch('enable-geolocation');
 
+//==================================================================
 let apiKeys = { WEATHERSTACK_KEY: '', CURRENCY_KEY: '' };
 
 let apiKeysPath = path.join(__dirname, 'apiKeys.json'); // dla dev
@@ -98,13 +99,35 @@ try {
 } catch (e) {
   console.warn('❌ Nie udało się załadować apiKeys.json:', e.message);
 }
+//==================================================================
+let changelog = { version: '', date: '', changes:' '};
 
+let changelogPath = path.join(__dirname, 'changelog.json'); 
+if (!isDev) {
+  const exeDir = path.dirname(process.argv[0]);
+  changelogPath = path.join(exeDir, 'changelog.json');
+  console.log('📁 Szukam changelog.json w:', changelogPath);
+}
+
+try {
+  const content = fs.readFileSync(changelogPath, 'utf-8');
+  changelog = JSON.parse(content);
+  console.log('🔐 Załadowano changelog z pliku:', changelog);
+} catch (e) {
+  console.warn('❌ Nie udało się załadować changelog.json:', e.message);
+}
+//==================================================================
 
 app.whenReady().then(() => {
 
   ipcMain.handle('get-api-keys', () => {
   console.log('🔑 Sending API keys to renderer:', apiKeys);
-  return apiKeys; // zakładam, że masz `apiKeys` jako globalny obiekt
+  return apiKeys; 
+});
+
+  ipcMain.handle('get-changelog', () => {
+  console.log('🔑 Sending changelog to renderer:', changelog);
+  return changelog; 
 });
 
   autoUpdater.logger = require('electron-log');

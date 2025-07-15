@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import WeatherTile from '../Components/WeatherTile';
 import CurrencyTile from '../Components/CurrencyTile';
 import { RefreshCw, Download, XCircle, CheckCircle, Search } from 'lucide-react';
-import './Home.css'; // <- to jest kluczowe
+import './Home.css'; 
 
 function Home() {
   const [updateStatus, setUpdateStatus] = useState(null);
@@ -10,15 +10,21 @@ function Home() {
   const [checking, setChecking] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [latestVersion, setLatestVersion] = useState(null);
+  const [updateStatusText, setUpdateStatusText] = useState('');
+  const [changelog, setChangelog] = useState([]);
+
 
   const clean = (v) => v.replace(/^v/, '').trim();
 
- useEffect(() => {
+ useEffect(() => 
+ {
   const fetchVersionAndCheck = async () => {
     const ver = await window.electron.getAppVersion();
+    setVersion(ver);
     const result = await window.electron.checkForUpdates();
       if (!result || !result.status) {
-        setUpdateStatus('❌ Error: could not check for updates.');
+        setUpdateStatusText('error');
+        setUpdateStatus(<><XCircle size={16} style={{ marginRight: 6 }} />Error: could not check for update.</>);
         return;
       }
 
@@ -27,68 +33,110 @@ function Home() {
 
     if (result.status === 'available') {
       if (remote === local) {
-        setUpdateStatus('✅ You have the latest version.');
+        setUpdateStatusText('no-update');
+        setUpdateStatus(<><CheckCircle size={16} style={{ marginRight: 6 }} />You have the latest version.</>);
       } else {
         setLatestVersion(result.info.version);
-        setUpdateStatus(`⬇️ Update available: ${result.info.version} — click to download`);
+        setUpdateStatusText('update');
+        setUpdateStatus(<><Download size={16} style={{ marginRight: 6 }} /> Update available: ${result.info.version} — click to download</>);
       }
       } else if (result.status === 'no-update') {
-        setUpdateStatus('✅ You have the latest version.');
+        setUpdateStatusText('no-update');
+        setUpdateStatus(<><CheckCircle size={16} style={{ marginRight: 6 }} />You have the latest version.</>);
       } else {
-        setUpdateStatus(`❌ Error: ${result.message || 'Unknown issue.'}`);
+        setUpdateStatusText('error');
+        setUpdateStatus(<><XCircle size={16} style={{ marginRight: 6 }} />Error: ${result.message || 'Unknown issue.'}</>);
       }
   };
 
   fetchVersionAndCheck();
 }, []);
 
-  const handleCheckUpdate = async () => {
-  setChecking(true);
-  setUpdateStatus(<><Search size={16} style={{ marginRight: 6 }} />Checking for updates...</>);
+
+//==========================================================
+
+useEffect(() => {
+  const fetchChangelog = async () => {
+    try {
+      const data = await window.electron.getChangelog();
+      if (Array.isArray(data)) {
+        setChangelog(data);
+      } else {
+        console.warn('❌ changelog.json is not an array');
+      }
+    } catch (err) {
+      console.error('❌ Failed to load changelog:', err);
+    }
+  };
+
+  fetchChangelog();
+}, []);
+
+//==========================================================
+
+  const handleCheckUpdate = async () => 
+  {
+    setChecking(true);
+    setUpdateStatusText('checking');
+    setUpdateStatus(<><Search size={16} style={{ marginRight: 6 }} />Checking for updates...</>);
     const result = await window.electron.checkForUpdates();
-if (!result || !result.status) {
-  setUpdateStatus('❌ Error: could not check for updates.');
-  return;
-}
+    if (!result || !result.status) 
+    {
+      setUpdateStatusText('error');
+      setUpdateStatus(<><XCircle size={16} style={{ marginRight: 6 }} />Error: could not check for update.</>);
+      return;
+    }
 
-const remote = clean(result.info?.version || '');
-const local = clean(version);
+    const remote = clean(result.info?.version || '');
+    const local = clean(version);
 
-if (result.status === 'available') {
-  if (remote === local) {
-    setUpdateStatus(<><CheckCircle size={16} style={{ marginRight: 6 }} />You have the latest version.</>);
-  } else {
-    setLatestVersion(result.info.version);
-    setUpdateStatus(<><Download size={16} style={{ marginRight: 6 }} /> Update available: ${result.info.version} — click to download</>);
-  }
-} else if (result.status === 'no-update') {
-  setUpdateStatus(<><CheckCircle size={16} style={{ marginRight: 6 }} />You have the latest version.</>);
-} else {
-  setUpdateStatus(<><XCircle size={16} style={{ marginRight: 6 }} />Error: ${result.message || 'Unknown issue.'}</>);
-}
-};
+    if (result.status === 'available') {
+      if (remote === local) {
+        setUpdateStatus(<><CheckCircle size={16} style={{ marginRight: 6 }} />You have the latest version.</>);
+      } else {
+        setLatestVersion(result.info.version);
+        setUpdateStatusText('update');
+        setUpdateStatus(<><Download size={16} style={{ marginRight: 6 }} /> Update available: ${result.info.version} — click to download</>);
+      }
+    } else if (result.status === 'no-update') {
+        setUpdateStatusText('no-update');
+        setUpdateStatus(<><CheckCircle size={16} style={{ marginRight: 6 }} />You have the latest version.</>);
+    } else {
+        setUpdateStatusText('error');
+        setUpdateStatus(<><XCircle size={16} style={{ marginRight: 6 }} />Error: ${result.message || 'Unknown issue.'}</>);
+    }
+
+    setChecking(false)
+  };
 
 
-  const handleDownloadUpdate = async () => {
+  const handleDownloadUpdate = async () => 
+  {
     setDownloading(true);
+    setUpdateStatusText('checking');
     setUpdateStatus(<><Download size={16} style={{ marginRight: 6 }} />Downloading update...</>);
     const result = await window.electron.downloadUpdate();
     setDownloading(false);
 
     if (result.status === 'downloading') {
+      setUpdateStatusText('restarting');
       setUpdateStatus(<><CheckCircle size={16} style={{ marginRight: 6 }} />Update downloaded. Restarting...</>);
       setTimeout(() => {
         window.electron.restartAndInstall();
       }, 1500);
     } else {
+      setUpdateStatusText('error');
       setUpdateStatus(<><XCircle size={16} style={{ marginRight: 6 }} />Download failed: {result.message}</>);
     }
   };
 
 
+  //const shouldShowDownload =
+    //latestVersion && clean(latestVersion) !== clean(version) && updateStatus?.includes('click to download');
   const shouldShowDownload =
-    latestVersion && clean(latestVersion) !== clean(version) && updateStatus?.includes('click to download');
-
+  latestVersion &&
+  clean(latestVersion) !== clean(version) &&
+  updateStatusText === 'update'
 
   return (
     <div>
@@ -106,7 +154,7 @@ if (result.status === 'available') {
           Check for Updates
         </button>
 
-        {shouldShowDownload && (
+        {(shouldShowDownload || downloading) && (
           <button
             className="button flex items-center gap-2"
             onClick={handleDownloadUpdate}
@@ -116,20 +164,43 @@ if (result.status === 'available') {
               <div className="progress-bar">
                 <div className="progress-bar-fill" />
               </div>
-            ) : (
+              ) : (
               <Download size={16} style={{ marginRight: 8 }} />
             )}
-            Download & Restart
+            {downloading ? 'Downloading...' : 'Download & Restart'}
           </button>
-        )}
+      )}
+
       </div>
 
       {updateStatus && <p className="status-message">{updateStatus}</p>}
 
-      <div className="tiles-container">
-        <WeatherTile />
-        <CurrencyTile />
-      </div>
+      <div className="info-container">
+
+        <div className="changes-container">
+
+            <h3 style={{ marginBottom: 10 }}>Changelog</h3>
+              {changelog.length === 0 ? (
+              <p>No changelog found.</p>
+              ) : (
+              changelog.map(entry => (
+                <div key={entry.version} style={{ marginBottom: 12 }}>
+                <strong>v{entry.version} ({entry.date})</strong>
+                <ul style={{ marginTop: 4 }}>
+                {entry.changes.map((line, i) => <li key={i}>{line}</li>)}
+                </ul>
+                </div>
+              ))
+          )}
+
+        </div>
+
+        <div className="tiles-container">
+          <WeatherTile />
+          <CurrencyTile />
+        </div>
+
+        </div>
     </div>
   );
 }

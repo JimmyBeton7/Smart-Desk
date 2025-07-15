@@ -8,6 +8,7 @@ console.log("✅ preload.js loaded");
 contextBridge.exposeInMainWorld('electron', {
 
   getApiKeys: () => ipcRenderer.invoke('get-api-keys'),
+  getChangelog: () => ipcRenderer.invoke('get-changelog'),
   //onApiKeys: (callback) => {
   //  ipcRenderer.on('set-api-keys', (event, keys) => {
   //    callback(keys);

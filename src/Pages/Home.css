@@ -1,8 +1,33 @@
+.info-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start; /* ważne – wyrównanie do góry */
+  gap: 24px;
+  padding: 16px;
+}
+
+/* Weather + Currency */
 .tiles-container {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 12px; /* powiększony odstęp */
   padding: 10px;
+  flex: 1;
+}
+
+/* Changelog box */
+.changes-container {
+  width: 300px;
+  height: 320px; /* stała wysokość – dopasowana do 2 kafelków + odstęp */
+  border: 2px dashed #888;
+  border-radius: 8px;
+  padding: 12px;
+  background-color: #0e3a4b;
+  color: #FCD8B4;
+  font-size: 14px;
+  overflow-y: auto;
+  line-height: 1.6; /* większy odstęp między wierszami changelogu */
 }
 
 .button {
@@ -27,10 +52,11 @@
   vertical-align: middle;
 }
 
+/* Spinner – zielony */
 .spinner {
   width: 16px;
   height: 16px;
-  border: 2px solid #082C38;
+  border: 6px solid #082C38;
   border-top: 2px solid transparent;
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -46,7 +72,7 @@
 .progress-bar {
   width: 100px;
   height: 8px;
-  background-color: #082C38;
+  background-color: #C19976;
   border-radius: 4px;
   overflow: hidden;
   display: flex;
@@ -55,12 +81,11 @@
 }
 
 .progress-bar-fill {
-  background-color: #C19976;
+  background-color: #082C38;
   height: 100%;
   width: 100%;
   animation: fill 1s infinite alternate ease-in-out;
 }
-
 
 @keyframes fill {
   from {
