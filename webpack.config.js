@@ -51,11 +51,14 @@ module.exports = {
       Buffer: ['buffer', 'Buffer'],
       process: 'process/browser.js',
     }),
+    new webpack.DefinePlugin({
+      global: 'window' // 👈 TO JEST KLUCZOWE
+    }),
     new HtmlWebpackPlugin({
       template: './public/index.html',
       filename: 'index.html'
     })
   ],
-  //target: 'web', // <- KLUCZOWA ZMIANA
+  //target: 'web', // <- KLUCZOWA ZMIANA do hot reload i dev
   target:'electron-renderer'
 };

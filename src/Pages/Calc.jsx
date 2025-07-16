@@ -1,7 +1,8 @@
 import React from 'react';
 import Calculator from '../Components/Calculator';
 import UnitConverter from '../Components/UnitConverter';
-import './Calc.css'; 
+import DrawChart from '../Components/DrawChart';
+import './Calc.css';
 
 export default function Calc() {
   return (
@@ -11,12 +12,13 @@ export default function Calc() {
           <Calculator />
         </div>
         <div className="right-column">
-          <UnitConverter />
+          <div className="top-half">
+            <UnitConverter />
+          </div>
+          <div className="bottom-half">
+            <DrawChart />
+          </div>
         </div>
-      </section>
-
-      <section className="bottom-row">
-        <div className="placeholder-box">Placeholder for future tools</div>
       </section>
     </main>
   );

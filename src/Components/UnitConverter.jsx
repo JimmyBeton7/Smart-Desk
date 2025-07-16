@@ -163,152 +163,263 @@ data: {
 }
 };
 
+const unitLabels = {
+  length: {
+    m: "meters",
+    km: "kilometers",
+    cm: "centimeters",
+    mm: "millimeters",
+    mi: "miles",
+    yd: "yards",
+    ft: "feet",
+    in: "inches",
+    nmi: "nautical miles"
+  },
+  area: {
+    "m²": "square meters",
+    "km²": "square kilometers",
+    "cm²": "square centimeters",
+    "mm²": "square millimeters",
+    ha: "hectares",
+    "ft²": "square feet",
+    "yd²": "square yards",
+    "in²": "square inches",
+    acre: "acres"
+  },
+  volume: {
+    "m³": "cubic meters",
+    l: "liters",
+    ml: "milliliters",
+    "cm³": "cubic centimeters",
+    "mm³": "cubic millimeters",
+    "ft³": "cubic feet",
+    "in³": "cubic inches",
+    gal: "gallons",
+    pt: "pints",
+    floz: "fluid ounces"
+  },
+  mass: {
+    μg: "micrograms",
+    mg: "milligrams",
+    gr: "grains",
+    ct: "carats",
+    g: "grams",
+    oz: "ounces",
+    kg: "kilograms",
+    lb: "pounds",
+    slug: "slugs",
+    ton: "US tons",
+    tonne: "metric tons",
+    tonUK: "UK tons"
+  },
+  time: {
+    fs: "femtoseconds",
+    ps: "picoseconds",
+    ns: "nanoseconds",
+    μs: "microseconds",
+    ms: "milliseconds",
+    s: "seconds",
+    min: "minutes",
+    h: "hours",
+    d: "days",
+    tydz: "weeks",
+    mies: "months",
+    r: "years"
+  },
+  energy: {
+    eV: "electronvolts",
+    erg: "ergs",
+    J: "joules",
+    "ft-lb": "foot-pounds",
+    cal: "calories",
+    kcal: "kilocalories",
+    Btu: "British thermal units",
+    quad: "quads",
+    kWh: "kilowatt-hours",
+    therm: "therms"
+  },
+  light: {
+    lx: "lux",
+    "lm/m2": "lumens per square meter",
+    "f*cd": "foot-candles",
+    "lm/ft2": "lumens per square foot",
+    "lm/in2": "lumens per square inch",
+    "lm/cm2": "lumens per square centimeter",
+    ph: "phot",
+    "W/cm2": "watts per square centimeter"
+  },
+  temperature: {
+    "°C": "degrees Celsius",
+    "°F": "degrees Fahrenheit",
+    K: "kelvin",
+    "°R": "degrees Rankine",
+    "°Ré": "degrees Réaumur"
+  },
+  pressure: {
+    Pa: "pascals",
+    kPa: "kilopascals",
+    bar: "bars",
+    atm: "atmospheres",
+    psi: "pounds per square inch",
+    mmHg: "millimeters of mercury",
+    inHg: "inches of mercury",
+    mmH20: "millimeters of water",
+    inH20: "inches of water"
+  },
+  power: {
+    mW: "milliwatts",
+    W: "watts",
+    kW: "kilowatts",
+    MW: "megawatts",
+    KM: "metric horsepower",
+    hp: "imperial horsepower"
+  },
+  speed: {
+    "in/s": "inches per second",
+    "cm/s": "centimeters per second",
+    "ft/s": "feet per second",
+    "km/h": "kilometers per hour",
+    "mi/h": "miles per hour",
+    kn: "knots",
+    "m/s": "meters per second",
+    mach: "Mach (at sea level, 20°C)",
+    "km/s": "kilometers per second",
+    c: "speed of light in vacuum"
+  },
+  count: {
+    szt: "pieces",
+    tuzin: "dozens",
+    mendel: "mendels",
+    mendel_chlopski: "peasant mendels",
+    kopa: "sixties",
+    gros: "gross"
+  },
+  data: {
+    b: "bits",
+    kb: "kilobits",
+    mb: "megabits",
+    gb: "gigabits",
+    B: "bytes",
+    kB: "kilobytes",
+    MB: "megabytes",
+    GB: "gigabytes",
+    TB: "terabytes",
+    PB: "petabytes",
+    EB: "exabytes",
+    ZB: "zettabytes",
+    YB: "yottabytes",
+    KiB: "kibibytes",
+    MiB: "mebibytes",
+    GiB: "gibibytes",
+    TiB: "tebibytes",
+    PiB: "pebibytes",
+    EiB: "exbibytes",
+    ZiB: "zebibytes",
+    YiB: "yobibytes"
+  }
+};
+
+
 const UnitConverter = () => {
+  const [selectedMode, setSelectedMode] = useState('length');
+  const [value, setValue] = useState('');
+  const [fromUnit, setFromUnit] = useState('m');
+  const [toUnit, setToUnit] = useState('km');
 
-  const [mode1, setMode1] = useState('length');
-  const [value1, setValue1] = useState('');
-  const [fromUnit1, setFromUnit1] = useState('m');
-  const [toUnit1, setToUnit1] = useState('km');
+  const handleModeChange = (mode, defaultFrom, defaultTo) => {
+    setSelectedMode(mode);
+    setFromUnit(defaultFrom);
+    setToUnit(defaultTo);
+    setValue('');
+  };
 
-  const [mode2, setMode2] = useState('energy');
-  const [value2, setValue2] = useState('');
-  const [fromUnit2, setFromUnit2] = useState('J');
-  const [toUnit2, setToUnit2] = useState('kWh');
-
-  const [mode3, setMode3] = useState('count');
-  const [value3, setValue3] = useState('');
-  const [fromUnit3, setFromUnit3] = useState('szt');
-  const [toUnit3, setToUnit3] = useState('tuzin');
-  
-  const convert = (val, from, to, mode) => 
-  {
-
+  const convert = (val, from, to, mode) => {
     if (mode === 'temperature') return convertTemperature(val, from, to);
-
     if (!val || isNaN(val)) return '';
     const inBase = parseFloat(val) * conversionData[mode][from];
     return inBase / conversionData[mode][to];
-
   };
 
-  const convertTemperature = (val, from, to) => 
-  {
+  const convertTemperature = (val, from, to) => {
     let celsius;
-
     val = parseFloat(val);
     if (isNaN(val)) return '';
-
-    // convert to Celsius first
-    switch (from) 
-    {
-        case '°C': celsius = val; break;
-        case '°F': celsius = (val - 32) * 5 / 9; break;
-        case 'K':  celsius = val - 273.15; break;
-        case '°R': celsius = (val - 491.67) * 5 / 9; break;
-        case '°Ré': celsius = val * 1.25; break;
-        default: return '';
+    switch (from) {
+      case '°C': celsius = val; break;
+      case '°F': celsius = (val - 32) * 5 / 9; break;
+      case 'K': celsius = val - 273.15; break;
+      case '°R': celsius = (val - 491.67) * 5 / 9; break;
+      case '°Ré': celsius = val * 1.25; break;
+      default: return '';
     }
-
-    // convert from Celsius to target
-    switch (to) 
-    {
-        case '°C': return celsius;
-        case '°F': return celsius * 9 / 5 + 32;
-        case 'K':  return celsius + 273.15;
-        case '°R': return (celsius + 273.15) * 9 / 5;
-        case '°Ré': return celsius * 0.8;
-        default: return '';
+    switch (to) {
+      case '°C': return celsius;
+      case '°F': return celsius * 9 / 5 + 32;
+      case 'K': return celsius + 273.15;
+      case '°R': return (celsius + 273.15) * 9 / 5;
+      case '°Ré': return celsius * 0.8;
+      default: return '';
     }
   };
 
-  const units1 = Object.keys(conversionData[mode1]);
-  const result1 = convert(value1, fromUnit1, toUnit1, mode1);
-
-  const units2 = Object.keys(conversionData[mode2]);
-  const result2 = convert(value2, fromUnit2, toUnit2, mode2);
-
-  const units3 = Object.keys(conversionData[mode3]);
-  const result3 = convert(value3, fromUnit3, toUnit3, mode3);
-
-  //const units = Object.keys(conversionData[mode]);
-  //const result = convert(value, fromUnit, toUnit);
+  const units = Object.keys(conversionData[selectedMode] || {});
+  const result = convert(value, fromUnit, toUnit, selectedMode);
 
   return (
+    <div className="unit-converter">
+      {/* Row 1: Physical dimensions */}
+      <div className="tabs">
+        <button onClick={() => handleModeChange('length', 'm', 'km')} className={selectedMode === 'length' ? 'active' : ''}>Length</button>
+        <button onClick={() => handleModeChange('area', 'm²', 'km²')} className={selectedMode === 'area' ? 'active' : ''}>Area</button>
+        <button onClick={() => handleModeChange('volume', 'm³', 'l')} className={selectedMode === 'volume' ? 'active' : ''}>Volume</button>
+        <button onClick={() => handleModeChange('mass', 'g', 'kg')} className={selectedMode === 'mass' ? 'active' : ''}>Mass</button>
+        <button onClick={() => handleModeChange('time', 's', 'min')} className={selectedMode === 'time' ? 'active' : ''}>Time</button>
+        <button onClick={() => handleModeChange('speed', 'm/s', 'km/h')} className={selectedMode === 'speed' ? 'active' : ''}>Speed</button>
+      </div>
 
-  <div className="unit-converter">
+      {/* Row 2: Abstract/scientific */}
+      <div className="tabs">
+        <button onClick={() => handleModeChange('energy', 'J', 'kWh')} className={selectedMode === 'energy' ? 'active' : ''}>Energy</button>
+        <button onClick={() => handleModeChange('light', 'lx', 'lm/m2')} className={selectedMode === 'light' ? 'active' : ''}>Light</button>
+        <button onClick={() => handleModeChange('temperature', '°C', 'K')} className={selectedMode === 'temperature' ? 'active' : ''}>Temperature</button>
+        <button onClick={() => handleModeChange('pressure', 'Pa', 'psi')} className={selectedMode === 'pressure' ? 'active' : ''}>Pressure</button>
+        <button onClick={() => handleModeChange('power', 'W', 'hp')} className={selectedMode === 'power' ? 'active' : ''}>Power</button>
+      </div>
 
-  {/* --- GŁÓWNY FORMULARZ: Length, Area, Volume, Mass, Time --- */}
+      {/* Row 3: Logical/data/count */}
+      <div className="tabs">
+        <button onClick={() => handleModeChange('count', 'szt', 'tuzin')} className={selectedMode === 'count' ? 'active' : ''}>Count</button>
+        <button onClick={() => handleModeChange('data', 'b', 'B')} className={selectedMode === 'data' ? 'active' : ''}>Data</button>
+      </div>
 
-  <div className="tabs">
-    <button className={mode1 === 'length' ? 'active' : ''} onClick={() => {setMode1('length'); setFromUnit1('m'); setToUnit1('km')}}>Length</button>
-    <button className={mode1 === 'area' ? 'active' : ''} onClick={() => {setMode1('area'); setFromUnit1('m²'); setToUnit1('km²')}}>Area</button>
-    <button className={mode1 === 'volume' ? 'active' : ''} onClick={() => {setMode1('volume'); setFromUnit1('m³'); setToUnit1('l')}}>Volume</button>
-    <button className={mode1 === 'mass' ? 'active' : ''} onClick={() => {setMode1('mass'); setFromUnit1('g'); setToUnit1('kg')}}>Mass</button>
-    <button className={mode1 === 'time' ? 'active' : ''} onClick={() => {setMode1('time'); setFromUnit1('s'); setToUnit1('min')}}>Time</button>
-    <button className={mode1 === 'velocity' ? 'active' : ''} onClick={() => {setMode1('velocity'); setFromUnit1('in/s'); setToUnit1('cm/s')}}>Velocity</button>
-  </div>
+      {/* Shared converter form */}
+      <div className="converter-form">
+        <input type="number" value={value} onChange={e => setValue(e.target.value)} placeholder="Enter value" />
+        <div className="unit-select">
 
-  <div className="converter-form">
-    <input type="number" value={value1} onChange={e => setValue1(e.target.value)} placeholder="Enter value" />
-    <div className="unit-select">
-      <select value={fromUnit1} onChange={e => setFromUnit1(e.target.value)}>
-        {units1.map(u => <option key={u} value={u}>{u}</option>)}
-      </select>
-      <span>&rarr;</span>
-      <select value={toUnit1} onChange={e => setToUnit1(e.target.value)}>
-        {units1.map(u => <option key={u} value={u}>{u}</option>)}
-      </select>
+          <select value={fromUnit} onChange={e => setFromUnit(e.target.value)}>
+            {units.map(u => (
+              <option key={u} value={u} title={`${u} – ${unitLabels[selectedMode]?.[u] || ''}`}>
+                {u} – {unitLabels[selectedMode]?.[u] || ''}
+              </option>
+            ))}
+          </select>
+
+          <span>&rarr;</span>
+
+          <select value={toUnit} onChange={e => setToUnit(e.target.value)}>
+            {units.map(u => (
+              <option key={u} value={u} title={`${u} – ${unitLabels[selectedMode]?.[u] || ''}`}>
+                {u} – {unitLabels[selectedMode]?.[u] || ''}
+              </option>
+            ))}
+          </select>
+
+        </div>
+        <div className="result">{parseFloat(result || 0).toFixed(6)}</div>
+      </div>
     </div>
-    <div className="result">{parseFloat(result1).toFixed(6)}</div>
-  </div>
-
-  {/* --- DRUGI FORMULARZ: Energy, Light --- */}
-
-  <div className="tabs" style={{ marginTop: '24px' }}>
-    <button className={mode2 === 'energy' ? 'active' : ''} onClick={() => {setMode2('energy'); setFromUnit2('J'); setToUnit2('kWh')}}>Energy</button>
-    <button className={mode2 === 'light' ? 'active' : ''} onClick={() => {setMode2('light'); setFromUnit2('lx'); setToUnit2('lm/m2')}}>Light</button>
-    <button className={mode2 === 'temperature' ? 'active' : ''} onClick={() => {setMode2('temperature'); setFromUnit2('°C'); setToUnit2('K')}}>Temperature</button>
-    <button className={mode2 === 'pressure' ? 'active' : ''} onClick={() => {setMode2('pressure'); setFromUnit2('Pa'); setToUnit2('psi')}}>Pressure</button>
-    <button className={mode2 === 'power' ? 'active' : ''} onClick={() => {setMode2('power'); setFromUnit2('mW'); setToUnit2('hp')}}>Power</button>
-  </div>
-
-  <div className="converter-form">
-    <input type="number" value={value2} onChange={e => setValue2(e.target.value)} placeholder="Enter value" />
-    <div className="unit-select">
-      <select value={fromUnit2} onChange={e => setFromUnit2(e.target.value)}>
-        {units2.map(u => <option key={u} value={u}>{u}</option>)}
-      </select>
-      <span>&rarr;</span>
-      <select value={toUnit2} onChange={e => setToUnit2(e.target.value)}>
-        {units2.map(u => <option key={u} value={u}>{u}</option>)}
-      </select>
-    </div>
-    <div className="result">{parseFloat(result2).toFixed(6)}</div>
-  </div>
-
-  {/* --- TRZECI FORMULARZ: COUNT, DATA --- */}
-
-  <div className="tabs" style={{ marginTop: '24px' }}>
-    <button className={mode3 === 'count' ? 'active' : ''} onClick={() => {setMode3('count'); setFromUnit3('szt'); setToUnit3('tuzin')}}>Count</button>
-    <button className={mode3 === 'data' ? 'active' : ''} onClick={() => {setMode3('data'); setFromUnit3('b'); setToUnit3('B')}}>Data</button>
-  </div>
-
-  <div className="converter-form">
-    <input type="number" value={value3} onChange={e => setValue3(e.target.value)} placeholder="Enter value" />
-    <div className="unit-select">
-      <select value={fromUnit3} onChange={e => setFromUnit3(e.target.value)}>
-        {units3.map(u => <option key={u} value={u}>{u}</option>)}
-      </select>
-      <span>&rarr;</span>
-      <select value={toUnit3} onChange={e => setToUnit3(e.target.value)}>
-        {units3.map(u => <option key={u} value={u}>{u}</option>)}
-      </select>
-    </div>
-    <div className="result">{parseFloat(result3).toFixed(6)}</div>
-  </div>
-
-</div>
-);
+  );
 };
 
 export default UnitConverter;

@@ -1,0 +1,145 @@
+.draw-chart {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+  border: 2px solid #C19976;
+  border-radius: 12px;
+  padding: 12px;
+  overflow: hidden;
+}
+
+.tabs {
+  display: flex;
+  background-color: #0e3a4b;
+  padding: 4px;
+}
+
+.tabs button {
+  flex: 1;
+  padding: 8px;
+  font-weight: bold;
+  background: #C19976;
+  color: #082C38;
+  border: none;
+  border-radius: 4px;
+  margin-right: 4px;
+  cursor: pointer;
+}
+
+.tabs button.active {
+  background: #FCD8B4;
+}
+
+.keyboard-tab {
+  padding: 8px;
+  flex: 1;
+}
+
+.expression-bar {
+  width: 97%;
+  font-size: 16px;
+  margin-bottom: 8px;
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+  background-color: #fcd8b4;
+  color: #082C38;
+}
+
+.mini-keypad {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+}
+
+.mini-keypad button {
+  padding: 6px;
+  font-size: 14px;
+  background: #C19976;
+  color: #082C38;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.mini-keypad button:hover{
+  background-color: #FCD8B4;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.plot-tab {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.plot-canvas {
+  border: 1px solid #333;
+  border-radius: 6px;
+  height: 100%;
+  margin-top: 8px;
+  padding: 8px;
+  background: #082C38;
+}
+.plot-options {
+  background-color: #0e3a4b;
+  padding: 8px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.axis-group {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 8px;
+}
+
+.axis-group label,
+.line-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px; 
+  font-size: 13px;
+  color: #FCD8B4;
+}
+
+.plot-options input[type="number"]{
+  background-color: #082C38;
+  color: #FCD8B4;
+}
+
+.angle-group button {
+  margin-right: 6px;
+  padding: 4px 10px;
+  border: none;
+  background: #C19976;
+  color: #082C38;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  gap: 8px;
+}
+
+.angle-group button.active {
+  background-color: #FCD8B4;
+}
+
+.plot-header button{
+  padding: 6px;
+  font-size: 14px;
+  background: #C19976;
+  color: #082C38;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.plot-header button:hover{
+  background-color: #FCD8B4;
+}
