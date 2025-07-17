@@ -79,13 +79,13 @@
 }
 
 .save-btn:hover{
-    opacity: 0.85;
+  background-color: #fcd8b4;
 }
 
 .cancel-btn:hover{
-    opacity: 0.85;
+  background-color: #5a5a5a;
 }
 
 .export-btn:hover{
-    opacity: 0.85;
+  background-color: #5a5a5a;
 }
