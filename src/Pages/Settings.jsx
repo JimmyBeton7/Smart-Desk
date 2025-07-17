@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Save } from 'lucide-react';
 import './Settings.css';
 
 function Settings() {
@@ -47,7 +48,12 @@ function Settings() {
         placeholder="e.g. Wroclaw, Warsaw"
       />
 
-      <button onClick={saveSettings}>Save</button>
+      <button
+        onClick={saveSettings}
+      >
+        <Save size={16} style={{ marginRight: 6 }} />
+        Save
+      </button>
     </div>
   );
 }
