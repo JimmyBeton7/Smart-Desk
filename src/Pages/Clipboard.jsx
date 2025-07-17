@@ -4,6 +4,7 @@ import { Trash } from 'lucide-react';
 
 const Clipboard = () => {
   const [history, setHistory] = useState([]);
+  const [copiedMessageVisible, setCopiedMessageVisible] = useState(false);
 
   useEffect(() => {
   console.log('Clipboard API:', window.electron?.clipboard);
@@ -31,8 +32,8 @@ const Clipboard = () => {
 
   const copyToClipboard = (text) => {
     window.electron.clipboard.writeText(text);
-    //window.electron.clipboardWriteText(text);
-
+    setCopiedMessageVisible(true);
+    setTimeout(() => setCopiedMessageVisible(false), 1500);
   };
 
   const clearClipboardHistory = async () => {
@@ -42,14 +43,22 @@ const Clipboard = () => {
 
   return (
     <div className="clipboard-container">
-      <h2>Clipboard History</h2>
-      <button className="clear-btn" onClick={clearClipboardHistory}>
-          <Trash size={18} style={{ marginRight: 6 }} />
-          Clear
+
+      <div className="clipboard-header">
+        <h2>Clipboard History</h2>
+      </div>
+      
+      <div className="clipboard-actions">
+        <button className="clear-btn" onClick={clearClipboardHistory}>
+            <Trash size={18} style={{ marginRight: 6 }} />
+            Clear
         </button>
+        {copiedMessageVisible && <span className="copied-global-label">✔ Copied!</span>}
+      </div>
+
       <div className="clipboard-grid">
         {history.map((item, index) => (
-          <div key={index} className="clipboard-tile" onClick={() => copyToClipboard(item)}>
+          <div key={index} className="clipboard-tile" onClick={() => copyToClipboard(item, index)}>
             {item.length > 200 ? item.slice(0, 200) + '…' : item}
           </div>
         ))}

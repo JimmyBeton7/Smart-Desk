@@ -39,7 +39,21 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.clipboard-header h2 {
+  margin: 0;
+  flex: 1;
+}
+
+.clipboard-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
 }
 
 .clear-btn {
@@ -82,4 +96,20 @@
   margin: 12px 0;
   color: #FCD8B4;
 }
+
+.copied-global-label {
+  background-color: #082C38;
+  color: #C19976;
+  font-size: 18px;
+  padding: 4px 4px;
+  border-radius: 6px;
+  animation: fadeOut 1.5s ease forwards;
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
 
