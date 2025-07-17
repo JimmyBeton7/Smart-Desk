@@ -11,6 +11,7 @@
   border-radius: 12px;
   width: 100%;
   max-width: none;
+  height: 99%;
 }
 
 .display {
@@ -53,6 +54,9 @@
   color: #082C38;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  width: 100%;
+  font-size: 19px; /* zwiększona czcionka */
+  line-height: 1; 
 }
 
 .keypad button:hover {
@@ -72,4 +76,9 @@
   color: #082C38;
   font-weight: bold;
   cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.angle-mode button:hover{
+  background-color: #FCD8B4;
 }

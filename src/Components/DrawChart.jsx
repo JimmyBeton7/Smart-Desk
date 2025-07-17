@@ -27,6 +27,7 @@ export default function DrawChart() {
   const [showOptions, setShowOptions] = useState(false);
   const [lineWidth, setLineWidth] = useState(2);
   const [angleMode, setAngleMode] = useState('RAD');
+  const [hoverPoint, setHoverPoint] = useState(null); // { x, y, px, py }
 
   const width = 500;
   const height = 300;
@@ -44,6 +45,21 @@ export default function DrawChart() {
   const xToPx = (x) => ((x - domain.xMin) / (domain.xMax - domain.xMin)) * width;
   const yToPx = (y) => height - ((y - domain.yMin) / (domain.yMax - domain.yMin)) * height;
 
+  const getNiceStep = (range, targetSteps = 10) => {
+  const roughStep = range / targetSteps;
+  const magnitude = Math.pow(10, Math.floor(Math.log10(roughStep)));
+  const residual = roughStep / magnitude;
+
+  let niceStep;
+  if (residual < 1.5) niceStep = 1;
+  else if (residual < 3) niceStep = 2;
+  else if (residual < 7) niceStep = 5;
+  else niceStep = 10;
+
+  return niceStep * magnitude;
+};
+
+
   const draw = () => {
     const ctx = canvasRef.current.getContext('2d');
     ctx.clearRect(0, 0, width, height);
@@ -51,8 +67,10 @@ export default function DrawChart() {
     const func = parseFunc(expression);
 
     // Dynamic step size for grid
-    const xStep = Math.pow(10, Math.floor(Math.log10(domain.xMax - domain.xMin)) - 1);
-    const yStep = Math.pow(10, Math.floor(Math.log10(domain.yMax - domain.yMin)) - 1);
+    //const xStep = Math.pow(10, Math.floor(Math.log10(domain.xMax - domain.xMin)) - 1);
+    //const yStep = Math.pow(10, Math.floor(Math.log10(domain.yMax - domain.yMin)) - 1);
+    const xStep = getNiceStep(domain.xMax - domain.xMin);
+    const yStep = getNiceStep(domain.yMax - domain.yMin);
 
     // Draw grid
     ctx.strokeStyle = '#333';
@@ -73,6 +91,28 @@ export default function DrawChart() {
       ctx.lineTo(width, py);
       ctx.stroke();
     }
+
+        // Draw labels
+    ctx.fillStyle = '#FCD8B4';
+    ctx.font = '12px monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+
+    for (let x = Math.ceil(domain.xMin / xStep) * xStep; x <= domain.xMax; x += xStep) {
+      const px = xToPx(x);
+      if (px < 0 || px > width) continue;
+      ctx.fillText(parseFloat(x.toFixed(5)), px, yToPx(0) + 4);
+    }
+
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+
+    for (let y = Math.ceil(domain.yMin / yStep) * yStep; y <= domain.yMax; y += yStep) {
+      const py = yToPx(y);
+      if (py < 0 || py > height) continue;
+      ctx.fillText(parseFloat(y.toFixed(5)), xToPx(0) - 4, py);
+    }
+
 
     // Draw axes
     ctx.strokeStyle = '#fff';
@@ -115,11 +155,25 @@ export default function DrawChart() {
       }
     }
     ctx.stroke();
+
+    if (hoverPoint) {
+      ctx.beginPath();
+      ctx.arc(hoverPoint.px, hoverPoint.py, 4, 0, Math.PI * 2);
+      ctx.fillStyle = '#FCD8B4';
+      ctx.fill();
+
+      ctx.fillStyle = '#fff';
+      ctx.font = '12px monospace';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'bottom';
+      ctx.fillText(`(${hoverPoint.x.toFixed(2)}, ${hoverPoint.y.toFixed(2)})`, hoverPoint.px + 8, hoverPoint.py - 8);
+    }
+
   };
 
   useEffect(() => {
     if (tab === 'plot') draw();
-  }, [expression, domain, lineWidth, tab]);
+  }, [expression, domain, lineWidth, tab, hoverPoint]);
 
   const handleMouseDown = (e) => {
     setDragging(true);
@@ -127,7 +181,12 @@ export default function DrawChart() {
   };
 
   const handleMouseMove = (e) => {
-    if (!dragging) return;
+  const rect = canvasRef.current.getBoundingClientRect();
+  const mouseX = e.clientX - rect.left;
+  const mouseY = e.clientY - rect.top;
+
+  // Obsługa przeciągania
+  if (dragging) {
     const dx = (e.clientX - start.x) / width * (domain.xMax - domain.xMin);
     const dy = (e.clientY - start.y) / height * (domain.yMax - domain.yMin);
 
@@ -139,7 +198,23 @@ export default function DrawChart() {
     }));
 
     setStart({ x: e.clientX, y: e.clientY });
-  };
+  } else if (tab === 'plot') {
+    // Obsługa hover-pointa
+    const x = domain.xMin + (mouseX / width) * (domain.xMax - domain.xMin);
+    const y = parseFunc(expression)(x);
+
+    const px = xToPx(x);
+    const py = yToPx(y);
+    const dist = Math.abs(py - mouseY);
+
+    if (isFinite(y) && dist < 10) {
+      setHoverPoint({ x, y, px, py });
+    } else {
+      setHoverPoint(null);
+    }
+  }
+};
+
 
   const handleMouseUp = () => setDragging(false);
 
@@ -184,6 +259,7 @@ export default function DrawChart() {
               <button key={k} onClick={() => setExpression(prev => prev + k)}>{k}</button>
             ))}
             <button onClick={() => setExpression(prev => prev.slice(0, -1))}>⌫</button>
+
             <button onClick={() => setExpression('')}>C</button>
             {['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].map(k => (
               <button key={k} onClick={() => setExpression(prev => prev + k)}>{k}</button>
