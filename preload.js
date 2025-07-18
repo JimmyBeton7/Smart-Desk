@@ -43,7 +43,8 @@ contextBridge.exposeInMainWorld('electron', {
   checkForUpdates: () => ipcRenderer.invoke('check-for-updates-manual'),
   downloadUpdate: () => ipcRenderer.invoke('download-update'),
   restartAndInstall: () => ipcRenderer.send('restart-and-install'),
-  getAppVersion: () => ipcRenderer.invoke('get-app-version')
+  getAppVersion: () => ipcRenderer.invoke('get-app-version'),
+  convertAudio: (filePath, format) => ipcRenderer.invoke('convert-audio', filePath, format)
 });
 
 window.addEventListener('DOMContentLoaded', () => {

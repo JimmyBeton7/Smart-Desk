@@ -619,4 +619,18 @@ ipcMain.handle('get-app-version', () => {
   return version;
 });
 
+const ffmpeg = require('fluent-ffmpeg');
+const ffmpegPath = require('ffmpeg-static');
 
+ffmpeg.setFfmpegPath(ffmpegPath);
+
+ipcMain.handle('convert-audio', async (_, inputPath, format) => {
+  const outputPath = inputPath.replace(/\.\w+$/, `.${format}`);
+  return new Promise((resolve) => {
+    ffmpeg(inputPath)
+      .toFormat(format)
+      .on('end', () => resolve({ success: true, output: outputPath }))
+      .on('error', err => resolve({ success: false, error: err.message }))
+      .save(outputPath);
+  });
+});

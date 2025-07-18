@@ -21,7 +21,12 @@
 }
 
 .file-converter-controls button {
-  background-color: #fcd8b4;
+  background-color: #C19976;
+  transition: background-color 0.2s ease;
+}
+
+.file-converter-controls button:hover{
+  background-color: #FCD8B4;;
 }
 
 .file-converter-controls select {
@@ -30,10 +35,25 @@
 }
 
 .file-converter-log {
+  font-size: 12px;
   margin-top: 12px;
   background-color: #0d3d4f;
   padding: 10px;
   border-radius: 8px;
   font-family: monospace;
+  color: #C19976;
+  display: flex;
+  align-items: center;
+}
+
+.converter-section {
+  border: 1px solid #C19976;
+  padding: 16px;
+  border-radius: 10px;
+  margin-bottom: 24px;
+}
+
+.converter-section h3 {
+  margin: 0 0 12px 0;
   color: #C19976;
 }
