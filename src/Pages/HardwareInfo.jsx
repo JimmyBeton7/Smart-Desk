@@ -1,22 +1,107 @@
 import React, { useEffect, useState } from 'react';
+import { RefreshCw, Download } from 'lucide-react';
 import './HardwareInfo.css';
 
 function HardwareInfo() {
   const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
 
+  const handleRefresh = async () => {
+    setLoading(true);
+    const newData = await window.electron.getHardwareInfo();
+    setData(newData);
+    setLoading(false);
+  };
+
+  const handleExport = async () => {
+  const lines = [];
+
+  const add = (label, value) => {
+    lines.push(`${label}: ${value}`);
+  };
+
+  if (!data) return;
+
+  add('CPU', `${data.cpu?.manufacturer} ${data.cpu?.brand}`);
+  add('Cores', data.cpu?.cores);
+  add('Speed', `${data.cpu?.speed} GHz`);
+
+  add('RAM Total', `${(data.mem?.total / 1e9).toFixed(2)} GB`);
+  add('RAM Free', `${(data.mem?.free / 1e9).toFixed(2)} GB`);
+
+  if (Array.isArray(data.disk)) {
+    data.disk.forEach(d => add(`Disk ${d.fs}`, `${(d.used / 1e9).toFixed(1)} / ${(d.size / 1e9).toFixed(1)} GB`));
+  }
+
+  add('OS', `${data.os?.distro} (${data.os?.arch})`);
+
+  if (Array.isArray(data.netInf)) {
+    data.netInf.forEach(n => add(`Network ${n.iface}`, n.ip4 || 'No IP'));
+  }
+
+  if (Array.isArray(data.netStats)) {
+    data.netStats.forEach(ns => add(`Traffic ${ns.iface}`, `⬆ ${(ns.tx_sec / 1024).toFixed(1)} KB/s ⬇ ${(ns.rx_sec / 1024).toFixed(1)} KB/s`));
+  }
+
+  if (Array.isArray(data.gpu?.controllers)) {
+    data.gpu.controllers.forEach(g => add('GPU', `${g.model} • ${g.vram}MB`));
+  }
+
+  if (data.battery?.hasbattery) {
+    add('Battery Cycles', data.battery.cycleCount);
+    add('Battery Voltage', `${data.battery.voltage} V`);
+    add('On AC', data.battery.acConnected ? 'Yes' : 'No');
+    add('Time Left', `${data.battery.timeRemaining} min`);
+  }
+
+  if (Array.isArray(data.usb)) {
+    data.usb.forEach(u => add('USB', `${u.vendor || 'Unknown'} ${u.name || ''}`));
+  }
+
+  if (Array.isArray(data.audio)) {
+    data.audio.forEach(a => add('Audio', `${a.name} (${a.type})`));
+  }
+
+  const content = lines.join('\n');
+  await window.electron.exportNote('hardware-info', content);
+};
+
+
+  /*
   useEffect(() => {
     window.electron.getHardwareInfo().then(setData);
   }, []);
+  */
+ useEffect(() => {
+  (async () => {
+    const saved = await window.electron.loadJSON('hardware');
+    if (saved && Object.keys(saved).length > 0) {
+      setData(saved);
+    } else {
+      const fresh = await window.electron.getHardwareInfo();
+      setData(fresh);
+    }
+  })();
+}, []);
 
-  if (!data) return (
-  <div className="hardware-loading">
-    <div className="spinner" />
-    <p>Loading hardware info…</p>
-  </div>
+
+  if (loading || !data) {
+  return (
+    <div className="hardware-loading">
+      <div className="spinner" />
+      <p>{loading ? 'Refreshing hardware info…' : 'Loading hardware info…'}</p>
+    </div>
   );
+}
 
   return (
     <div className="hardware-page">
+
+        <div style={{ display: 'flex', justifyContent: 'flex-start', gap: '10px', margin: '20px' }}>
+          <button onClick={handleRefresh} className="hardware-refresh-btn"><RefreshCw size={16} style={{ marginRight: 8 }}/> Refresh</button>
+          <button onClick={handleExport} className="hardware-refresh-btn"><Download size={16} style={{marginRight: 6}} /> Export</button>
+        </div>
+
     <div className="hardware-grid">
 
       {/* CPU */}

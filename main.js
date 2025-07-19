@@ -483,6 +483,7 @@ process.env.WEATHERSTACK_KEY = process.env.WEATHERSTACK_KEY || require('dotenv')
 
 const si = require('systeminformation');
 
+/*
 ipcMain.handle('get-hardware-info', async () => {
   const [cpu, mem, os, battery, netInf, disk, gpu, netStats, usb, audio] = await Promise.all([
     si.cpu(),
@@ -510,6 +511,38 @@ ipcMain.handle('get-hardware-info', async () => {
     audio
   };
 });
+*/
+ipcMain.handle('get-hardware-info', async () => {
+  const [cpu, mem, os, battery, netInf, disk, gpu, netStats, usb, audio] = await Promise.all([
+    si.cpu(),
+    si.mem(),
+    si.osInfo(),
+    si.battery(),
+    si.networkInterfaces(),
+    si.fsSize(),
+    si.graphics(),
+    si.networkStats(),
+    si.usb(),
+    si.audio()
+  ]);
+
+  const fullData = {
+    cpu,
+    mem,
+    os,
+    battery,
+    netInf,
+    disk,
+    gpu,
+    netStats,
+    usb,
+    audio
+  };
+
+  safeWrite(HARDWARE_FILE, fullData);
+  return fullData;
+});
+
 
 
 //==============================================================================
@@ -578,6 +611,14 @@ const COLOR_HISTORY_FILE = path.join(app.getPath('userData'), 'color-history.jso
 ipcMain.handle('load-color-history', () => safeRead(COLOR_HISTORY_FILE, []));
 ipcMain.handle('save-color-history', (_, data) => {
   safeWrite(COLOR_HISTORY_FILE, data);
+  return true;
+});
+
+const HARDWARE_FILE = path.join(app.getPath('userData'), 'hardware.json');
+
+ipcMain.handle('load-hardware', () => safeRead(HARDWARE_FILE, {}));
+ipcMain.handle('save-hardware', (_, data) => {
+  safeWrite(HARDWARE_FILE, data);
   return true;
 });
 

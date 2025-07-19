@@ -1,20 +1,61 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { evaluate, parse, compile } from 'mathjs';
 import './DrawChart.css';
 
-const parseFunc = (expr) => {
+const parseFunc = (expr, angleMode = 'RAD') => {
   try {
-    const safeExpr = expr
-      .replace(/\^/g, '**')
-      .replace(/π/g, 'Math.PI')
-      .replace(/\be\b/g, 'Math.E')
-      // zamień funkcje na Math.<funkcja>
-      .replace(/\b(sin|cos|tan|asin|acos|atan|log|ln|sqrt|exp|abs)\b/g, 'Math.$1')
-      .replace(/\bln\b/g, 'Math.log') // ln → Math.log
-      .replace(/\bsqrt\b/g, 'Math.sqrt') // √ → sqrt jeśli chcesz
-      .replace(/√/g, 'Math.sqrt'); // również √x → Math.sqrt(x)
+    // Zamień π i e
+    expr = expr.replace(/π/g, 'pi').replace(/\be\b/g, 'e');
 
-    return new Function('x', 'return ' + safeExpr);
-  } catch {
+    // Zamień √ na sqrt
+    expr = expr.replace(/√\s*\(/g, 'sqrt(');
+
+    // Ustaw jednostki kątów
+    const scope = {
+      pi: Math.PI,
+      e: Math.E,
+    };
+
+    // Konwersja DEG → RAD jeśli potrzeba
+    const angleWrapper = (f) => (x) => f(angleMode === 'DEG' ? x * Math.PI / 180 : x);
+
+    // Zastąp funkcje trygonometryczne w razie potrzeby
+    if (angleMode === 'DEG') {
+      scope.sin = angleWrapper(Math.sin);
+      scope.cos = angleWrapper(Math.cos);
+      scope.tan = angleWrapper(Math.tan);
+      scope.asin = angleWrapper(Math.asin);
+      scope.acos = angleWrapper(Math.acos);
+      scope.atan = angleWrapper(Math.atan);
+      scope.sec = (x) => 1 / angleWrapper(Math.cos)(x);
+      scope.csc = (x) => 1 / angleWrapper(Math.sin)(x);
+      scope.cot = (x) => 1 / angleWrapper(Math.tan)(x);
+    } else {
+      scope.sin = Math.sin;
+      scope.cos = Math.cos;
+      scope.tan = Math.tan;
+      scope.asin = Math.asin;
+      scope.acos = Math.acos;
+      scope.atan = Math.atan;
+      scope.sec = (x) => 1 / Math.cos(x);
+      scope.csc = (x) => 1 / Math.sin(x);
+      scope.cot = (x) => 1 / Math.tan(x);
+    }
+
+    scope.log2 = (x) => Math.log(x) / Math.LN2;
+    scope.log10 = (x) => Math.log(x) / Math.LN10;
+    scope.ln = Math.log;
+
+    const node = compile(expr);
+
+    return (x) => {
+      try {
+        return node.evaluate({ ...scope, x });
+      } catch {
+        return NaN;
+      }
+    };
+  } catch (e) {
     return () => NaN;
   }
 };
@@ -64,7 +105,8 @@ export default function DrawChart() {
     const ctx = canvasRef.current.getContext('2d');
     ctx.clearRect(0, 0, width, height);
 
-    const func = parseFunc(expression);
+    //const func = parseFunc(expression);
+    const func = parseFunc(expression, angleMode);
 
     // Dynamic step size for grid
     //const xStep = Math.pow(10, Math.floor(Math.log10(domain.xMax - domain.xMin)) - 1);
@@ -201,7 +243,8 @@ export default function DrawChart() {
   } else if (tab === 'plot') {
     // Obsługa hover-pointa
     const x = domain.xMin + (mouseX / width) * (domain.xMax - domain.xMin);
-    const y = parseFunc(expression)(x);
+    //const y = parseFunc(expression)(x);
+    const y = parseFunc(expression, angleMode)(x);
 
     const px = xToPx(x);
     const py = yToPx(y);
@@ -255,9 +298,14 @@ export default function DrawChart() {
             className="expression-bar"
           />
           <div className="mini-keypad">
-            {['x', '(', ')', '+', '-', '*', '/', '^', 'π', 'e', 'sin', 'cos', 'tan', '√', 'log', 'ln'].map(k => (
-              <button key={k} onClick={() => setExpression(prev => prev + k)}>{k}</button>
+            {[
+              'x', '(', ')', '+', '-', '*', '/', '^', 'π', 'e',
+              'sin(', 'cos(', 'tan(', '√(', 'log(', 'ln(', 
+              'log2(', 'log10(', 'sec(', 'csc(', 'cot(', 'asin(', 'acos(', 'atan('
+            ].map(k => (
+            <button key={k} onClick={() => setExpression(prev => prev + k)}>{k}</button>
             ))}
+
             <button onClick={() => setExpression(prev => prev.slice(0, -1))}>⌫</button>
 
             <button onClick={() => setExpression('')}>C</button>
