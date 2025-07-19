@@ -435,8 +435,38 @@ ipcMain.handle('pick-file', async () => {
   return canceled ? null : filePaths[0];
 });
 
+ipcMain.handle('pick-file-type', async (_, filters) => {
+  const { canceled, filePaths } = await dialog.showOpenDialog({
+    properties: ['openFile'],
+    filters: filters // np. [{ name: 'Documents', extensions: ['pdf', 'docx'] }]
+  });
+  return canceled ? null : filePaths[0];
+});
+
+const toIco = require('to-ico');
+
+async function convertToIco(inputPath) {
+  const buffer = await sharp(inputPath)
+    .resize(256, 256)
+    .png()
+    .toBuffer();
+
+  const icoBuffer = await toIco([buffer]);
+  const outputPath = inputPath.replace(/\.\w+$/, '.ico');
+  fs.writeFileSync(outputPath, icoBuffer);
+
+  return { success: true, output: outputPath };
+}
+
+
 ipcMain.handle('convert-file', async (_, filePath, targetFormat) => {
+
   try {
+
+    if (targetFormat === 'ico') {
+      return await convertToIco(filePath);
+    }
+
     const outputPath = filePath.replace(/\.\w+$/, `.${targetFormat}`);
     await sharp(filePath)
       .toFormat(targetFormat)
@@ -449,30 +479,30 @@ ipcMain.handle('convert-file', async (_, filePath, targetFormat) => {
 
 //==============================================================================
 
-const PDFOfficeGen = require('pdf-officegen');
+const { exec } = require('child_process');
 
-ipcMain.handle('convert-pdf-to-docx', async (_, pdfPath) => {
-  try {
-    const generator = new PDFOfficeGen.Word({ engine: 'ghostscript' }); // lub 'mupdf'
-    const outPath = pdfPath.replace(/\.pdf$/i, '.docx');
+ipcMain.handle('convert-doc-to-pdf', async (_, inputPath) => {
+  const outputPath = inputPath.replace(/\.docx$/i, '.pdf');
 
-    await new Promise((resolve, reject) => {
-      generator.convertFromPdf(pdfPath, async (err, result) => {
-        if (err) {
-          console.error('❌ pdf-officegen conversion failed:', err);
-          reject(err);
-        } else {
-          fs.writeFileSync(outPath, result);
-          resolve();
-        }
-      });
+  const command = `"${process.env.ProgramFiles}\\Microsoft Office\\root\\Office16\\WINWORD.EXE" /mFileConvertToPDF "${inputPath}" "${outputPath}"`;
+
+  return new Promise((resolve) => {
+    exec(command, (error) => {
+      if (error) {
+        return resolve({ success: false, error: error.message });
+      }
+      return resolve({ success: true, output: outputPath });
     });
+  });
+});
 
-    return { success: true, output: outPath };
-  } catch (err) {
-    console.error('❌ Conversion error:', err);
-    return { success: false, error: err.message || String(err) };
-  }
+
+ipcMain.handle('open-pdf-in-word', async (_, inputPath) => {
+  const command = `start winword "${inputPath}"`;
+  exec(command, (error) => {
+    if (error) return;
+  });
+  return { success: true };
 });
 
 //==============================================================================

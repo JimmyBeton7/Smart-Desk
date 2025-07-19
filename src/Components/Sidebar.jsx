@@ -12,7 +12,7 @@ const tools = [
   { path: '/colorpicker', label: 'Color Picker', icon: <Droplet size={20} /> },
   { path: '/fileconventer', label: 'Converter', icon: <ToolCase size={20} /> },
   { path: '/todoplus', label: 'TODO+', icon: <Check size={20} /> },
-  { path: '/hardwareinfo', label: 'Hardware info', icon: <HardDrive size={20} /> },
+  { path: '/hardwareinfo', label: 'Hardware', icon: <HardDrive size={20} /> },
   { path: '/chatgpt', label: 'ChatGPT', icon: <Bot size={20} /> },
   { path: '/settings', label: 'Settings', icon: <Settings size={20} /> },
 ];

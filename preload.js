@@ -35,7 +35,8 @@ contextBridge.exposeInMainWorld('electron', {
   //pickColor: () => ipcRenderer.invoke('pick-color'),
   pickFile: () => ipcRenderer.invoke('pick-file'),
   convertFile: (filePath, targetFormat) => ipcRenderer.invoke('convert-file', filePath, targetFormat),
-  convertPdfToDocx: (pdfPath) => ipcRenderer.invoke('convert-pdf-to-docx', pdfPath),
+  convertDocToPdf: (path) => ipcRenderer.invoke('convert-doc-to-pdf', path),
+  openPdfInWord: (path) => ipcRenderer.invoke('open-pdf-in-word', path),
   startColorPicker: () => ipcRenderer.invoke('start-color-picker'),
   getHardwareInfo: () => ipcRenderer.invoke('get-hardware-info'),
   loadJSON: (name) => ipcRenderer.invoke(`load-${name}`),
@@ -44,7 +45,8 @@ contextBridge.exposeInMainWorld('electron', {
   downloadUpdate: () => ipcRenderer.invoke('download-update'),
   restartAndInstall: () => ipcRenderer.send('restart-and-install'),
   getAppVersion: () => ipcRenderer.invoke('get-app-version'),
-  convertAudio: (filePath, format) => ipcRenderer.invoke('convert-audio', filePath, format)
+  convertAudio: (filePath, format) => ipcRenderer.invoke('convert-audio', filePath, format),
+  pickFileByType: (filters) => ipcRenderer.invoke('pick-file-type', filters),
 });
 
 window.addEventListener('DOMContentLoaded', () => {

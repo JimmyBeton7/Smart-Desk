@@ -24,8 +24,26 @@ function FileConverter() {
 
   //=============== PICK ==========================================
 
+  const handlePickDocument = async () => {
+    const selectedPath = await window.electron.pickFileByType([
+      { name: 'Documents', extensions: ['pdf', 'docx'] }
+    ]);
+    if (!selectedPath) return;
+
+    setDocPath(selectedPath);
+    const extMatch = selectedPath.match(/\.(\w+)$/i);
+    const ext = extMatch ? extMatch[1].toLowerCase() : '';
+    setDocFormat('');
+    setDocLog(<><File size={14} style={{ marginRight: 6 }} />Selected: ${selectedPath} (.${ext})</>);
+  };
+
+
   const handlePickImage = async () => {
-    const selectedPath = await window.electron.pickFile();
+    //const selectedPath = await window.electron.pickFile();
+    const selectedPath = await window.electron.pickFileByType([
+      { name: 'Images', extensions: ['jpg', 'jpeg', 'png', 'ico', 'webp'] }
+    ]);
+
     if (!selectedPath) return;
 
     setImagePath(selectedPath);
@@ -38,7 +56,10 @@ function FileConverter() {
   };
 
   const handlePickAudio = async () => {
-    const selectedPath = await window.electron.pickFile();
+    //const selectedPath = await window.electron.pickFile();
+    const selectedPath = await window.electron.pickFileByType([
+      { name: 'Audio', extensions: ['mp3', 'wav', 'ogg', 'flac', 'm4a'] }
+    ]);
     if (!selectedPath) return;
     const extMatch = selectedPath.match(/\.(\w+)$/i);
     const ext = extMatch ? extMatch[1].toLowerCase() : '';
@@ -46,29 +67,6 @@ function FileConverter() {
     setAudioSourceFormat(ext);
     setAudioFormat('');
     setAudioLog(<><Music size={14} style={{ marginRight: 6 }} />Selected: ${selectedPath} (.${ext})</>);
-  };
-
-
-  const handlePickFile = async (type) => {
-    const selectedPath = await window.electron.pickFile();
-    if (!selectedPath) return;
-
-    switch (type) {
-      case 'image':
-        setImagePath(selectedPath);
-        setImageLog(`📷 Selected: ${selectedPath}`);
-        break;
-      case 'document':
-        setDocPath(selectedPath);
-        setDocLog(`📄 Selected: ${selectedPath}`);
-        break;
-      case 'audio':
-        setAudioPath(selectedPath);
-        setAudioLog(`🎵 Selected: ${selectedPath}`);
-        break;
-      default:
-        break;
-    }
   };
 
 //=================== CONVERT ============================================
@@ -104,18 +102,30 @@ const handleConvertAudio = async () => {
   }
 };
 
-  const handleConvertDummy = (type) => {
-    switch (type) {
-      case 'document':
-        setDocLog("🛠 Document conversion not implemented yet.");
-        break;
-      case 'audio':
-        setAudioLog("🛠 Audio conversion not implemented yet.");
-        break;
-      default:
-        break;
+const handleConvertDocument = async () => {
+  if (!docPath || !docFormat) {
+    setDocLog(<><FileWarning size={14} style={{ marginRight: 6 }} />Select file and format.</>);
+    return;
+  }
+
+  const target = docFormat.split('-from-')[0];
+  const source = docFormat.split('-from-')[1];
+
+  if (source === 'docx' && target === 'pdf') {
+    const result = await window.electron.convertDocToPdf(docPath);
+    if (result.success) {
+      setDocLog(<><CheckCircle size={14} style={{ marginRight: 6 }} />Converted to {result.output}</>);
+    } else {
+      setDocLog(<><XCircle size={14} style={{ marginRight: 6 }} />Error: {result.error}</>);
     }
-  };
+  }
+
+  if (source === 'pdf' && target === 'docx') {
+    await window.electron.openPdfInWord(docPath);
+    setDocLog(<><CheckCircle size={14} style={{ marginRight: 6 }} />Opened in Word. Use "Save as DOCX".</>);
+  }
+};
+
 
   //=============================================================================
 
@@ -126,18 +136,18 @@ const handleConvertAudio = async () => {
       {/* Document Section */}
       <div className="converter-section">
         <h3>Document</h3>
-        <div className="file-converter-controls">
-          <button onClick={() => handlePickFile('document')}>Pick File</button>
-          <select value={docFormat} onChange={e => setDocFormat(e.target.value)}>
-            <option value="">Select format</option>
-            <option value="docx-from-pdf">PDF → DOCX</option>
-            <option value="txt-from-pdf">PDF → TXT</option>
-          </select>
-          <button onClick={() => handleConvertDummy('document')} disabled={!docPath || !docFormat}>
-            Convert
+          <div className="file-converter-controls">
+            <button onClick={handlePickDocument}>Pick File</button>
+            <select value={docFormat} onChange={e => setDocFormat(e.target.value)}>
+              <option value="">Select format</option>
+              <option value="docx-from-pdf">PDF → DOCX</option>
+                <option value="pdf-from-docx">DOCX → PDF</option>
+            </select>
+            <button onClick={handleConvertDocument} disabled={!docPath || !docFormat}>
+              Convert
           </button>
-        </div>
-        <div className="file-converter-log">{docLog}</div>
+          </div>
+          <div className="file-converter-log">{docLog}</div>
       </div>
 
       {/* Image Section */}

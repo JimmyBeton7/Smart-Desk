@@ -145,8 +145,12 @@ const editTask = (task) => {
             </span>
 
             <div className="task-actions">
+              <div className="task-actions-edit">
                 <button onClick={() => editTask(task)}> <Pen size={16} style={{ marginRight: 8 }} /> </button>
+              </div>
+              <div className="task-actions-delete">
                 <button onClick={() => removeTask(task.id)}> <Trash size={16} style={{ marginRight: 8 }} /> </button>
+              </div>
             </div>
           </li>
         ))}

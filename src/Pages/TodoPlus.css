@@ -166,4 +166,9 @@
   transform: scale(1.2);
 }
 
+.task-actions-delete button:hover {
+  color: #fa6926;
+}
+
+
 
