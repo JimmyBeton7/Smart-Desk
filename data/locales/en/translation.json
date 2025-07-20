@@ -1,0 +1,112 @@
+{
+  "settings": {
+    "title": "Settings",
+    "apiKeyLabel": "OpenAI API Key",
+    "apiKeyPlaceholder": "Enter your OpenAI API Key",
+    "locationLabel": "Weather Location",
+    "locationPlaceholder": "e.g. Wroclaw, Warsaw",
+    "languageLabel": "Language",
+    "saveButton": "Save",
+    "english": "English",
+    "polish": "Polish"
+  },
+  "hardware": {
+    "loading": "Loading hardware info…",
+    "refreshing": "Refreshing hardware info…",
+    "refresh": "Refresh",
+    "export": "Export"
+  },
+  "todo": {
+    "title": "TODO+",
+    "addPlaceholder": "Add a new task…",
+    "add": "Add",
+    "save": "Save",
+    "sortBy": "Sort by:",
+    "created": "Created",
+    "priority": "Priority",
+    "deadline": "Deadline",
+    "high": "🔴 High",
+    "medium": "🟡 Medium",
+    "low": "🟢 Low"
+  },
+  "converter": {
+    "title": "File Converter",
+    "image": "Image",
+    "audio": "Audio",
+    "document": "Document",
+    "pickFile": "Pick File",
+    "convert": "Convert",
+    "convertTo": "Convert to...",
+    "comingSoon": "(coming soon…)",
+    "selectFormat": "Select format",
+    "log": {
+      "selectPrompt": "Select file and format.",
+      "convertedTo": "Converted to {{output}}",
+      "error": "Error: {{error}}",
+      "selected": "Selected: {{path}} (.{{ext}})",
+      "openedWord": "Opened in Word. Use \"Save as DOCX\"."
+    }
+  },
+  "colorPicker": {
+    "title": "Color Picker",
+    "pick": "Pick Color",
+    "history": "History",
+    "hex": "HEX",
+    "rgb": "RGB"
+  },
+  "notes": {
+    "title": "Your notes",
+    "newNote": "New note"
+  },
+  "noteEditor": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "export": "Export",
+    "titlePlaceholder": "Note title",
+    "contentPlaceholder": "Write your note here..."
+  },
+  "clipboard": {
+    "title": "Clipboard History",
+    "clear": "Clear",
+    "copied": "✔ Copied!"
+  },
+   "pomodoro": {
+    "title": "Pomodoro Timer",
+    "start": "▶ Start",
+    "pause": "⏸ Pause",
+    "reset": "Reset",
+    "duration": "⏱ Duration:",
+    "minutes": "min"
+  },
+  "sidebar": {
+    "home": "Home",
+    "pomodoro": "Pomodoro",
+    "calc": "Calculator",
+    "clipboard": "Clipboard",
+    "notes": "Notes",
+    "colorpicker": "Color Picker",
+    "converter": "Converter",
+    "todo": "TODO+",
+    "hardware": "Hardware",
+    "chatgpt": "ChatGPT",
+    "settings": "Settings",
+    "exit": "Exit",
+    "title": "Smart Tools"
+  },
+  "home": {
+    "welcome": "Welcome to Smart Desk Companion",
+    "select": "Select a tool from the sidebar.",
+    "version": "Version: {{version}}",
+    "checkUpdates": "Check for Updates",
+    "downloadRestart": "Download & Restart",
+    "downloading": "Downloading...",
+    "checking": "Checking for updates...",
+    "downloaded": "Update downloaded. Restarting...",
+    "updateAvailable": "Update available: {{version}} — click to download",
+    "upToDate": "You have the latest version.",
+    "errorCheck": "Error: could not check for update.",
+    "downloadFailed": "Download failed: {{message}}",
+    "changelog": "Changelog",
+    "noChangelog": "No changelog found."
+  }
+}

@@ -45,3 +45,29 @@
 .settings-container button:hover {
   background-color: #FCD8B4;
 }
+
+.language-toggle {
+  display: flex;
+  gap: 20px;
+  margin: 10px 0;
+}
+
+.lang-radio {
+  cursor: pointer;
+  padding: 8px 14px;
+  border: 2px solid #C19976;
+  border-radius: 10px;
+  background-color: #082C38;
+  color: #FCD8B4;
+  transition: all 0.2s ease;
+}
+
+.lang-radio.selected {
+  background-color: #C19976;
+  color: #082C38;
+}
+
+.lang-radio input {
+  display: none;
+}
+

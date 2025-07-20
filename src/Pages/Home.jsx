@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import WeatherTile from '../Components/WeatherTile';
 import CurrencyTile from '../Components/CurrencyTile';
 import { RefreshCw, Download, XCircle, CheckCircle, Search } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import './Home.css'; 
 
 function Home() {
+  const { t } = useTranslation();
   const [updateStatus, setUpdateStatus] = useState(null);
   const [version, setVersion] = useState('...');
   const [checking, setChecking] = useState(false);
@@ -24,7 +26,7 @@ function Home() {
     const result = await window.electron.checkForUpdates();
       if (!result || !result.status) {
         setUpdateStatusText('error');
-        setUpdateStatus(<><XCircle size={16} style={{ marginRight: 6 }} />Error: could not check for update.</>);
+        setUpdateStatus(<><XCircle size={16} /> {t('home.errorCheck')}</>);
         return;
       }
 
@@ -34,18 +36,18 @@ function Home() {
     if (result.status === 'available') {
       if (remote === local) {
         setUpdateStatusText('no-update');
-        setUpdateStatus(<><CheckCircle size={16} style={{ marginRight: 6 }} />You have the latest version.</>);
+        setUpdateStatus(<><CheckCircle size={16} /> {t('home.upToDate')}</>);
       } else {
         setLatestVersion(result.info.version);
         setUpdateStatusText('update');
-        setUpdateStatus(<><Download size={16} style={{ marginRight: 6 }} /> Update available: ${result.info.version} — click to download</>);
+        setUpdateStatus(<><Download size={16} /> {t('home.updateAvailable', { version: result.info.version })}</>);
       }
       } else if (result.status === 'no-update') {
         setUpdateStatusText('no-update');
-        setUpdateStatus(<><CheckCircle size={16} style={{ marginRight: 6 }} />You have the latest version.</>);
+        setUpdateStatus(<><CheckCircle size={16} /> {t('home.upToDate')}</>);
       } else {
         setUpdateStatusText('error');
-        setUpdateStatus(<><XCircle size={16} style={{ marginRight: 6 }} />Error: ${result.message || 'Unknown issue.'}</>);
+        setUpdateStatus(<><XCircle size={16} /> {t('home.downloadFailed', { message: result.message || 'Unknown issue.' })}</>);
       }
   };
 
@@ -78,12 +80,12 @@ useEffect(() => {
   {
     setChecking(true);
     setUpdateStatusText('checking');
-    setUpdateStatus(<><Search size={16} style={{ marginRight: 6 }} />Checking for updates...</>);
+    setUpdateStatus(<><Search size={16} /> {t('home.checking')}</>);
     const result = await window.electron.checkForUpdates();
     if (!result || !result.status) 
     {
       setUpdateStatusText('error');
-      setUpdateStatus(<><XCircle size={16} style={{ marginRight: 6 }} />Error: could not check for update.</>);
+      setUpdateStatus(<><XCircle size={16} /> {t('home.errorCheck')}</>);
       return;
     }
 
@@ -92,18 +94,18 @@ useEffect(() => {
 
     if (result.status === 'available') {
       if (remote === local) {
-        setUpdateStatus(<><CheckCircle size={16} style={{ marginRight: 6 }} />You have the latest version.</>);
+        setUpdateStatus(<><CheckCircle size={16} /> {t('home.upToDate')}</>);
       } else {
         setLatestVersion(result.info.version);
         setUpdateStatusText('update');
-        setUpdateStatus(<><Download size={16} style={{ marginRight: 6 }} /> Update available: ${result.info.version} — click to download</>);
+        setUpdateStatus(<><Download size={16} /> {t('home.updateAvailable', { version: result.info.version })}</>);
       }
     } else if (result.status === 'no-update') {
         setUpdateStatusText('no-update');
-        setUpdateStatus(<><CheckCircle size={16} style={{ marginRight: 6 }} />You have the latest version.</>);
+        setUpdateStatus(<><CheckCircle size={16} /> {t('home.upToDate')}</>);
     } else {
         setUpdateStatusText('error');
-        setUpdateStatus(<><XCircle size={16} style={{ marginRight: 6 }} />Error: ${result.message || 'Unknown issue.'}</>);
+         setUpdateStatus(<><XCircle size={16} /> {t('home.downloadFailed', { message: result.message || 'Unknown issue.' })}</>);
     }
 
     setChecking(false)
@@ -114,19 +116,19 @@ useEffect(() => {
   {
     setDownloading(true);
     setUpdateStatusText('checking');
-    setUpdateStatus(<><Download size={16} style={{ marginRight: 6 }} />Downloading update...</>);
+    setUpdateStatus(<><Download size={16} /> {t('home.downloading')}</>);
     const result = await window.electron.downloadUpdate();
     setDownloading(false);
 
     if (result.status === 'downloading') {
       setUpdateStatusText('restarting');
-      setUpdateStatus(<><CheckCircle size={16} style={{ marginRight: 6 }} />Update downloaded. Restarting...</>);
+      setUpdateStatus(<><CheckCircle size={16} /> {t('home.downloaded')}</>);
       setTimeout(() => {
         window.electron.restartAndInstall();
       }, 1500);
     } else {
       setUpdateStatusText('error');
-      setUpdateStatus(<><XCircle size={16} style={{ marginRight: 6 }} />Download failed: {result.message}</>);
+      setUpdateStatus(<><XCircle size={16} /> {t('home.downloadFailed', { message: result.message })}</>);
     }
   };
 
@@ -140,9 +142,9 @@ useEffect(() => {
 
   return (
     <div>
-      <h1>Welcome to Smart Desk Companion</h1>
-      <p>Select a tool from the sidebar.</p>
-      <p>Version: {version}</p>
+      <h1>{t('home.welcome')}</h1>
+      <p>{t('home.select')}</p>
+      <p>{t('home.version', { version })}</p>
 
       <div className="buttons-row">
         <button
@@ -151,7 +153,7 @@ useEffect(() => {
           disabled={checking || downloading}
         >
           {checking ? <span className="spinner" /> : <RefreshCw size={16} style={{ marginRight: 8 }}/>}
-          Check for Updates
+          {t('home.checkUpdates')}
         </button>
 
         {(shouldShowDownload || downloading) && (
@@ -167,7 +169,7 @@ useEffect(() => {
               ) : (
               <Download size={16} style={{ marginRight: 8 }} />
             )}
-            {downloading ? 'Downloading...' : 'Download & Restart'}
+            {downloading ? t('home.downloading') : t('home.downloadRestart')}
           </button>
       )}
 
@@ -179,9 +181,9 @@ useEffect(() => {
 
         <div className="changes-container">
 
-            <h3 style={{ marginBottom: 10 }}>Changelog</h3>
+            <h3>{t('home.changelog')}</h3>
               {changelog.length === 0 ? (
-              <p>No changelog found.</p>
+              <p>{t('home.noChangelog')}</p>
               ) : (
               changelog.map(entry => (
                 <div key={entry.version} style={{ marginBottom: 12 }}>

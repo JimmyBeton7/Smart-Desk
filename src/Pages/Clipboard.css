@@ -64,9 +64,10 @@
   background: #c19976;
   border: none;
   border-radius: 8px;
-  padding: 8px 12px;
+  padding: 10px 20px;
   color: #082c38;
   font-weight: bold;
+  font-size: 16px;
   cursor: pointer;
   display: flex;
   align-items: center;

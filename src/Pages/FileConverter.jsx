@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Camera, Music, File, XCircle, CheckCircle, FileWarning} from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import './FileConverter.css';
 
 function FileConverter() {
+  const { t } = useTranslation();
   // Image
   const [imagePath, setImagePath] = useState('');
   const [imageFormat, setImageFormat] = useState('');
@@ -34,7 +36,7 @@ function FileConverter() {
     const extMatch = selectedPath.match(/\.(\w+)$/i);
     const ext = extMatch ? extMatch[1].toLowerCase() : '';
     setDocFormat('');
-    setDocLog(<><File size={14} style={{ marginRight: 6 }} />Selected: ${selectedPath} (.${ext})</>);
+    setDocLog(<><File size={14} style={{ marginRight: 6 }} />{t('converter.log.selected', { path: selectedPath, ext })}</>);
   };
 
 
@@ -52,7 +54,7 @@ function FileConverter() {
 
     setImageSourceFormat(ext);
     setImageFormat(''); 
-    setImageLog(<><Camera size={14} style={{ marginRight: 6 }} />Selected: ${selectedPath} (.${ext}) </>); 
+    setImageLog(<><Camera size={14} style={{ marginRight: 6 }} />{t('converter.log.selected', { path: selectedPath, ext })}</>);
   };
 
   const handlePickAudio = async () => {
@@ -66,14 +68,14 @@ function FileConverter() {
     setAudioPath(selectedPath);
     setAudioSourceFormat(ext);
     setAudioFormat('');
-    setAudioLog(<><Music size={14} style={{ marginRight: 6 }} />Selected: ${selectedPath} (.${ext})</>);
+    setAudioLog(<><Music size={14} style={{ marginRight: 6 }} />{t('converter.log.selected', { path: selectedPath, ext })}</>);
   };
 
 //=================== CONVERT ============================================
 
 const handleConvertImage = async () => {
   if (!imagePath || !imageFormat) {
-    setImageLog(<><FileWarning size={14} style={{ marginRight: 6 }} />Select file and format.</>);
+    setImageLog(<><FileWarning size={14} style={{ marginRight: 6 }} />{t('converter.log.selectPrompt')}</>);
     return;
   }
 
@@ -82,29 +84,29 @@ const handleConvertImage = async () => {
 
   const result = await window.electron.convertFile(imagePath, targetFormat);
   if (result.success) {
-    setImageLog(<><CheckCircle size={14} style={{ marginRight: 6 }} />Converted to ${result.output}</>);
+    setImageLog(<><CheckCircle size={14} style={{ marginRight: 6 }} />{t('converter.log.convertedTo', { output: result.output })}</>);
   } else {
-    setImageLog(<><XCircle size={14} style={{ marginRight: 6 }} />Error: ${result.error}</>);
+    setImageLog(<><XCircle size={14} style={{ marginRight: 6 }} />{t('converter.log.error', { error: result.error })}</>);
   }
 };
 
 const handleConvertAudio = async () => {
   if (!audioPath || !audioFormat) {
-    setAudioLog(<><FileWarning size={14} style={{ marginRight: 6 }} />Select file and format.</>);
+    setAudioLog(<><FileWarning size={14} style={{ marginRight: 6 }} />{t('converter.log.selectPrompt')}</>);
     return;
   }
   const targetFormat = audioFormat.split('-from-')[0];
   const result = await window.electron.convertAudio(audioPath, targetFormat);
   if (result.success) {
-    setAudioLog(<><CheckCircle size={14} style={{ marginRight: 6 }} />Converted to ${result.output}</>);
+    setAudioLog(<><CheckCircle size={14} style={{ marginRight: 6 }} />{t('converter.log.convertedTo', { output: result.output })}</>);
   } else {
-    setAudioLog(<><XCircle size={14} style={{ marginRight: 6 }} />Error: ${result.error}</>);
+    setAudioLog(<><XCircle size={14} style={{ marginRight: 6 }} />{t('converter.log.error', { error: result.error })}</>);
   }
 };
 
 const handleConvertDocument = async () => {
   if (!docPath || !docFormat) {
-    setDocLog(<><FileWarning size={14} style={{ marginRight: 6 }} />Select file and format.</>);
+    setDocLog(<><FileWarning size={14} style={{ marginRight: 6 }} />{t('converter.log.selectPrompt')}</>);
     return;
   }
 
@@ -114,15 +116,15 @@ const handleConvertDocument = async () => {
   if (source === 'docx' && target === 'pdf') {
     const result = await window.electron.convertDocToPdf(docPath);
     if (result.success) {
-      setDocLog(<><CheckCircle size={14} style={{ marginRight: 6 }} />Converted to {result.output}</>);
+      setDocLog(<><CheckCircle size={14} style={{ marginRight: 6 }} />{t('converter.log.convertedTo', { output: result.output })}</>);
     } else {
-      setDocLog(<><XCircle size={14} style={{ marginRight: 6 }} />Error: {result.error}</>);
+      setDocLog(<><XCircle size={14} style={{ marginRight: 6 }} />{t('converter.log.error', { error: result.error })}</>);
     }
   }
 
   if (source === 'pdf' && target === 'docx') {
     await window.electron.openPdfInWord(docPath);
-    setDocLog(<><CheckCircle size={14} style={{ marginRight: 6 }} />Opened in Word. Use "Save as DOCX".</>);
+    setDocLog(<><CheckCircle size={14} style={{ marginRight: 6 }} />{t('converter.log.openedWord')}</>);
   }
 };
 
@@ -131,33 +133,32 @@ const handleConvertDocument = async () => {
 
   return (
     <div className="file-converter-container">
-      <h2>File Converter</h2>
+      <h2>{t('converter.title')}</h2>
 
       {/* Document Section */}
-      <div className="converter-section">
-        <h3>Document</h3>
+      <div className="converter-section disabled">
+        <h3>{t('converter.document')} <span className="coming-soon">{t('converter.comingSoon')}</span></h3>
           <div className="file-converter-controls">
-            <button onClick={handlePickDocument}>Pick File</button>
-            <select value={docFormat} onChange={e => setDocFormat(e.target.value)}>
-              <option value="">Select format</option>
-              <option value="docx-from-pdf">PDF → DOCX</option>
+            <button disabled>{t('converter.pickFile')}</button>
+              <select disabled>
+                <option value="">{t('converter.selectFormat')}</option>
+                <option value="docx-from-pdf">PDF → DOCX</option>
                 <option value="pdf-from-docx">DOCX → PDF</option>
-            </select>
-            <button onClick={handleConvertDocument} disabled={!docPath || !docFormat}>
-              Convert
-          </button>
+              </select>
+            <button disabled>{t('converter.convert')}</button>
           </div>
-          <div className="file-converter-log">{docLog}</div>
-      </div>
+       <div className="file-converter-log">{docLog}</div>
+    </div>
+
 
       {/* Image Section */}
       <div className="converter-section">
-        <h3>Image</h3>
+        <h3>{t('converter.image')}</h3>
           <div className="file-converter-controls">
-            <button onClick={handlePickImage}>Pick File</button>
+            <button onClick={handlePickImage}>{t('converter.pickFile')}</button>
 
             <select value={imageFormat} onChange={e => setImageFormat(e.target.value)}>
-              <option value="">Convert to...</option>
+              <option value="">{t('converter.convertTo')}</option>
               {allImageFormats
                 .filter(fmt => fmt !== imageSourceFormat)
                 .map(fmt => (
@@ -168,7 +169,7 @@ const handleConvertDocument = async () => {
             </select>
 
             <button onClick={handleConvertImage} disabled={!imagePath || !imageFormat}>
-              Convert
+              {t('converter.convert')}
             </button>
         </div>
         <div className="file-converter-log">{imageLog}</div>
@@ -176,11 +177,11 @@ const handleConvertDocument = async () => {
 
       {/* Audio Section */}
       <div className="converter-section">
-        <h3>Audio</h3>
+        <h3>{t('converter.audio')}</h3>
           <div className="file-converter-controls">
-            <button onClick={handlePickAudio}>Pick File</button>
+            <button onClick={handlePickAudio}>{t('converter.pickFile')}</button>
             <select value={audioFormat} onChange={e => setAudioFormat(e.target.value)}>
-              <option value="">Convert to...</option>
+              <option value="">{t('converter.convertTo')}</option>
               {allAudioFormats
                 .filter(fmt => fmt !== audioSourceFormat)
                 .map(fmt => (
@@ -190,7 +191,7 @@ const handleConvertDocument = async () => {
               ))}
             </select>
             <button onClick={handleConvertAudio} disabled={!audioPath || !audioFormat}>
-              Convert
+              {t('converter.convert')}
             </button>
           </div>
          <div className="file-converter-log">{audioLog}</div>

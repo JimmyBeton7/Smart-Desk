@@ -1,0 +1,112 @@
+{
+  "settings": {
+    "title": "Ustawienia",
+    "apiKeyLabel": "Klucz API OpenAI",
+    "apiKeyPlaceholder": "Wprowadź swój klucz API OpenAI",
+    "locationLabel": "Lokalizacja pogodowa",
+    "locationPlaceholder": "np. Wrocław, Warszawa",
+    "languageLabel": "Język",
+    "saveButton": "Zapisz",
+    "english": "Angielski",
+    "polish": "Polski"
+  },
+  "hardware": {
+    "loading": "Ładowanie informacji o sprzęcie…",
+    "refreshing": "Odświeżanie informacji o sprzęcie…",
+    "refresh": "Odśwież",
+    "export": "Eksportuj"
+  },
+  "todo": {
+    "title": "TODO+",
+    "addPlaceholder": "Dodaj nowe zadanie…",
+    "add": "Dodaj",
+    "save": "Zapisz",
+    "sortBy": "Sortuj według:",
+    "created": "Utworzenia",
+    "priority": "Priorytetu",
+    "deadline": "Terminu",
+    "high": "🔴 Wysoki",
+    "medium": "🟡 Średni",
+    "low": "🟢 Niski"
+  },
+  "converter": {
+    "title": "Konwerter plików",
+    "image": "Obraz",
+    "audio": "Audio",
+    "document": "Dokument",
+    "pickFile": "Wybierz plik",
+    "convert": "Konwertuj",
+    "convertTo": "Konwertuj na...",
+    "comingSoon": "(wkrótce…)",
+    "selectFormat": "Wybierz format",
+    "log": {
+      "selectPrompt": "Wybierz plik i format.",
+      "convertedTo": "Skonwertowano na {{output}}",
+      "error": "Błąd: {{error}}",
+      "selected": "Wybrano: {{path}} (.{{ext}})",
+      "openedWord": "Otwarto w Wordzie. Użyj „Zapisz jako DOCX”."
+    }
+  },
+  "colorPicker": {
+    "title": "Pobieranie koloru",
+    "pick": "Wybierz kolor",
+    "history": "Historia",
+    "hex": "HEX",
+    "rgb": "RGB"
+  },
+  "notes": {
+    "title": "Twoje notatki",
+    "newNote": "Nowa notatka"
+  },
+  "noteEditor": {
+    "save": "Zapisz",
+    "cancel": "Anuluj",
+    "export": "Eksportuj",
+    "titlePlaceholder": "Tytuł notatki",
+    "contentPlaceholder": "Zapisz tutaj swoją notatkę..."
+  },
+  "clipboard": {
+    "title": "Historia schowka",
+    "clear": "Wyczyść",
+    "copied": "✔ Skopiowano!"
+  },
+  "pomodoro": {
+    "title": "Minutnik Pomodoro",
+    "start": "▶ Start",
+    "pause": "⏸ Pauza",
+    "reset": "Resetuj",
+    "duration": "⏱ Czas trwania:",
+    "minutes": "min"
+  },
+  "sidebar": {
+    "home": "Strona główna",
+    "pomodoro": "Pomodoro",
+    "calc": "Kalkulator",
+    "clipboard": "Schowek",
+    "notes": "Notatki",
+    "colorpicker": "Pipeta",
+    "converter": "Konwerter",
+    "todo": "Zadania",
+    "hardware": "Sprzęt",
+    "chatgpt": "ChatGPT",
+    "settings": "Ustawienia",
+    "exit": "Wyjście",
+    "title": "Narzędzia"
+  },
+  "home": {
+    "welcome": "Witamy w Smart Desk Companion",
+    "select": "Wybierz narzędzie z paska bocznego.",
+    "version": "Wersja: {{version}}",
+    "checkUpdates": "Sprawdź aktualizacje",
+    "downloadRestart": "Pobierz i uruchom ponownie",
+    "downloading": "Pobieranie...",
+    "checking": "Sprawdzanie aktualizacji...",
+    "downloaded": "Aktualizacja pobrana. Trwa restart...",
+    "updateAvailable": "Dostępna aktualizacja: {{version}} — kliknij, aby pobrać",
+    "upToDate": "Masz najnowszą wersję.",
+    "errorCheck": "Błąd: nie udało się sprawdzić aktualizacji.",
+    "downloadFailed": "Błąd pobierania: {{message}}",
+    "changelog": "Lista zmian",
+    "noChangelog": "Brak informacji o zmianach."
+  }
+}

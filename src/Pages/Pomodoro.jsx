@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import './Pomodoro.css';
 import { RotateCcw } from 'lucide-react';
 import React from 'react';
+import { useTranslation } from 'react-i18next'; 
 
 function Pomodoro() {
   const [duration, setDuration] = useState(25);
   const [seconds, setSeconds] = useState(25 * 60);
   const [isRunning, setIsRunning] = useState(false);
+  const { t } = useTranslation();
 
   // 🧠 Load state from sessionStorage
   useEffect(() => {
@@ -52,20 +54,20 @@ function Pomodoro() {
 
   return (
     <div className="pomodoro-container">
-      <h1>Pomodoro Timer</h1>
+      <h1>{t('pomodoro.title')}</h1>
       <div className="time">{format(seconds)}</div>
 
       <div className="buttons">
-        <button onClick={() => setIsRunning(true)}>▶ Start</button>
-        <button onClick={() => setIsRunning(false)}>⏸ Pause</button>
+        <button onClick={() => setIsRunning(true)}>{t('pomodoro.start')}</button>
+        <button onClick={() => setIsRunning(false)}>{t('pomodoro.pause')}</button>
         <button onClick={reset}>
           <RotateCcw size={18} style={{ marginRight: '6px' }} />
-          Reset
+          {t('pomodoro.reset')}
         </button>
       </div>
 
       <div className="options">
-        <label htmlFor="duration">⏱ Duration:</label>
+        <label htmlFor="duration">{t('pomodoro.duration')}</label>
         <input
           id="duration"
           type="number"
@@ -79,7 +81,7 @@ function Pomodoro() {
             setIsRunning(false);
           }}
         />
-        <span>min</span>
+        <span>{t('pomodoro.minutes')}</span>
       </div>
     </div>
   );

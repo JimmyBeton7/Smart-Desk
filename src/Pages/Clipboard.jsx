@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import './Clipboard.css';
 import { Trash } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Clipboard = () => {
   const [history, setHistory] = useState([]);
   const [copiedMessageVisible, setCopiedMessageVisible] = useState(false);
+   const { t } = useTranslation();
 
   useEffect(() => {
   console.log('Clipboard API:', window.electron?.clipboard);
@@ -45,15 +47,15 @@ const Clipboard = () => {
     <div className="clipboard-container">
 
       <div className="clipboard-header">
-        <h2>Clipboard History</h2>
+        <h2>{t('clipboard.title')}</h2>
       </div>
       
       <div className="clipboard-actions">
         <button className="clear-btn" onClick={clearClipboardHistory}>
-            <Trash size={18} style={{ marginRight: 6 }} />
-            Clear
+            <Trash size={18} style={{ marginRight: 8 }} />
+            {t('clipboard.clear')}
         </button>
-        {copiedMessageVisible && <span className="copied-global-label">✔ Copied!</span>}
+        {copiedMessageVisible && <span className="copied-global-label">{t('clipboard.copied')}</span>}
       </div>
 
       <div className="clipboard-grid">

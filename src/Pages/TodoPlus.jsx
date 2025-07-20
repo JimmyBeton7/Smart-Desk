@@ -2,8 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import './TodoPlus.css';
 import { Calendar, Trash, Pen, ArrowUp } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 function TodoPlus() {
+  const { t } = useTranslation();
   const [tasks, setTasks] = useState([]);
   const [input, setInput] = useState('');
   const [priority, setPriority] = useState('medium');
@@ -94,15 +96,15 @@ const editTask = (task) => {
   return (
     <div className="tab-content">
     <div className="todo-container">
-      <h2>TODO+</h2>
+      <h2>{t('todo.title')}</h2>
 
       <div className="todo-sort">
         <div style={{ marginBottom: 12, display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <label style={{ fontWeight: 'bold' }}>Sort by:</label>
+          <label style={{ fontWeight: 'bold' }}>{t('todo.sortBy')}</label>
           <select value={sortMode} onChange={e => setSortMode(e.target.value)}>
-            <option value="created">Created</option>
-            <option value="priority">Priority</option>
-            <option value="deadline">Deadline</option>
+            <option value="created">{t('todo.created')}</option>
+            <option value="priority">{t('todo.priority')}</option>
+            <option value="deadline">{t('todo.deadline')}</option>
           </select>
         </div>
       </div>
@@ -111,19 +113,20 @@ const editTask = (task) => {
         <input
             value={input}
             onChange={e => setInput(e.target.value)}
-            placeholder="Add a new task…"
+            placeholder={t('todo.addPlaceholder')}
         />
         <select value={priority} onChange={e => setPriority(e.target.value)}>
-            <option value="high">🔴 High</option>
-            <option value="medium">🟡 Medium</option>
-            <option value="low">🟢 Low</option>
+            <option value="high">{t('todo.high')}</option>
+            <option value="medium">{t('todo.medium')}</option>
+            <option value="low">{t('todo.low')}</option>
         </select>
         <input
             type="date"
             value={deadline}
             onChange={e => setDeadline(e.target.value)}
         />
-        <button onClick={saveTask}>{editTaskId ? 'Save' : 'Add'}</button>
+        <button onClick={saveTask}>{editTaskId ? t('todo.save') : t('todo.add')}</button>
+
      </div>
 
       <ul className="todo-list">

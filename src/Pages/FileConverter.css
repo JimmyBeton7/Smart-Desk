@@ -57,3 +57,15 @@
   margin: 0 0 12px 0;
   color: #C19976;
 }
+
+.converter-section.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.coming-soon {
+  font-size: 0.9em;
+  font-weight: normal;
+  color: #ccc;
+  margin-left: 8px;
+}

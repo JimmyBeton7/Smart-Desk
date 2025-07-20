@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { RefreshCw, Download } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import './HardwareInfo.css';
 
 function HardwareInfo() {
+  const { t } = useTranslation();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -89,7 +91,7 @@ function HardwareInfo() {
   return (
     <div className="hardware-loading">
       <div className="spinner" />
-      <p>{loading ? 'Refreshing hardware info…' : 'Loading hardware info…'}</p>
+      <p>{loading ? t('hardware.refreshing') : t('hardware.loading')}</p>
     </div>
   );
 }
@@ -98,8 +100,8 @@ function HardwareInfo() {
     <div className="hardware-page">
 
         <div style={{ display: 'flex', justifyContent: 'flex-start', gap: '10px', margin: '20px' }}>
-          <button onClick={handleRefresh} className="hardware-refresh-btn"><RefreshCw size={16} style={{ marginRight: 8 }}/> Refresh</button>
-          <button onClick={handleExport} className="hardware-refresh-btn"><Download size={16} style={{marginRight: 6}} /> Export</button>
+          <button onClick={handleRefresh} className="hardware-refresh-btn"><RefreshCw size={16} style={{ marginRight: 8 }}/> {t('hardware.refresh')}</button>
+          <button onClick={handleExport} className="hardware-refresh-btn"><Download size={16} style={{marginRight: 6}} /> {t('hardware.export')}</button>
         </div>
 
     <div className="hardware-grid">

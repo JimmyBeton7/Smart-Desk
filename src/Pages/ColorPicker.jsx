@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import './ColorPicker.css';
 
 function ColorPicker() {
+  const { t } = useTranslation();
   const [selectedColor, setSelectedColor] = useState(null);
   const [history, setHistory] = useState([]);
 
@@ -30,25 +33,24 @@ const pickColor = async () => {
 
   return (
     <div className="color-picker-container">
-      <h2>Color Picker</h2>
-      <button className="pick-btn" onClick={pickColor}>Pick Color</button>
+      <h2>{t('colorPicker.title')}</h2>
+      <button className="pick-btn" onClick={pickColor}>{t('colorPicker.pick')}</button>
 
       {selectedColor && (
-  <div className="color-details">
-    <div className="preview" style={{ backgroundColor: selectedColor.hex }} />
-    <div className="color-info">
-      <div onClick={() => copyToClipboard(selectedColor.hex)}>
-        HEX: {selectedColor.hex}
-      </div>
-      <div onClick={() => copyToClipboard(selectedColor.rgb)}>
-        RGB: {selectedColor.rgb}
+        <div className="color-details">
+        <div className="preview" style={{ backgroundColor: selectedColor.hex }} />
+        <div className="color-info">
+        <div onClick={() => copyToClipboard(selectedColor.hex)}>
+          HEX: {selectedColor.hex}
+        </div>
+        <div onClick={() => copyToClipboard(selectedColor.rgb)}>
+          RGB: {selectedColor.rgb}
+        </div>
       </div>
     </div>
-  </div>
-)}
+    )}
 
-
-      <h3>History</h3>
+      <h3>{t('colorPicker.history')}</h3>
       <div className="color-history">
         {history.map((color, i) => (
           <div
