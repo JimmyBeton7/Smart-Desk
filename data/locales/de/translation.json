@@ -1,0 +1,114 @@
+{
+  "settings": {
+    "title": "Einstellungen",
+    "apiKeyLabel": "OpenAI API-Schlüssel",
+    "apiKeyPlaceholder": "Gib deinen OpenAI API-Schlüssel ein",
+    "locationLabel": "Wetterstandort",
+    "locationPlaceholder": "z. B. Wroclaw, Warschau",
+    "languageLabel": "Sprache",
+    "saveButton": "Speichern",
+    "english": "Englisch",
+    "polish": "Polnisch",
+    "spanish": "Spanisch",
+    "german": "Deutsch"
+  },
+  "hardware": {
+    "loading": "Lade Hardware-Informationen…",
+    "refreshing": "Aktualisiere Hardware-Informationen…",
+    "refresh": "Aktualisieren",
+    "export": "Exportieren"
+  },
+  "todo": {
+    "title": "TODO+",
+    "addPlaceholder": "Neue Aufgabe hinzufügen…",
+    "add": "Hinzufügen",
+    "save": "Speichern",
+    "sortBy": "Sortieren nach:",
+    "created": "Erstellt",
+    "priority": "Priorität",
+    "deadline": "Frist",
+    "high": "🔴 Hoch",
+    "medium": "🟡 Mittel",
+    "low": "🟢 Niedrig"
+  },
+  "converter": {
+    "title": "Dateikonverter",
+    "image": "Bild",
+    "audio": "Audio",
+    "document": "Dokument",
+    "pickFile": "Datei auswählen",
+    "convert": "Konvertieren",
+    "convertTo": "Konvertieren zu...",
+    "comingSoon": "(bald verfügbar...)",
+    "selectFormat": "Format auswählen",
+    "log": {
+      "selectPrompt": "Datei und Format auswählen.",
+      "convertedTo": "Konvertiert zu {{output}}",
+      "error": "Fehler: {{error}}",
+      "selected": "Ausgewählt: {{path}} (.{{ext}})",
+      "openedWord": "In Word geöffnet. Verwende \"Speichern unter DOCX\"."
+    }
+  },
+  "colorPicker": {
+    "title": "Farbwähler",
+    "pick": "Farbe auswählen",
+    "history": "Verlauf",
+    "hex": "HEX",
+    "rgb": "RGB"
+  },
+  "notes": {
+    "title": "Deine Notizen",
+    "newNote": "Neue Notiz"
+  },
+  "noteEditor": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "export": "Exportieren",
+    "titlePlaceholder": "Notiztitel",
+    "contentPlaceholder": "Schreibe deine Notiz hier..."
+  },
+  "clipboard": {
+    "title": "Zwischenablage Verlauf",
+    "clear": "Löschen",
+    "copied": "✔ Kopiert!"
+  },
+  "pomodoro": {
+    "title": "Pomodoro-Timer",
+    "start": "▶ Start",
+    "pause": "⏸ Pause",
+    "reset": "Zurücksetzen",
+    "duration": "⏱ Dauer:",
+    "minutes": "Min"
+  },
+  "sidebar": {
+    "home": "Startseite",
+    "pomodoro": "Pomodoro",
+    "calc": "Rechner",
+    "clipboard": "Zwischenablage",
+    "notes": "Notizen",
+    "colorpicker": "Farbwähler",
+    "converter": "Konverter",
+    "todo": "TODO+",
+    "hardware": "Hardware",
+    "chatgpt": "ChatGPT",
+    "settings": "Einstellungen",
+    "exit": "Beenden",
+    "title": "Intelligente Werkzeuge"
+  },
+  "home": {
+    "welcome": "Willkommen bei Smart Desk Companion",
+    "select": "Wähle ein Werkzeug aus der Seitenleiste.",
+    "version": "Version: {{version}}",
+    "checkUpdates": "Nach Updates suchen",
+    "downloadRestart": "Herunterladen & Neustarten",
+    "downloading": "Wird heruntergeladen...",
+    "checking": "Suche nach Updates...",
+    "downloaded": "Update heruntergeladen. Neustart...",
+    "updateAvailable": "Update verfügbar: {{version}} — klicken zum Herunterladen",
+    "upToDate": "Du hast die neueste Version.",
+    "errorCheck": "Fehler: Update konnte nicht geprüft werden.",
+    "downloadFailed": "Download fehlgeschlagen: {{message}}",
+    "changelog": "Änderungsprotokoll",
+    "noChangelog": "Kein Änderungsprotokoll gefunden."
+  }
+}

@@ -8,7 +8,9 @@
     "languageLabel": "Język",
     "saveButton": "Zapisz",
     "english": "Angielski",
-    "polish": "Polski"
+    "polish": "Polski",
+    "spanish": "Hiszpański",
+    "german": "Niemiecki"
   },
   "hardware": {
     "loading": "Ładowanie informacji o sprzęcie…",

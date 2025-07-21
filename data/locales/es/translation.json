@@ -1,0 +1,114 @@
+{
+  "settings": {
+    "title": "Configuración",
+    "apiKeyLabel": "Clave API de OpenAI",
+    "apiKeyPlaceholder": "Introduce tu clave API de OpenAI",
+    "locationLabel": "Ubicación del clima",
+    "locationPlaceholder": "por ejemplo, Wroclaw, Varsovia",
+    "languageLabel": "Idioma",
+    "saveButton": "Guardar",
+    "english": "Inglés",
+    "polish": "Polaco",
+    "spanish": "Español",
+    "german": "Alemán"
+  },
+  "hardware": {
+    "loading": "Cargando información del hardware…",
+    "refreshing": "Actualizando información del hardware…",
+    "refresh": "Actualizar",
+    "export": "Exportar"
+  },
+  "todo": {
+    "title": "TODO+",
+    "addPlaceholder": "Agregar una nueva tarea…",
+    "add": "Agregar",
+    "save": "Guardar",
+    "sortBy": "Ordenar por:",
+    "created": "Creado",
+    "priority": "Prioridad",
+    "deadline": "Fecha límite",
+    "high": "🔴 Alta",
+    "medium": "🟡 Media",
+    "low": "🟢 Baja"
+  },
+  "converter": {
+    "title": "Convertidor de archivos",
+    "image": "Imagen",
+    "audio": "Audio",
+    "document": "Documento",
+    "pickFile": "Seleccionar archivo",
+    "convert": "Convertir",
+    "convertTo": "Convertir a...",
+    "comingSoon": "(próximamente...)",
+    "selectFormat": "Seleccionar formato",
+    "log": {
+      "selectPrompt": "Selecciona un archivo y formato.",
+      "convertedTo": "Convertido a {{output}}",
+      "error": "Error: {{error}}",
+      "selected": "Seleccionado: {{path}} (.{{ext}})",
+      "openedWord": "Abierto en Word. Usa \"Guardar como DOCX\"."
+    }
+  },
+  "colorPicker": {
+    "title": "Selector de color",
+    "pick": "Seleccionar color",
+    "history": "Historial",
+    "hex": "HEX",
+    "rgb": "RGB"
+  },
+  "notes": {
+    "title": "Tus notas",
+    "newNote": "Nueva nota"
+  },
+  "noteEditor": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "export": "Exportar",
+    "titlePlaceholder": "Título de la nota",
+    "contentPlaceholder": "Escribe tu nota aquí..."
+  },
+  "clipboard": {
+    "title": "Historial del portapapeles",
+    "clear": "Limpiar",
+    "copied": "✔ ¡Copiado!"
+  },
+  "pomodoro": {
+    "title": "Temporizador Pomodoro",
+    "start": "▶ Iniciar",
+    "pause": "⏸ Pausar",
+    "reset": "Restablecer",
+    "duration": "⏱ Duración:",
+    "minutes": "min"
+  },
+  "sidebar": {
+    "home": "Inicio",
+    "pomodoro": "Pomodoro",
+    "calc": "Calculadora",
+    "clipboard": "Portapapeles",
+    "notes": "Notas",
+    "colorpicker": "Selector de color",
+    "converter": "Convertidor",
+    "todo": "TODO+",
+    "hardware": "Hardware",
+    "chatgpt": "ChatGPT",
+    "settings": "Configuración",
+    "exit": "Salir",
+    "title": "Herramientas inteligentes"
+  },
+  "home": {
+    "welcome": "Bienvenido a Smart Desk Companion",
+    "select": "Selecciona una herramienta del menú lateral.",
+    "version": "Versión: {{version}}",
+    "checkUpdates": "Buscar actualizaciones",
+    "downloadRestart": "Descargar y reiniciar",
+    "downloading": "Descargando...",
+    "checking": "Buscando actualizaciones...",
+    "downloaded": "Actualización descargada. Reiniciando...",
+    "updateAvailable": "Actualización disponible: {{version}} — haz clic para descargar",
+    "upToDate": "Tienes la última versión.",
+    "errorCheck": "Error: no se pudo buscar la actualización.",
+    "downloadFailed": "Error al descargar: {{message}}",
+    "changelog": "Registro de cambios",
+    "noChangelog": "No se encontró registro de cambios."
+  }
+}

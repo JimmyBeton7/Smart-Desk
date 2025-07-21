@@ -59,6 +59,6 @@ module.exports = {
       filename: 'index.html'
     })
   ],
-  //target: 'web', // <- KLUCZOWA ZMIANA do hot reload i dev
-  target:'electron-renderer'
+  target: 'web', // <- do hot reload i dev
+  //target:'electron-renderer'
 };

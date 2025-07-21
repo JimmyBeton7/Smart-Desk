@@ -60,6 +60,7 @@ function Settings() {
 
       <label>{t('settings.languageLabel')}</label>
       <div className="language-toggle">
+
         <label className={`lang-radio ${language === 'en' ? 'selected' : ''}`}>
           <input
             type="radio"
@@ -68,8 +69,10 @@ function Settings() {
             checked={language === 'en'}
             onChange={() => setLanguage('en')}
           />
-          🇬🇧 {t('settings.english')}
+          
+          EN {t('settings.english')}
         </label>
+
         <label className={`lang-radio ${language === 'pl' ? 'selected' : ''}`}>
           <input
             type="radio"
@@ -78,8 +81,31 @@ function Settings() {
             checked={language === 'pl'}
             onChange={() => setLanguage('pl')}
           />
-          🇵🇱 {t('settings.polish')}
+          PL {t('settings.polish')}
         </label>
+
+        <label className={`lang-radio ${language === 'es' ? 'selected' : ''}`}>
+          <input
+            type="radio"
+            name="language"
+            value="es"
+            checked={language === 'es'}
+            onChange={() => setLanguage('es')}
+          />
+          ES {t('settings.spanish')}
+        </label>
+
+        <label className={`lang-radio ${language === 'de' ? 'selected' : ''}`}>
+          <input
+            type="radio"
+            name="language"
+            value="de"
+            checked={language === 'de'}
+            onChange={() => setLanguage('de')}
+          />
+          DE {t('settings.german')}
+        </label>
+        
       </div>
 
       <button onClick={saveSettings}>

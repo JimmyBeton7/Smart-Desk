@@ -62,6 +62,11 @@
   transition: all 0.2s ease;
 }
 
+.lang-radio:hover{
+  background-color: #FCD8B4;
+  color: #082C38;
+}
+
 .lang-radio.selected {
   background-color: #C19976;
   color: #082C38;

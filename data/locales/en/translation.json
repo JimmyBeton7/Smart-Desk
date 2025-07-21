@@ -8,7 +8,9 @@
     "languageLabel": "Language",
     "saveButton": "Save",
     "english": "English",
-    "polish": "Polish"
+    "polish": "Polish",
+    "spanish": "Spanish",
+    "german": "German"
   },
   "hardware": {
     "loading": "Loading hardware info…",
