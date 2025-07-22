@@ -1,6 +1,6 @@
 .clipboard-container {
-  background-color: #082C38;
-  color: #FCD8B4;
+  background-color: var(--bg-main);
+  color: var(--text);
   padding: 20px;
   height: 100%;
   overflow-y: auto;
@@ -19,8 +19,8 @@
 }
 
 .clipboard-tile {
-  background-color: #0d3d4f;
-  color: #FCD8B4;
+  background-color: var(--tile-bg);
+  color: var(--text);
   padding: 15px;
   border-radius: 10px;
   cursor: pointer;
@@ -31,8 +31,8 @@
 }
 
 .clipboard-tile:hover {
-  background-color: #C19976;
-  color: #082C38;
+  background-color: var(--accent);
+  color: var(--bg-main);
 }
 
 .clipboard-tile:active {
@@ -61,11 +61,11 @@
 }
 
 .clear-btn {
-  background: #c19976;
+  background: var(--accent);
   border: none;
   border-radius: 8px;
   padding: 10px 20px;
-  color: #082c38;
+  color: var(--bg-main);
   font-weight: bold;
   font-size: 16px;
   cursor: pointer;
@@ -73,14 +73,16 @@
   align-items: center;
   transition: background 0.2s ease;
 }
+
 .clear-btn:hover {
-  background: #fcd8b4;
+  background: var(--text);
+  color: var(--bg-main);
 }
 
 .spinner {
   width: 24px;
   height: 24px;
-  border: 3px solid #C19976;
+  border: 3px solid var(--accent);
   border-top: 3px solid transparent;
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -99,12 +101,12 @@
   align-items: center;
   gap: 6px;
   margin: 12px 0;
-  color: #FCD8B4;
+  color: var(--text);
 }
 
 .copied-global-label {
-  background-color: #082C38;
-  color: #C19976;
+  background-color: var(--bg-main);
+  color: var(--accent);
   font-size: 18px;
   padding: 4px 4px;
   border-radius: 6px;
@@ -116,5 +118,3 @@
   80% { opacity: 1; }
   100% { opacity: 0; }
 }
-
-

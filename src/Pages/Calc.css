@@ -3,7 +3,7 @@
   flex-direction: column;
   height: 100vh; 
   padding: 8px 8px 0 4px; 
-  background-color: #082C38;
+  background-color: var(--bg-main);
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -40,7 +40,7 @@
 .bottom-half {
   margin-top: 55px;
   height: 338px;
-  background-color: #082C38;
+  background-color: var(--bg-main);
   overflow: hidden;
   display: flex;
   flex-direction: column;

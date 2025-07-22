@@ -8,12 +8,14 @@ function Settings() {
   const [apiKey, setApiKey] = useState('');
   const [location, setLocation] = useState('');
   const [language, setLanguage] = useState('en');
+  const [theme, setTheme] = useState('default');
 
   useEffect(() => {
   window.electron.loadJSON('settings').then(data => {
     if (data.apiKey) setApiKey(data.apiKey);
     if (data.location) setLocation(data.location);
     if (data.language) setLanguage(data.language);
+    if (data.theme) setTheme(data.theme);
   });
 }, []);
 
@@ -24,7 +26,13 @@ function Settings() {
       apiKey: apiKey.trim(),
       location: trimmed,
       language: language,
+      theme,
     });
+
+    if (prev?.theme !== theme) {
+        document.documentElement.classList.remove('theme-' + prev?.theme);
+        document.documentElement.classList.add('theme-' + theme);
+    }
 
     if (prev?.location !== trimmed) {
       window.electron.saveJSON('weather', {}); // czyści cache
@@ -105,8 +113,37 @@ function Settings() {
           />
           DE {t('settings.german')}
         </label>
-        
+
+        </div>
+
+        <label style={{ marginTop: 20 }}>Theme</label>
+          <div className="theme-toggle">
+          {[
+            { value: 'default', label: 'Classic' },
+            { value: 'variant1', label: 'Midnight Blue' },
+            { value: 'variant2', label: 'Gold Sand' },
+            { value: 'variant3', label: 'Matrix' },
+            { value: 'variant4', label: 'Autumn Leaves' },
+            { value: 'variant5', label: 'Forest Bloom' },
+            { value: 'variant6', label: 'Cyber Wave' },
+            ].map(opt => (
+        <label
+          key={opt.value}
+          className={`theme-radio ${theme === opt.value ? 'selected' : ''} theme-${opt.value}`}
+        >
+        <input
+          type="radio"
+          name="theme"
+          value={opt.value}
+          checked={theme === opt.value}
+          onChange={() => setTheme(opt.value)}
+        />
+        {opt.label}
+        </label>
+        ))}
       </div>
+  
+
 
       <button onClick={saveSettings}>
         <Save size={16} style={{ marginRight: 6 }} />

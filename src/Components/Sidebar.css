@@ -1,12 +1,12 @@
 .sidebar {
   width: 200px;
-  background-color: #C19976;
+  background: var(--accent);
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
   box-sizing: border-box;
-  color: #082C38;
+  color: var(--bg-main);
   min-width: 200px;
   max-width: 200px;
   flex-shrink: 0;
@@ -29,10 +29,10 @@
 }
 
 .sidebar-item:hover {
-  background-color: #FCD8B4;
+  background: var(--text);
 }
 
 .sidebar-item.active {
-  background-color: #FCD8B4;
+  background: var(--text);
   font-weight: bold;
 }

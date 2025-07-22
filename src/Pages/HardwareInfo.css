@@ -9,12 +9,12 @@
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 16px;
   padding: 20px;
-  color: #fcd8b4;
+  color: var(--text);
 }
 
 .hardware-tile {
-  background-color: #0d3d4f;
-  border: 1px solid #c19976;
+  background-color: var(--tile-bg);
+  border: 1px solid var(--accent);
   border-radius: 16px;
   padding: 16px;
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.25);
@@ -23,14 +23,14 @@
 
 .hardware-tile:hover {
   transform: translateY(-2px);
-  box-shadow: 0 0 10px rgba(241, 180, 121, 0.4);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--accent), transparent 40%);
 }
 
 .hardware-tile h3 {
   margin-top: 0;
   margin-bottom: 8px;
-  color: #fcd8b4;
-  border-bottom: 1px solid #c19976;
+  color: var(--text);
+  border-bottom: 1px solid var(--accent);
   padding-bottom: 4px;
   font-size: 16px;
 }
@@ -38,14 +38,14 @@
 .hardware-tile p {
   margin: 4px 0;
   font-size: 14px;
-  color: #fcd8b4;
+  color: var(--text);
   word-break: break-word;
 }
 
 .spinner {
   width: 24px;
   height: 24px;
-  border: 3px solid #FCD8B4;
+  border: 3px solid var(--text);
   border-top: 3px solid transparent;
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -57,8 +57,8 @@
   align-items: center;              
   padding: 6px 12px;
   font-size: 14px;
-  background-color: #C19976;
-  color: #082C38;
+  background-color: var(--accent);
+  color: var(--bg-main);
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -66,13 +66,11 @@
 }
 
 .hardware-refresh-btn:hover {
-  background-color: #fcd8b4;
+  background-color: var(--text);
 }
-
 
 @keyframes spin {
   to {
     transform: rotate(360deg);
   }
 }
-

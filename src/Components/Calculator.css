@@ -1,13 +1,13 @@
 .calculator-container {
   width: 340px;
-  background-color: #082C38;
-  color: #FCD8B4;
+  background-color: var(--bg-main);
+  color: var(--text);
   padding: 16px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 2px solid #C19976;
+  border: 2px solid var(--accent);
   border-radius: 12px;
   width: 100%;
   max-width: none;
@@ -15,8 +15,8 @@
 }
 
 .display {
-  background-color: #0d3d4f;
-  color: #FCD8B4;
+  background-color: var(--tile-bg);
+  color: var(--text);
   font-size: 28px;
   font-family: monospace;
   text-align: right;
@@ -46,21 +46,21 @@
 }
 
 .keypad button {
-  background-color: #C19976;
+  background-color: var(--accent);
   border: none;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 19px;
   padding: 12px 0;
-  color: #082C38;
+  color: var(--bg-main);
   cursor: pointer;
   transition: background-color 0.2s ease;
   width: 100%;
-  font-size: 19px; /* zwiększona czcionka */
-  line-height: 1; 
+  line-height: 1;
 }
 
 .keypad button:hover {
-  background-color: #FCD8B4;
+  background-color: var(--text);
+  color: var(--bg-main);
 }
 
 .angle-mode {
@@ -69,16 +69,17 @@
 }
 
 .angle-mode button {
-  background-color: #C19976;
+  background-color: var(--accent);
   border: none;
   padding: 6px 12px;
   border-radius: 6px;
-  color: #082C38;
+  color: var(--bg-main);
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
 
-.angle-mode button:hover{
-  background-color: #FCD8B4;
+.angle-mode button:hover {
+  background-color: var(--text);
+  color: var(--bg-main);
 }

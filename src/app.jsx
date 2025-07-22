@@ -1,12 +1,22 @@
 import i18n from 'i18next';
 import * as React from 'react';
-import './App.css';
+//import './App.css';
+import './themes.css';
 import { HashRouter as Router } from 'react-router-dom';
 import Sidebar from './Components/Sidebar';
 import ToolContainer from './Components/ToolContainer';
 import { createRoot } from 'react-dom/client';
 
 import './i18n';
+
+
+window.electron.loadJSON('settings').then(data => {
+    if (data?.theme) {
+      document.documentElement.classList.add('theme-' + data.theme);
+    } else {
+      document.documentElement.classList.add('theme-default');
+    }
+  });
 
 window.electron.loadJSON('settings').then(data => {
   if (data?.language) {

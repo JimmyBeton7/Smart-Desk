@@ -3,7 +3,7 @@
   flex-direction: column;
   height: 99%;
   box-sizing: border-box;
-  border: 2px solid #C19976;
+  border: 2px solid var(--accent);
   border-radius: 12px;
   padding: 12px;
   overflow: hidden;
@@ -18,8 +18,8 @@
   flex: 1;
   padding: 8px;
   font-weight: bold;
-  background: #C19976;
-  color: #082C38;
+  background: var(--accent);
+  color: var(--bg-main);
   border: none;
   border-radius: 4px;
   margin-right: 4px;
@@ -27,7 +27,8 @@
 }
 
 .tabs button.active {
-  background: #FCD8B4;
+  background: var(--text);
+  color: var(--bg-main);
 }
 
 .keyboard-tab {
@@ -42,8 +43,8 @@
   padding: 8px;
   border-radius: 6px;
   border: none;
-  background-color: #0d3d4f;
-  color: #FCD8B4;
+  background-color: var(--tile-bg);
+  color: var(--text);
 }
 
 .mini-keypad {
@@ -55,17 +56,18 @@
 .mini-keypad button {
   padding: 6px;
   font-size: 18px;
-  background: #C19976;
-  color: #082C38;
+  background: var(--accent);
+  color: var(--bg-main);
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  line-height: 1; 
+  line-height: 1;
   transition: background-color 0.2s ease-in-out;
 }
 
-.mini-keypad button:hover{
-  background-color: #FCD8B4;
+.mini-keypad button:hover {
+  background-color: var(--text);
+  color: var(--bg-main);
 }
 
 .plot-tab {
@@ -81,10 +83,11 @@
   height: 100%;
   margin-top: 8px;
   padding: 8px;
-  background: #082C38;
+  background: var(--bg-main);
 }
+
 .plot-options {
-  background-color: #0e3a4b;
+  background-color: var(--tile-bg);
   padding: 8px;
   border-radius: 6px;
   margin-bottom: 8px;
@@ -95,7 +98,7 @@
 
 .axis-group {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); 
+  grid-template-columns: repeat(2, 1fr);
   gap: 8px;
 }
 
@@ -103,26 +106,26 @@
 .line-group label {
   display: flex;
   align-items: center;
-  gap: 8px; 
+  gap: 8px;
   font-size: 13px;
-  color: #FCD8B4;
+  color: var(--text);
 }
 
-.line-group input[type="range"]{
-  background-color: #FCD8B4;
+.line-group input[type="range"] {
+  background-color: var(--text);
 }
 
-.plot-options input[type="number"]{
-  background-color: #082C38;
-  color: #FCD8B4;
+.plot-options input[type="number"] {
+  background-color: var(--bg-main);
+  color: var(--text);
 }
 
 .angle-group button {
   margin-right: 6px;
   padding: 4px 10px;
   border: none;
-  background: #C19976;
-  color: #082C38;
+  background: var(--accent);
+  color: var(--bg-main);
   font-weight: bold;
   border-radius: 6px;
   cursor: pointer;
@@ -130,14 +133,15 @@
 }
 
 .angle-group button.active {
-  background-color: #FCD8B4;
+  background-color: var(--text);
+  color: var(--bg-main);
 }
 
-.plot-header button{
+.plot-header button {
   padding: 6px;
   font-size: 14px;
-  background: #C19976;
-  color: #082C38;
+  background: var(--accent);
+  color: var(--bg-main);
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -145,6 +149,7 @@
   margin-left: 4px;
 }
 
-.plot-header button:hover{
-  background-color: #FCD8B4;
+.plot-header button:hover {
+  background-color: var(--text);
+  color: var(--bg-main);
 }

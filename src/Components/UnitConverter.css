@@ -1,7 +1,7 @@
 /* converter.css */
 .unit-converter {
-  background-color: #082C38;
-  color: #fcd8b4;
+  background-color: var(--bg-main);
+  color: var(--text);
   padding: 16px;
   border-radius: 12px;
   font-size: 14px;
@@ -13,7 +13,7 @@
   max-width: 530px;     /* 👈 dodaj to (lub 100%) */
   width: 100%;          /* 👈 + zapewnij ograniczenie rozciągania */
   box-sizing: border-box;
-  border: 2px solid #C19976;
+  border: 2px solid var(--accent);
 }
 .tabs {
   display: flex;
@@ -22,8 +22,8 @@
 }
 
 .tabs button {
-  background-color: #C19976;
-  color: #082C38;
+  background-color: var(--accent);
+  color: var(--bg-main);
   border: none;
   padding: 6px 12px;
   border-radius: 6px;
@@ -32,12 +32,10 @@
   transition: background-color 0.2s ease;
 }
 
-.tabs button:hover {
-  background-color: #FCD8B4;
-}
-
+.tabs button:hover,
 .tabs button.active {
-  background-color: #FCD8B4;
+  background-color: var(--text);
+  color: var(--bg-main);
 }
 
 .converter-form input[type="number"] {
@@ -46,8 +44,8 @@
   font-size: 16px;
   border-radius: 8px;
   border: none;
-  background-color: #0d3d4f;
-  color: #FCD8B4;
+  background-color: var(--tile-bg);
+  color: var(--text);
   margin-bottom: 12px;
   max-width: 100%;  
   box-sizing: border-box; 
@@ -69,8 +67,8 @@
   font-size: 14px;
   border-radius: 8px;
   border: none;
-  background-color: #0d3d4f;
-  color: #FCD8B4;
+  background-color: var(--tile-bg);
+  color: var(--text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -81,7 +79,7 @@
 .result {
   font-size: 20px;
   font-weight: bold;
-  color: #fa6926;
+  color: var(--highlight);
   text-align: center;
   margin-top: 12px;
 }

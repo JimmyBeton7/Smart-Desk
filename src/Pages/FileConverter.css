@@ -1,12 +1,13 @@
 .file-converter-container {
   padding: 20px;
-  color: #FCD8B4;
+  color: var(--text);
 }
 
 .file-converter-controls {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
 .file-converter-controls button,
@@ -14,40 +15,41 @@
   padding: 10px;
   border: none;
   border-radius: 8px;
-  background-color: #C19976;
-  color: #082C38;
   font-weight: bold;
   cursor: pointer;
 }
 
 .file-converter-controls button {
-  background-color: #C19976;
+  background-color: var(--accent);
+  color: var(--bg-main);
   transition: background-color 0.2s ease;
 }
 
-.file-converter-controls button:hover{
-  background-color: #FCD8B4;;
+.file-converter-controls button:hover {
+  background-color: var(--text);
+  color: var(--bg-main);
 }
 
 .file-converter-controls select {
-  background-color: #0d3d4f;
-  color: #FCD8B4;
+  background-color: var(--tile-bg);
+  color: var(--text);
+  border: 1px solid var(--accent);
 }
 
 .file-converter-log {
   font-size: 12px;
   margin-top: 12px;
-  background-color: #0d3d4f;
+  background-color: var(--tile-bg);
   padding: 10px;
   border-radius: 8px;
   font-family: monospace;
-  color: #C19976;
+  color: var(--accent);
   display: flex;
   align-items: center;
 }
 
 .converter-section {
-  border: 1px solid #C19976;
+  border: 1px solid var(--accent);
   padding: 16px;
   border-radius: 10px;
   margin-bottom: 24px;
@@ -55,7 +57,7 @@
 
 .converter-section h3 {
   margin: 0 0 12px 0;
-  color: #C19976;
+  color: var(--accent);
 }
 
 .converter-section.disabled {

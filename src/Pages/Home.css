@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: flex-start; /* ważne – wyrównanie do góry */
+  align-items: flex-start;
   gap: 24px;
   padding: 16px;
 }
@@ -11,7 +11,7 @@
 .tiles-container {
   display: flex;
   flex-direction: column;
-  gap: 20px; /* powiększony odstęp */
+  gap: 20px;
   padding: 0px;
   flex: 1;
 }
@@ -19,21 +19,21 @@
 /* Changelog box */
 .changes-container {
   width: 300px;
-  height: 370px; /* stała wysokość – dopasowana do 2 kafelków + odstęp */
+  height: 370px;
   border: 2px dashed #888;
   border-radius: 8px;
   padding: 12px;
-  background-color: #0e3a4b;
-  color: #FCD8B4;
+  background-color: var(--tile-bg);
+  color: var(--text);
   font-size: 14px;
   overflow-y: auto;
-  line-height: 1.6; /* większy odstęp między wierszami changelogu */
+  line-height: 1.6;
 }
 
 .button {
-  background-color: #C19976;
+  background-color: var(--accent);
   border: none;
-  color: #082C38;
+  color: var(--bg-main);
   padding: 10px 20px;
   font-size: 16px;
   border-radius: 8px;
@@ -45,18 +45,17 @@
 }
 
 .button:hover {
-  background-color: #FCD8B4;
+  background-color: var(--text);
 }
 
 .button svg {
   vertical-align: middle;
 }
 
-/* Spinner – zielony */
 .spinner {
   width: 16px;
   height: 16px;
-  border: 6px solid #082C38;
+  border: 6px solid var(--bg-main);
   border-top: 2px solid transparent;
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -72,7 +71,7 @@
 .progress-bar {
   width: 100px;
   height: 8px;
-  background-color: #C19976;
+  background-color: var(--accent);
   border-radius: 4px;
   overflow: hidden;
   display: flex;
@@ -81,7 +80,7 @@
 }
 
 .progress-bar-fill {
-  background-color: #082C38;
+  background-color: var(--bg-main);
   height: 100%;
   width: 100%;
   animation: fill 1s infinite alternate ease-in-out;
@@ -98,7 +97,7 @@
 
 .status-message {
   margin-top: 8px;
-  color: #FCD8B4;
+  color: var(--text);
   font-weight: bold;
 }
 
