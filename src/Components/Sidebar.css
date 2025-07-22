@@ -29,10 +29,10 @@
 }
 
 .sidebar-item:hover {
-  background: var(--text);
+  background: var(--hover);
 }
 
 .sidebar-item.active {
-  background: var(--text);
+  background: var(--active);
   font-weight: bold;
 }

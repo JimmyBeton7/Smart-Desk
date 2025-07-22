@@ -5,6 +5,8 @@
   --tile-bg: #0d3d4f;
   --border: #C19976;
   --gray: #444;
+  --hover: #FCD8B4;
+  --active: #FCD8B4;
 }
 
 /* MOTYWY */
@@ -15,6 +17,8 @@
   --tile-bg: #0d3d4f;
   --border: #C19976;
   --gray: #444;
+  --hover: #FCD8B4;
+  --active: #FCD8B4;
 }
 
 .theme-variant1 {
@@ -24,6 +28,8 @@
   --tile-bg: #2D3E50;
   --border: #778DA9;
   --gray: #4A4A4A;
+  --hover: #E0E1DD;
+  --active: #E0E1DD;
 }
 
 .theme-variant2 {
@@ -33,24 +39,30 @@
   --tile-bg: #2C2C2C;
   --border: #C2B280;
   --gray: #555;
+  --hover: #F5F5F5;
+  --active: #F5F5F5;
 }
 
 .theme-variant3 {
   --bg-main: #0A0F0A;         /* głęboka czerń */
-  --accent: #00FF66;          /* neonowa zieleń */
+  --accent: #04b44a;          /* neonowa zieleń */
   --text: #CCFFCC;            /* jasna zieleń */
   --tile-bg: #112D11;         /* ciemna zieleń */
   --border: #00FF66;
   --gray: #223322;
+  --hover: #CCFFCC;
+  --active: #CCFFCC;
 }
 
 .theme-variant4 {
-  --bg-main: #4E342E;         /* ciemny kasztan */
-  --accent: #FF7043;          /* intensywny pomarańcz / liść klonu */
+  --bg-main: #291e1b;         /* ciemny kasztan */
+  --accent: #af3f1c;          /* intensywny pomarańcz / liść klonu */
   --text: #FFF3E0;            /* jasny krem */
   --tile-bg: #6D4C41;         /* czekoladowy brąz */
   --border: #FF7043;
   --gray: #5E4B45;
+  --hover: #FFF3E0;
+  --active: #FFF3E0;
 }
 
 .theme-variant5 {
@@ -60,15 +72,19 @@
   --tile-bg: #2A5140;         /* zieleń paproci */
   --border: #A1E887;
   --gray: #3A5A4A;
+  --hover: #E0FFE5;
+  --active: #E0FFE5;
 }
 
 .theme-variant6 {
-  --bg-main: linear-gradient(135deg, #091833, #133e7c 60%, #0abdc6); /* tło główne */
-  --accent: linear-gradient(90deg, #b904ad, #0abdc6); /* gradientowy akcent */
-  --text: #e0e0ff; /* jasny biało-fioletowy tekst */
-  --tile-bg: linear-gradient(145deg, #0abdc6, #133e7c 70%, #711c91); /* tło kafelków */
-  --border: #ea00d9; /* różowo-fioletowy akcent */
-  --gray: #1f2e4d; /* szaro-niebieski dla ikon, przycisków nieaktywnych */
+  --bg-main: #091833;         /* głęboki granat */
+  --accent: #07afb8;          /* cyber błękit jako główny akcent */
+  --text: #d4d4d4;            /* jasna biel z fioletowym chłodem */
+  --tile-bg: #133e7c;         /* ciemny błękit płytek */
+  --border: #ea00d9;          /* cyber magenta jako obwódka */
+  --gray: #1f2e4d;            /* przygaszony granat jako szarość */
+  --hover: rgba(255, 255, 255, 0.089);
+  --active: rgba(255, 255, 255, 0.15);
 }
 
 .app-container {
