@@ -65,7 +65,9 @@
     "cancel": "Anuluj",
     "export": "Eksportuj",
     "titlePlaceholder": "Tytuł notatki",
-    "contentPlaceholder": "Zapisz tutaj swoją notatkę..."
+    "contentPlaceholder": "Zapisz tutaj swoją notatkę...",
+    "startRecording": "Nagrywaj",
+    "stopRecording": "Zatrzymaj"
   },
   "clipboard": {
     "title": "Historia schowka",

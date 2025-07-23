@@ -65,7 +65,9 @@
     "cancel": "Abbrechen",
     "export": "Exportieren",
     "titlePlaceholder": "Notiztitel",
-    "contentPlaceholder": "Schreibe deine Notiz hier..."
+    "contentPlaceholder": "Schreibe deine Notiz hier...",
+    "startRecording": "Aufnehmen",
+    "stopRecording": "Stopp"
   },
   "clipboard": {
     "title": "Zwischenablage Verlauf",

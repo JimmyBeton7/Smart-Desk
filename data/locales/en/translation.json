@@ -65,7 +65,9 @@
     "cancel": "Cancel",
     "export": "Export",
     "titlePlaceholder": "Note title",
-    "contentPlaceholder": "Write your note here..."
+    "contentPlaceholder": "Write your note here...",
+    "startRecording": "Record",
+    "stopRecording": "Stop"
   },
   "clipboard": {
     "title": "Clipboard History",

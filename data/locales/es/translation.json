@@ -65,7 +65,9 @@
     "cancel": "Cancelar",
     "export": "Exportar",
     "titlePlaceholder": "Título de la nota",
-    "contentPlaceholder": "Escribe tu nota aquí..."
+    "contentPlaceholder": "Escribe tu nota aquí...",
+    "startRecording": "Grabar",
+    "stopRecording": "Detener"
   },
   "clipboard": {
     "title": "Historial del portapapeles",

@@ -64,7 +64,8 @@
   color: var(--text);
 }
 
-.save-btn:hover {
+.save-btn:hover,
+.mic-btn:hover {
   background-color: var(--text);      /* #fcd8b4 */
   color: var(--bg-main);
 }
@@ -72,4 +73,37 @@
 .cancel-btn:hover,
 .export-btn:hover {
   background-color: #5a5a5a;
+}
+
+.mic-btn {
+  justify-content: flex-end;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  border: none;
+  transition: background 0.2s;
+  background-color: var(--accent);    /* #c19976 */
+  color: var(--bg-main);
+}
+
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-left: 6px;
+  border: 2px solid var(--text);
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
