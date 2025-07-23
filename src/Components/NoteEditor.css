@@ -92,8 +92,8 @@
 
 .spinner {
   display: inline-block;
-  width: 14px;
-  height: 14px;
+  width: 8px;
+  height: 8px;
   margin-left: 6px;
   border: 2px solid var(--text);
   border-top: 2px solid transparent;
