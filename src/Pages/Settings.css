@@ -8,7 +8,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .settings-container h2 {
@@ -111,4 +111,19 @@
 
 .theme-radio input {
   display: none;
+}
+
+.saved-global-label {
+  background-color: var(--bg-main);
+  color: var(--accent);
+  font-size: 18px;
+  padding: 4px 4px;
+  border-radius: 6px;
+  animation: fadeOut 1.5s ease forwards;
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
 }

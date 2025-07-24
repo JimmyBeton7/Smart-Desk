@@ -9,6 +9,7 @@ function Settings() {
   const [location, setLocation] = useState('');
   const [language, setLanguage] = useState('en');
   const [theme, setTheme] = useState('default');
+  const [savedMessageVisible, setSavedMessageVisible] = useState(false);
 
   useEffect(() => {
   window.electron.loadJSON('settings').then(data => {
@@ -35,15 +36,18 @@ function Settings() {
     }
 
     if (prev?.location !== trimmed) {
-      window.electron.saveJSON('weather', {}); // czyści cache
+      window.electron.saveJSON('weather', {});
       window.dispatchEvent(new Event('weather-location-changed'));
     }
 
     if (prev?.language !== language) {
-      window.dispatchEvent(new Event('language-changed')); // możesz użyć tego do przeładowania tłumaczeń
+      window.dispatchEvent(new Event('language-changed')); 
     }
 
-  });
+    setSavedMessageVisible(true);
+    setTimeout(() => setSavedMessageVisible(false), 1500);
+
+    });
   };
 
   return (
@@ -149,6 +153,7 @@ function Settings() {
         <Save size={16} style={{ marginRight: 6 }} />
         {t('settings.saveButton')}
       </button>
+      {savedMessageVisible && <span className="saved-global-label">{t('settings.saved')}</span>}
     </div>
   );
 }

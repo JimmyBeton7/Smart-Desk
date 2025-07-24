@@ -10,7 +10,8 @@
     "english": "English",
     "polish": "Polish",
     "spanish": "Spanish",
-    "german": "German"
+    "german": "German",
+    "saved": "Changes saved"
   },
   "hardware": {
     "loading": "Loading hardware info…",
