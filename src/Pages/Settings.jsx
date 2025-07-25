@@ -120,7 +120,7 @@ function Settings() {
 
         </div>
 
-        <label style={{ marginTop: 20 }}>Theme</label>
+        <label style={{ marginTop: 20 }}>{t('settings.theme')}</label>
           <div className="theme-toggle">
           {[
             { value: 'default', label: 'Classic' },
