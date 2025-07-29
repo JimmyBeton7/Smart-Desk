@@ -63,10 +63,10 @@ A modern to-do list with enhanced capabilities:
 _____________________________________________________________
 Built With
 
-Electron – Cross-platform desktop app framework
-React – Frontend UI framework
-Node.js – Backend and system operations
-JavaScript / HTML / CSS – Core building blocks
+* Electron – Cross-platform desktop app framework
+* React – Frontend UI framework
+* Node.js – Backend and system operations
+* JavaScript / HTML / CSS – Core building blocks
 
 _____________________________________________________________
 Getting Started
