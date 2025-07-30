@@ -653,6 +653,14 @@ ipcMain.handle('save-hardware', (_, data) => {
   return true;
 });
 
+const TODO_CALENDAR_FILE = path.join(app.getPath('userData'), 'todo-calendar.json');
+
+ipcMain.handle('load-todo-calendar', () => safeRead(TODO_CALENDAR_FILE, []));
+ipcMain.handle('save-todo-calendar', (_, data) => {
+  safeWrite(TODO_CALENDAR_FILE, data);
+  return true;
+});
+
 //=============================================================================
 
 ipcMain.handle('check-for-updates-manual', async () => {

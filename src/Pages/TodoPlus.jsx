@@ -1,4 +1,5 @@
 // src/Pages/TodoPlus.jsx
+/*
 import React, { useEffect, useState } from 'react';
 import './TodoPlus.css';
 import { Calendar, Trash, Pen, ArrowUp } from 'lucide-react';
@@ -164,3 +165,39 @@ const editTask = (task) => {
 }
 
 export default TodoPlus;
+*/
+// src/Pages/TodoPlus.jsx
+import React, { useState } from 'react';
+import TaskListView from '../Components/TaskListView';
+import CalendarView from '../Components/CalendarView';
+import { useTranslation } from 'react-i18next';
+
+function TodoPlus() {
+  const { t } = useTranslation();
+  const [tab, setTab] = useState('list'); // 'list' | 'calendar'
+
+  return (
+      <div className="tab-content">
+        <div className="tabs">
+          <button
+              className={tab === 'list' ? 'active' : ''}
+              onClick={() => setTab('list')}
+          >
+            {t('todo.tabList')}
+          </button>
+          <button
+              className={tab === 'calendar' ? 'active' : ''}
+              onClick={() => setTab('calendar')}
+          >
+            {t('todo.tabCalendar')}
+          </button>
+        </div>
+
+        {tab === 'list' && <TaskListView />}
+        {tab === 'calendar' && <CalendarView />}
+      </div>
+  );
+}
+
+export default TodoPlus;
+

@@ -1,0 +1,228 @@
+.calendar-view-wrapper {
+    padding: 20px;
+    color: var(--text);
+    font-family: sans-serif;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    align-items: center;
+}
+
+.calendar-header .left,
+.calendar-header .right {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.today-btn {
+    background-color: var(--accent);
+    border: none;
+    color: var(--bg-main);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.calendar-header .right button {
+    background: none;
+    border: 1px solid var(--accent);
+    padding: 6px 10px;
+    color: var(--text);
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.calendar-header .right .active {
+    background: var(--accent);
+    color: var(--bg-main);
+}
+
+.calendar-grid {
+    display: flex;
+    border-top: 1px solid #ccc;
+    overflow-x: auto;
+}
+
+.time-column {
+    width: 60px;
+    border-right: 1px solid #ccc;
+}
+
+.time-slot {
+    height: 80px;
+    font-size: 12px;
+    text-align: right;
+    padding-right: 5px;
+    border-bottom: 1px solid #eee;
+    color: #aaa;
+}
+
+.day-column {
+    flex: 1;
+    position: relative;
+    border-left: 1px solid #ccc;
+}
+
+.hour-cell {
+    height: 80px;
+    border-bottom: 1px solid #eee;
+}
+
+.calendar-event {
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    z-index: 10;
+    padding: 4px 6px;
+    font-size: 12px;
+    border-radius: 6px;
+    background-color: #3b82f6;
+    color: white;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
+
+.calendar-event .title {
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.calendar-event .time {
+    font-size: 10px;
+    opacity: 0.9;
+}
+
+.event-blue { background-color: #3b82f6; }
+.event-green { background-color: #10b981; }
+.event-yellow { background-color: #f59e0b; }
+.event-purple { background-color: #8b5cf6; }
+.event-pink { background-color: #ec4899; }
+
+.calendar-event .event-hover {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 4px;
+    background: #1f1f2e;
+    color: white;
+    font-size: 11px;
+    padding: 8px;
+    border-radius: 6px;
+    box-shadow: 0 0 6px rgba(0,0,0,0.4);
+    width: 220px;
+    z-index: 20;
+}
+
+.calendar-event:hover .event-hover {
+    display: block;
+}
+
+.event-popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.popup-content {
+    background: #1e1e2f;
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    width: 400px;
+    position: relative;
+}
+
+.popup-content h3 {
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+.popup-content p {
+    margin: 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    color: white;
+    border: none;
+}
+
+.create-event-panel {
+    display: flex;
+    gap: 10px;
+    margin: 16px 0;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.create-event-panel input,
+.create-event-panel select {
+    padding: 6px;
+    border-radius: 6px;
+    border: 1px solid var(--accent);
+    background: var(--tile-bg);
+    color: var(--text);
+}
+
+.create-event-panel button {
+    padding: 6px 12px;
+    background: var(--accent);
+    border: none;
+    border-radius: 6px;
+    color: var(--bg-main);
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.add-event-btn {
+    background: var(--accent);
+    color: var(--bg-main);
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.popup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.popup-form input,
+.popup-form select,
+.popup-form button {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid var(--accent);
+    background: var(--tile-bg);
+    color: var(--text);
+    font-size: 14px;
+}
+
+.popup-form button {
+    background: var(--accent);
+    color: var(--bg-main);
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+}
