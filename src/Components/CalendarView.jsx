@@ -3,14 +3,14 @@ import React, { useEffect, useState } from 'react';
 import './CalendarView.css';
 import { ChevronLeft, ChevronRight, Clock, MapPin, Users, Calendar, X } from 'lucide-react';
 
-export default function CalendarView() {
+export function CalendarView() {
     const [selectedEvent, setSelectedEvent] = useState(null);
-    const [currentDate] = useState('March 5');
-    const [currentMonth] = useState('March 2025');
     const [currentView, setCurrentView] = useState('week');
     const [events, setEvents] = useState([]);
     const [showCreatePopup, setShowCreatePopup] = useState(false);
+    const [currentWeekStart, setCurrentWeekStart] = useState(getStartOfWeek(new Date()));
 
+    // Form fields
     const [title, setTitle] = useState('');
     const [startTime, setStartTime] = useState('09:00');
     const [endTime, setEndTime] = useState('10:00');
@@ -20,7 +20,7 @@ export default function CalendarView() {
     const [description, setDescription] = useState('');
 
     const weekDays = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
-    const weekDates = [3, 4, 5, 6, 7, 8, 9];
+    const weekInfo = getWeekDates(currentWeekStart);
     const timeSlots = Array.from({ length: 9 }, (_, i) => i + 8); // 8–16
 
     useEffect(() => {
@@ -31,33 +31,52 @@ export default function CalendarView() {
         window.electron.saveJSON('todo-calendar', events);
     }, [events]);
 
-    const calculateEventStyle = (startTime, endTime) => {
-        const start = parseInt(startTime.split(':')[0], 10) + parseInt(startTime.split(':')[1], 10) / 60;
-        const end = parseInt(endTime.split(':')[0], 10) + parseInt(endTime.split(':')[1], 10) / 60;
-        const top = (start - 8) * 80;
-        const height = (end - start) * 80;
+    function getStartOfWeek(date) {
+        const d = new Date(date);
+        const day = d.getDay();
+        const diff = d.getDate() - ((day + 6) % 7);
+        return new Date(d.setDate(diff));
+    }
+
+    function getWeekDates(startDate) {
+        return Array.from({ length: 7 }, (_, i) => {
+            const d = new Date(startDate);
+            d.setDate(d.getDate() + i);
+            return {
+                label: weekDays[i],
+                date: d.getDate(),
+                fullDate: d,
+                iso: d.toISOString().split('T')[0],
+            };
+        });
+    }
+
+    const calculateEventStyle = (start, end) => {
+        const s = parseInt(start.split(':')[0], 10) + parseInt(start.split(':')[1], 10) / 60;
+        const e = parseInt(end.split(':')[0], 10) + parseInt(end.split(':')[1], 10) / 60;
+        const top = Math.floor((s - 8) * 80) + 1;
+        const height = Math.floor((e - s) * 80) - 10;
         return { top: `${top}px`, height: `${height}px` };
     };
 
     const addEvent = () => {
         if (!title.trim()) return;
+        const selectedDate = weekInfo[day - 1].iso;
         const newEvent = {
             id: Date.now(),
             title,
             startTime,
             endTime,
-            day,
+            date: selectedDate,
             color: 'event-blue',
             description,
             location,
             attendees: [],
-            organizer,
+            organizer
         };
         setEvents([...events, newEvent]);
-        setTitle('');
-        setLocation('');
-        setDescription('');
-        setOrganizer('You');
+        setShowCreatePopup(false);
+        setTitle(''); setStartTime('09:00'); setEndTime('10:00'); setLocation(''); setDescription(''); setOrganizer('You');
     };
 
     return (
@@ -65,63 +84,49 @@ export default function CalendarView() {
             <div className="calendar-header">
                 <div className="left">
                     <button className="add-event-btn" onClick={() => setShowCreatePopup(true)}>+ Add Event</button>
-                    <button className="today-btn">Today</button>
-                    <button><ChevronLeft size={20} /></button>
-                    <button><ChevronRight size={20} /></button>
-                    <h2>{currentDate}</h2>
+                    <button className="today-btn" onClick={() => setCurrentWeekStart(getStartOfWeek(new Date()))}>Today</button>
+                    <button onClick={() => setCurrentWeekStart(new Date(currentWeekStart.setDate(currentWeekStart.getDate() - 7)))}><ChevronLeft size={20} /></button>
+                    <button onClick={() => setCurrentWeekStart(new Date(currentWeekStart.setDate(currentWeekStart.getDate() + 7)))}><ChevronRight size={20} /></button>
+                    <h2>{weekInfo[0].fullDate.toLocaleDateString()} – {weekInfo[6].fullDate.toLocaleDateString()}</h2>
                 </div>
-
                 <div className="right">
                     {['day', 'week', 'month'].map(view => (
-                        <button
-                            key={view}
-                            className={currentView === view ? 'active' : ''}
-                            onClick={() => setCurrentView(view)}
-                        >
-                            {view[0].toUpperCase() + view.slice(1)}
-                        </button>
+                        <button key={view} className={currentView === view ? 'active' : ''} onClick={() => setCurrentView(view)}>{view}</button>
                     ))}
                 </div>
             </div>
 
             {currentView === 'week' && (
-                <div className="calendar-grid">
-                    <div className="time-column">
-                        {timeSlots.map(t => (
-                            <div key={t} className="time-slot">{t > 12 ? `${t - 12} PM` : `${t} AM`}</div>
+                <>
+                    <div className="calendar-week-labels">
+                        <div className="day-label empty-slot" />
+                        {weekInfo.map((d, i) => (
+                            <div key={i} className="day-label">{d.label} {d.date}</div>
                         ))}
                     </div>
 
-                    {Array.from({ length: 7 }).map((_, dayIndex) => (
-                        <div key={dayIndex} className="day-column">
-                            {timeSlots.map((_, i) => (
-                                <div key={i} className="hour-cell" />
-                            ))}
-
-                            {events
-                                .filter(e => e.day === dayIndex + 1)
-                                .map(e => {
-                                    const style = calculateEventStyle(e.startTime, e.endTime);
-                                    return (
-                                        <div
-                                            key={e.id}
-                                            className={`calendar-event ${e.color}`}
-                                            style={style}
-                                            onClick={() => setSelectedEvent(e)}
-                                        >
-                                            <div className="title">{e.title}</div>
-                                            <div className="time">{e.startTime} - {e.endTime}</div>
-                                            <div className="event-hover">
-                                                <p><strong>Organizer:</strong> {e.organizer}</p>
-                                                <p><strong>Location:</strong> {e.location}</p>
-                                                <p><strong>Description:</strong> {e.description}</p>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
+                    <div className="calendar-grid">
+                        <div className="time-column">
+                            {timeSlots.map(t => <div key={t} className="time-slot">{t > 12 ? `${t - 12} PM` : `${t} AM`}</div>)}
                         </div>
-                    ))}
-                </div>
+                        {weekInfo.map((dayInfo, dayIndex) => (
+                            <div key={dayIndex} className="day-column">
+                                {timeSlots.map((_, i) => <div key={i} className="hour-cell" />)}
+                                {events.filter(e => e.date === dayInfo.iso).map(e => (
+                                    <div key={e.id} className={`calendar-event ${e.color}`} style={calculateEventStyle(e.startTime, e.endTime)} onClick={() => setSelectedEvent(e)}>
+                                        <div className="title">{e.title}</div>
+                                        <div className="time">{e.startTime} - {e.endTime}</div>
+                                        <div className="event-hover">
+                                            <p><strong>Organizer:</strong> {e.organizer}</p>
+                                            <p><strong>Location:</strong> {e.location}</p>
+                                            <p><strong>Description:</strong> {e.description}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ))}
+                    </div>
+                </>
             )}
 
             {currentView !== 'week' && (
@@ -137,7 +142,7 @@ export default function CalendarView() {
                         <h3>{selectedEvent.title}</h3>
                         <p><Clock size={16} /> {selectedEvent.startTime} - {selectedEvent.endTime}</p>
                         <p><MapPin size={16} /> {selectedEvent.location}</p>
-                        <p><Calendar size={16} /> {weekDays[selectedEvent.day - 1]}, {weekDates[selectedEvent.day - 1]} {currentMonth}</p>
+                        <p><Calendar size={16} /> {new Date(selectedEvent.date).toLocaleDateString()}</p>
                         <p><Users size={16} /> {selectedEvent.attendees.join(', ')}</p>
                         <p><strong>Organizer:</strong> {selectedEvent.organizer}</p>
                         <p><strong>Description:</strong> {selectedEvent.description}</p>
@@ -162,36 +167,11 @@ export default function CalendarView() {
                             <input type="text" placeholder="Organizer" value={organizer} onChange={e => setOrganizer(e.target.value)} />
                             <input type="text" placeholder="Location" value={location} onChange={e => setLocation(e.target.value)} />
                             <input type="text" placeholder="Description" value={description} onChange={e => setDescription(e.target.value)} />
-
-                            <button onClick={() => {
-                                if (!title.trim()) return;
-                                const newEvent = {
-                                    id: Date.now(),
-                                    title,
-                                    startTime,
-                                    endTime,
-                                    day,
-                                    color: 'event-blue',
-                                    description,
-                                    location,
-                                    attendees: [],
-                                    organizer
-                                };
-                                setEvents([...events, newEvent]);
-                                setTitle('');
-                                setLocation('');
-                                setDescription('');
-                                setOrganizer('You');
-                                setShowCreatePopup(false);
-                            }}>
-                                Add Event
-                            </button>
+                            <button onClick={addEvent}>Add Event</button>
                         </div>
                     </div>
                 </div>
             )}
-
-
         </div>
     );
 }

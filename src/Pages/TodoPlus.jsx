@@ -169,7 +169,7 @@ export default TodoPlus;
 // src/Pages/TodoPlus.jsx
 import React, { useState } from 'react';
 import TaskListView from '../Components/TaskListView';
-import CalendarView from '../Components/CalendarView';
+import {CalendarView} from '../Components/CalendarView';
 import { useTranslation } from 'react-i18next';
 
 function TodoPlus() {
