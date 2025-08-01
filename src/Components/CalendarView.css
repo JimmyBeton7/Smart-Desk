@@ -228,20 +228,50 @@
 }
 
 .calendar-week-labels {
-    display: flex;
-    padding: 0 0 4px 60px;
-    gap: 1px;
+    display: grid;
+    grid-template-columns: 60px repeat(7, 1fr);
     font-size: 13px;
-    color: var(--text);
     font-weight: bold;
+    color: var(--text);
+    border-bottom: 1px solid #ccc;
 }
 
 .day-label {
-    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    border-left: 1px solid #ccc;
+    background: var(--tile-bg);
     text-align: center;
 }
 
 .empty-slot {
-    width: 60px;
+    background: transparent;
+    border: none;
 }
+
+.popup-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+}
+
+.btn.edit {
+    background: var(--accent);
+}
+
+.btn.delete {
+    background: var(--accent);
+}
+
 

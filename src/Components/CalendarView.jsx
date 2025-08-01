@@ -1,7 +1,9 @@
 // src/Pages/CalendarView.jsx
 import React, { useEffect, useState } from 'react';
 import './CalendarView.css';
-import { ChevronLeft, ChevronRight, Clock, MapPin, Users, Calendar, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import {EventPopup} from '../Components/EventPopup';
+import {EventCreatePopup} from '../Components/EventCreatePopup';
 
 export function CalendarView() {
     const [selectedEvent, setSelectedEvent] = useState(null);
@@ -9,19 +11,11 @@ export function CalendarView() {
     const [events, setEvents] = useState([]);
     const [showCreatePopup, setShowCreatePopup] = useState(false);
     const [currentWeekStart, setCurrentWeekStart] = useState(getStartOfWeek(new Date()));
-
-    // Form fields
-    const [title, setTitle] = useState('');
-    const [startTime, setStartTime] = useState('09:00');
-    const [endTime, setEndTime] = useState('10:00');
-    const [day, setDay] = useState(1);
-    const [organizer, setOrganizer] = useState('You');
-    const [location, setLocation] = useState('');
-    const [description, setDescription] = useState('');
+    const [editEvent, setEditEvent] = useState(null);
 
     const weekDays = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
     const weekInfo = getWeekDates(currentWeekStart);
-    const timeSlots = Array.from({ length: 9 }, (_, i) => i + 8); // 8–16
+    const timeSlots = Array.from({ length: 9 }, (_, i) => i + 8);
 
     useEffect(() => {
         window.electron.loadJSON('todo-calendar').then(setEvents);
@@ -51,6 +45,12 @@ export function CalendarView() {
         });
     }
 
+    const handleEditEvent = (event) => {
+        setEditEvent(event);
+        setSelectedEvent(null);      // zamknij popup
+        setShowCreatePopup(true);    // otwórz formularz edycji
+    };
+
     const calculateEventStyle = (start, end) => {
         const s = parseInt(start.split(':')[0], 10) + parseInt(start.split(':')[1], 10) / 60;
         const e = parseInt(end.split(':')[0], 10) + parseInt(end.split(':')[1], 10) / 60;
@@ -59,25 +59,35 @@ export function CalendarView() {
         return { top: `${top}px`, height: `${height}px` };
     };
 
-    const addEvent = () => {
-        if (!title.trim()) return;
-        const selectedDate = weekInfo[day - 1].iso;
-        const newEvent = {
-            id: Date.now(),
-            title,
-            startTime,
-            endTime,
-            date: selectedDate,
-            color: 'event-blue',
-            description,
-            location,
-            attendees: [],
-            organizer
-        };
-        setEvents([...events, newEvent]);
-        setShowCreatePopup(false);
-        setTitle(''); setStartTime('09:00'); setEndTime('10:00'); setLocation(''); setDescription(''); setOrganizer('You');
+    const deleteEvent = (id) => {
+        setEvents(events.filter(e => e.id !== id));
+        setSelectedEvent(null);
     };
+
+    const updateEvent = (updated) => {
+        const normalized = {
+            ...updated,
+            attendees: typeof updated.attendees === 'string'
+                ? updated.attendees.split(',').map(a => a.trim()).filter(Boolean)
+                : updated.attendees || [],
+        };
+        setEvents(events.map(e => e.id === updated.id ? normalized : e));
+        setSelectedEvent(null);
+        setEditEvent(null);
+        setShowCreatePopup(false);
+    };
+
+    const addEvent = (newEvent) => {
+        const normalized = {
+            ...newEvent,
+            attendees: typeof newEvent.attendees === 'string'
+                ? newEvent.attendees.split(',').map(a => a.trim()).filter(Boolean)
+                : newEvent.attendees || [],
+        };
+        setEvents([...events, normalized]);
+        setShowCreatePopup(false);
+    };
+
 
     return (
         <div className="calendar-view-wrapper">
@@ -136,42 +146,34 @@ export function CalendarView() {
             )}
 
             {selectedEvent && (
-                <div className="event-popup">
-                    <div className={`popup-content ${selectedEvent.color}`}>
-                        <button className="close-btn" onClick={() => setSelectedEvent(null)}><X size={18} /></button>
-                        <h3>{selectedEvent.title}</h3>
-                        <p><Clock size={16} /> {selectedEvent.startTime} - {selectedEvent.endTime}</p>
-                        <p><MapPin size={16} /> {selectedEvent.location}</p>
-                        <p><Calendar size={16} /> {new Date(selectedEvent.date).toLocaleDateString()}</p>
-                        <p><Users size={16} /> {selectedEvent.attendees.join(', ')}</p>
-                        <p><strong>Organizer:</strong> {selectedEvent.organizer}</p>
-                        <p><strong>Description:</strong> {selectedEvent.description}</p>
-                    </div>
-                </div>
+                <EventPopup
+                    event={selectedEvent}
+                    onClose={() => setSelectedEvent(null)}
+                    onDelete={deleteEvent}
+                    onEdit={handleEditEvent}
+                />
             )}
 
             {showCreatePopup && (
-                <div className="event-popup">
-                    <div className="popup-content event-blue">
-                        <button className="close-btn" onClick={() => setShowCreatePopup(false)}><X size={18} /></button>
-                        <h3>Create New Event</h3>
-                        <div className="popup-form">
-                            <input type="text" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} />
-                            <div style={{ display: 'flex', gap: '10px' }}>
-                                <input type="time" value={startTime} onChange={e => setStartTime(e.target.value)} />
-                                <input type="time" value={endTime} onChange={e => setEndTime(e.target.value)} />
-                            </div>
-                            <select value={day} onChange={e => setDay(parseInt(e.target.value))}>
-                                {weekDays.map((d, i) => <option key={i} value={i + 1}>{d}</option>)}
-                            </select>
-                            <input type="text" placeholder="Organizer" value={organizer} onChange={e => setOrganizer(e.target.value)} />
-                            <input type="text" placeholder="Location" value={location} onChange={e => setLocation(e.target.value)} />
-                            <input type="text" placeholder="Description" value={description} onChange={e => setDescription(e.target.value)} />
-                            <button onClick={addEvent}>Add Event</button>
-                        </div>
-                    </div>
-                </div>
+                <EventCreatePopup
+                    onClose={() => {
+                        setShowCreatePopup(false);
+                        setEditEvent(null);
+                    }}
+                    onSave={(data) => {
+                        if (editEvent) {
+                            updateEvent({ ...editEvent, ...data });
+                        } else {
+                            const newId = crypto.randomUUID(); // lub Date.now()
+                            const date = weekInfo[data.day - 1]?.iso;
+                            addEvent({ id: newId, date, ...data });
+                        }
+                    }}
+                    defaultValues={editEvent}
+                    weekInfo={weekInfo}
+                />
             )}
+
         </div>
     );
 }
