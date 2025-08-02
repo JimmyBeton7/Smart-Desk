@@ -1,10 +1,11 @@
 import React from 'react';
 import { Clock, MapPin, Users, Calendar, X } from 'lucide-react';
+import './EventPopup.css';
 
 export function EventPopup({ event, onClose, onDelete, onEdit }) {
     return (
         <div className="event-popup">
-            <div className={`popup-content ${event.color || 'event-blue'}`}>
+            <div className="popup-content">
                 <button className="close-btn" onClick={onClose}><X size={18} /></button>
                 <h3>{event.title || 'Untitled Event'}</h3>
 

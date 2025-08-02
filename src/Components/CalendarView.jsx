@@ -1,5 +1,5 @@
 // src/Pages/CalendarView.jsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './CalendarView.css';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import {EventPopup} from '../Components/EventPopup';
@@ -12,10 +12,11 @@ export function CalendarView() {
     const [showCreatePopup, setShowCreatePopup] = useState(false);
     const [currentWeekStart, setCurrentWeekStart] = useState(getStartOfWeek(new Date()));
     const [editEvent, setEditEvent] = useState(null);
+    const calendarGridRef = useRef(null);
 
     const weekDays = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
     const weekInfo = getWeekDates(currentWeekStart);
-    const timeSlots = Array.from({ length: 9 }, (_, i) => i + 8);
+    const timeSlots = Array.from({ length: 24 }, (_, i) => i);
 
     useEffect(() => {
         window.electron.loadJSON('todo-calendar').then(setEvents);
@@ -24,6 +25,12 @@ export function CalendarView() {
     useEffect(() => {
         window.electron.saveJSON('todo-calendar', events);
     }, [events]);
+
+    useEffect(() => {
+        if (calendarGridRef.current) {
+            calendarGridRef.current.scrollTop = 8 * 80; // 8 slotów * 80px wysokości
+        }
+    }, [currentView]);
 
     function getStartOfWeek(date) {
         const d = new Date(date);
@@ -54,8 +61,8 @@ export function CalendarView() {
     const calculateEventStyle = (start, end) => {
         const s = parseInt(start.split(':')[0], 10) + parseInt(start.split(':')[1], 10) / 60;
         const e = parseInt(end.split(':')[0], 10) + parseInt(end.split(':')[1], 10) / 60;
-        const top = Math.floor((s - 8) * 80) + 1;
-        const height = Math.floor((e - s) * 80) - 10;
+        const top = Math.floor(s * 80) + 10;
+        const height = Math.floor((e - s) * 80) - 5;
         return { top: `${top}px`, height: `${height}px` };
     };
 
@@ -115,9 +122,13 @@ export function CalendarView() {
                         ))}
                     </div>
 
-                    <div className="calendar-grid">
+                    <div className="calendar-grid" ref={calendarGridRef}>
                         <div className="time-column">
-                            {timeSlots.map(t => <div key={t} className="time-slot">{t > 12 ? `${t - 12} PM` : `${t} AM`}</div>)}
+                            {timeSlots.map(t => (
+                                <div key={t} className="time-slot">
+                                    {t === 0 ? '12 AM' : t < 12 ? `${t} AM` : t === 12 ? '12 PM' : `${t - 12} PM`}
+                                </div>
+                            ))}
                         </div>
                         {weekInfo.map((dayInfo, dayIndex) => (
                             <div key={dayIndex} className="day-column">

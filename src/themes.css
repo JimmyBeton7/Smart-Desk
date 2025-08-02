@@ -111,3 +111,28 @@ html, body, #root {
   padding: 16px;
 }
 
+/* Styl paska przewijania */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+/* Tło (tor) scrollbara */
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+  border-radius: 10px;
+}
+
+/* Sam uchwyt */
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+/* Hover na uchwycie */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text);
+}
+
+

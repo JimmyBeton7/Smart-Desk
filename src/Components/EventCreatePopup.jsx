@@ -1,5 +1,6 @@
 // src/Components/EventCreatePopup.jsx
 import React, { useState } from 'react';
+import './EventPopup.css';
 
 export function EventCreatePopup({ onClose, onSave, defaultValues, weekInfo }) {
     const [form, setForm] = useState(() => {
@@ -29,7 +30,7 @@ export function EventCreatePopup({ onClose, onSave, defaultValues, weekInfo }) {
 
     return (
         <div className="event-popup">
-            <div className="popup-content event-blue">
+            <div className="popup-content">
                 <button className="close-btn" onClick={onClose}>×</button>
                 <h3>{defaultValues?.id ? 'Edit Event' : 'Create New Event'}</h3>
                 <div className="popup-form">
