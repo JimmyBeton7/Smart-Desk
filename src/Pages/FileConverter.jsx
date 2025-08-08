@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Camera, Music, File, XCircle, CheckCircle, FileWarning} from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import Select from 'react-select';
 import './FileConverter.css';
 
 function FileConverter() {
@@ -129,6 +130,52 @@ const handleConvertDocument = async () => {
 };
 
 
+
+  const customSelectStyles = {
+    control: (base, state) => ({
+      ...base,
+      backgroundColor: 'var(--tile-bg)',
+      borderColor: 'var(--accent)',
+      borderRadius: 8,
+      padding: '2px',
+      boxShadow: state.isFocused ? `0 0 0 2px var(--accent)` : 'none',
+      '&:hover': {
+        borderColor: 'var(--hover)'
+      }
+    }),
+    menu: base => ({
+      ...base,
+      backgroundColor: 'var(--tile-bg)',
+      borderRadius: 8,
+      zIndex: 100
+    }),
+    option: (base, state) => ({
+      ...base,
+      backgroundColor: state.isFocused
+          ? 'var(--bg-main)'
+          : 'transparent',
+      color: 'var(--text)',
+      cursor: 'pointer',
+      '&:active': {
+        backgroundColor: 'var(--active)'
+      }
+    }),
+    singleValue: base => ({
+      ...base,
+      color: 'var(--text)'
+    }),
+    placeholder: base => ({
+      ...base,
+      color: 'var(--text)'
+    }),
+    input: base => ({
+      ...base,
+      color: 'var(--text)'
+    })
+  };
+
+
+
   //=============================================================================
 
   return (
@@ -140,11 +187,28 @@ const handleConvertDocument = async () => {
         <h3>{t('converter.document')} <span className="coming-soon">{t('converter.comingSoon')}</span></h3>
           <div className="file-converter-controls">
             <button disabled>{t('converter.pickFile')}</button>
-              <select disabled>
-                <option value="">{t('converter.selectFormat')}</option>
-                <option value="docx-from-pdf">PDF → DOCX</option>
-                <option value="pdf-from-docx">DOCX → PDF</option>
-              </select>
+
+            <Select
+                className="select"
+                value={
+                  docFormat
+                      ? {
+                        value: docFormat,
+                        label: docFormat === 'docx-from-pdf' ? 'PDF → DOCX' : 'DOCX → PDF'
+                      }
+                      : null
+                }
+                onChange={option => setDocFormat(option?.value || '')}
+                options={[
+                  { value: 'docx-from-pdf', label: 'PDF → DOCX' },
+                  { value: 'pdf-from-docx', label: 'DOCX → PDF' }
+                ]}
+                placeholder={t('converter.selectFormat')}
+                styles={customSelectStyles}
+                isDisabled={true}
+            />
+
+
             <button disabled>{t('converter.convert')}</button>
           </div>
        <div className="file-converter-log">{docLog}</div>
@@ -157,16 +221,28 @@ const handleConvertDocument = async () => {
           <div className="file-converter-controls">
             <button onClick={handlePickImage}>{t('converter.pickFile')}</button>
 
-            <select value={imageFormat} onChange={e => setImageFormat(e.target.value)}>
-              <option value="">{t('converter.convertTo')}</option>
-              {allImageFormats
-                .filter(fmt => fmt !== imageSourceFormat)
-                .map(fmt => (
-              <option key={fmt} value={`${fmt}-from-${imageSourceFormat}`}>
-              {imageSourceFormat.toUpperCase()} → {fmt.toUpperCase()}
-              </option>
-              ))}
-            </select>
+            <Select
+                className="select"
+                value={
+                  imageFormat
+                      ? {
+                        value: imageFormat,
+                        label: `${imageSourceFormat.toUpperCase()} → ${imageFormat.split('-from-')[0].toUpperCase()}`
+                      }
+                      : null
+                }
+                onChange={option => setImageFormat(option?.value || '')}
+                options={allImageFormats
+                    .filter(fmt => fmt !== imageSourceFormat)
+                    .map(fmt => ({
+                      value: `${fmt}-from-${imageSourceFormat}`,
+                      label: `${imageSourceFormat.toUpperCase()} → ${fmt.toUpperCase()}`
+                    }))
+                }
+                placeholder={t('converter.convertTo')}
+                styles={customSelectStyles}
+            />
+
 
             <button onClick={handleConvertImage} disabled={!imagePath || !imageFormat}>
               {t('converter.convert')}
@@ -180,16 +256,30 @@ const handleConvertDocument = async () => {
         <h3>{t('converter.audio')}</h3>
           <div className="file-converter-controls">
             <button onClick={handlePickAudio}>{t('converter.pickFile')}</button>
-            <select value={audioFormat} onChange={e => setAudioFormat(e.target.value)}>
-              <option value="">{t('converter.convertTo')}</option>
-              {allAudioFormats
-                .filter(fmt => fmt !== audioSourceFormat)
-                .map(fmt => (
-              <option key={fmt} value={`${fmt}-from-${audioSourceFormat}`}>
-              {audioSourceFormat.toUpperCase()} → {fmt.toUpperCase()}
-              </option>
-              ))}
-            </select>
+
+            <Select
+                className="select"
+                value={
+                  audioFormat
+                      ? {
+                        value: audioFormat,
+                        label: `${audioSourceFormat.toUpperCase()} → ${audioFormat.split('-from-')[0].toUpperCase()}`
+                      }
+                      : null
+                }
+                onChange={option => setAudioFormat(option?.value || '')}
+                options={allAudioFormats
+                    .filter(fmt => fmt !== audioSourceFormat)
+                    .map(fmt => ({
+                      value: `${fmt}-from-${audioSourceFormat}`,
+                      label: `${audioSourceFormat.toUpperCase()} → ${fmt.toUpperCase()}`
+                    }))
+                }
+                placeholder={t('converter.convertTo')}
+                styles={customSelectStyles}
+            />
+
+
             <button onClick={handleConvertAudio} disabled={!audioPath || !audioFormat}>
               {t('converter.convert')}
             </button>

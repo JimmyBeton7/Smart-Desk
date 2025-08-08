@@ -1,9 +1,10 @@
 // src/Pages/TodoPlus.jsx
-/*
+
 import React, { useEffect, useState } from 'react';
 import './TodoPlus.css';
 import { Calendar, Trash, Pen, ArrowUp } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import Select from 'react-select';
 
 function TodoPlus() {
   const { t } = useTranslation();
@@ -94,6 +95,49 @@ const editTask = (task) => {
     setTasks(tasks.filter(t => t.id !== id));
   };
 
+    const customSelectStyles = {
+        control: (base, state) => ({
+            ...base,
+            backgroundColor: 'var(--tile-bg)',
+            borderColor: 'var(--accent)',
+            borderRadius: 8,
+            padding: '2px',
+            boxShadow: state.isFocused ? `0 0 0 2px var(--accent)` : 'none',
+            '&:hover': {
+                borderColor: 'var(--hover)'
+            }
+        }),
+        menu: base => ({
+            ...base,
+            backgroundColor: 'var(--tile-bg)',
+            borderRadius: 8,
+            zIndex: 100
+        }),
+        option: (base, state) => ({
+            ...base,
+            backgroundColor: state.isFocused
+                ? 'var(--bg-main)'
+                : 'transparent',
+            color: 'var(--text)',
+            cursor: 'pointer',
+            '&:active': {
+                backgroundColor: 'var(--active)'
+            }
+        }),
+        singleValue: base => ({
+            ...base,
+            color: 'var(--text)'
+        }),
+        placeholder: base => ({
+            ...base,
+            color: 'var(--text)'
+        }),
+        input: base => ({
+            ...base,
+            color: 'var(--text)'
+        })
+    };
+
   return (
     <div className="tab-content">
     <div className="todo-container">
@@ -102,11 +146,19 @@ const editTask = (task) => {
       <div className="todo-sort">
         <div style={{ marginBottom: 12, display: 'flex', alignItems: 'center', gap: '12px' }}>
           <label style={{ fontWeight: 'bold' }}>{t('todo.sortBy')}</label>
-          <select value={sortMode} onChange={e => setSortMode(e.target.value)}>
-            <option value="created">{t('todo.created')}</option>
-            <option value="priority">{t('todo.priority')}</option>
-            <option value="deadline">{t('todo.deadline')}</option>
-          </select>
+
+            <Select
+                className="select"
+                value={{ value: sortMode, label: t(`todo.${sortMode}`) }}
+                onChange={option => setSortMode(option.value)}
+                options={[
+                    { value: 'created', label: t('todo.created') },
+                    { value: 'priority', label: t('todo.priority') },
+                    { value: 'deadline', label: t('todo.deadline') }
+                ]}
+                styles={customSelectStyles}
+            />
+
         </div>
       </div>
 
@@ -116,12 +168,22 @@ const editTask = (task) => {
             onChange={e => setInput(e.target.value)}
             placeholder={t('todo.addPlaceholder')}
         />
-        <select value={priority} onChange={e => setPriority(e.target.value)}>
-            <option value="high">{t('todo.high')}</option>
-            <option value="medium">{t('todo.medium')}</option>
-            <option value="low">{t('todo.low')}</option>
-        </select>
-        <input
+
+          <Select
+              className="select"
+              value={{ value: priority, label: t(`todo.${priority}`) }}
+              onChange={option => setPriority(option.value)}
+              options={[
+                  { value: 'high', label: t('todo.high') },
+                  { value: 'medium', label: t('todo.medium') },
+                  { value: 'low', label: t('todo.low') }
+              ]}
+              isSearchable={false}
+              styles={customSelectStyles}
+          />
+
+
+          <input
             type="date"
             value={deadline}
             onChange={e => setDeadline(e.target.value)}
@@ -165,7 +227,9 @@ const editTask = (task) => {
 }
 
 export default TodoPlus;
-*/
+
+
+/*
 // src/Pages/TodoPlus.jsx
 import React, { useState } from 'react';
 import TaskListView from '../Components/TaskListView';
@@ -200,4 +264,4 @@ function TodoPlus() {
 }
 
 export default TodoPlus;
-
+*/

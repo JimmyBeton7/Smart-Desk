@@ -8,7 +8,7 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  color: #fcd8b4;
+  color: var(--text);
   transition: color 0.2s ease;
 }
 

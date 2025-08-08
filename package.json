@@ -60,6 +60,7 @@
     "react-i18next": "^15.6.0",
     "react-quill": "^2.0.0",
     "react-router-dom": "^7.6.3",
+    "react-select": "^5.10.2",
     "sharp": "^0.34.2",
     "systeminformation": "^5.27.7",
     "to-ico": "^1.1.5"
