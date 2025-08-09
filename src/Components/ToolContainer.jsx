@@ -14,6 +14,7 @@ import ColorPicker from '../Pages/ColorPicker';
 import FileConverter from '../Pages/FileConverter';
 import TodoPlus from '../Pages/TodoPlus';
 import HardwareInfo from '../Pages/HardwareInfo';
+import TerminalTab from '../Pages/TerminalTab';
 
 function ToolContainer() {
   return (

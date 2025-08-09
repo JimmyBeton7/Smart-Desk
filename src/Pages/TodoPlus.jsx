@@ -157,6 +157,7 @@ const editTask = (task) => {
                     { value: 'deadline', label: t('todo.deadline') }
                 ]}
                 styles={customSelectStyles}
+                isSearchable={false}
             />
 
         </div>

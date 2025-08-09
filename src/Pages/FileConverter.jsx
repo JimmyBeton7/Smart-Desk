@@ -241,6 +241,7 @@ const handleConvertDocument = async () => {
                 }
                 placeholder={t('converter.convertTo')}
                 styles={customSelectStyles}
+                isSearchable={false}
             />
 
 
@@ -277,6 +278,7 @@ const handleConvertDocument = async () => {
                 }
                 placeholder={t('converter.convertTo')}
                 styles={customSelectStyles}
+                isSearchable={false}
             />
 
 

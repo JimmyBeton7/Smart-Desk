@@ -47,6 +47,7 @@ contextBridge.exposeInMainWorld('electron', {
   getAppVersion: () => ipcRenderer.invoke('get-app-version'),
   convertAudio: (filePath, format) => ipcRenderer.invoke('convert-audio', filePath, format),
   pickFileByType: (filters) => ipcRenderer.invoke('pick-file-type', filters),
+
 });
 
 window.addEventListener('DOMContentLoaded', () => {

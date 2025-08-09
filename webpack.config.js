@@ -52,13 +52,13 @@ module.exports = {
       process: 'process/browser.js',
     }),
     new webpack.DefinePlugin({
-      global: 'window' // 👈 TO JEST KLUCZOWE
+      global: 'window'
     }),
     new HtmlWebpackPlugin({
       template: './public/index.html',
       filename: 'index.html'
     })
   ],
-  target: 'web', // <- do hot reload i dev
-  //target:'electron-renderer'
+  //target: 'web', // <- do hot reload i dev
+  target:'electron-renderer'
 };

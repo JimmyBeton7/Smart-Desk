@@ -38,6 +38,11 @@ const { BrowserWindow, ipcMain } = require('electron');
 let mainWindow;
 let isQuiting = false;
 
+
+//=========================================================
+
+//=========================================================
+
 const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 1200,
@@ -157,21 +162,54 @@ app.whenReady().then(() => {
 
   createWindow();
 
+  //mainWindow.removeMenu();
+
+  if (process.argv.includes('--hidden')) {
+    mainWindow.hide();
+  }
+  if (process.platform === 'darwin') {
+    app.dock.hide();
+  }
+  if (process.argv.includes('--hidden')) mainWindow.setSkipTaskbar(true);
+
+
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
 
-  tray = new Tray(path.join(__dirname, 'assets', 'logo.ico')); // użyj własnej ikonki
-    const contextMenu = Menu.buildFromTemplate([
+  //const iconPath = path.join(process.resourcesPath, 'assets', 'logo.ico');
+  const devIcon = path.join(__dirname, 'assets', 'logo.ico');
+  const prodIcon = path.join(process.resourcesPath, 'assets', 'logo.ico');
+  const iconPath = isDev ? devIcon : prodIcon;
+
+
+  console.log('🧭 resourcesPath:', process.resourcesPath);
+  console.log('🖼️ Tray icon path:', iconPath, 'exists:', fs.existsSync(iconPath));
+  if (!fs.existsSync(iconPath)) {
+    console.warn('⚠️ Tray icon NOT found at:', iconPath);
+  }
+
+  tray = new Tray(iconPath);
+
+  //tray = new Tray(path.join(__dirname, 'assets', 'logo.ico')); // użyj własnej ikonki
+  const contextMenu = Menu.buildFromTemplate([
     { label: 'Open Smart Desk', click: () => mainWindow.show() },
     { label: 'Close', click: () => app.quit() }
   ]);
   tray.setToolTip('Smart Desk');
   tray.setContextMenu(contextMenu);
 
+  //tray.on('click', () => {
+  //  mainWindow.show();
+  //});
   tray.on('click', () => {
-    mainWindow.show();
+    if (mainWindow.isVisible()) {
+      mainWindow.hide();
+    } else {
+      mainWindow.show();
+    }
   });
+
 
   app.setLoginItemSettings({
   openAtLogin: true,
@@ -179,9 +217,13 @@ app.whenReady().then(() => {
   args: [
     '--hidden'
   ],
+  });
+  console.log('🔄 Autostart ustawiony na:', process.execPath, app.getLoginItemSettings());
 });
 
-});
+if (!isDev) {
+  Menu.setApplicationMenu(null); // wyłącza menu aplikacji globalnie
+}
 
 app.on('before-quit', () => {
   isQuiting = true;
@@ -193,7 +235,10 @@ app.on('window-all-closed', () => {
 });
 
 ipcMain.on('exit-app', () => {
-  app.quit();
+  //app.quit();
+  if (mainWindow) {
+    mainWindow.hide();
+  }
 });
 
 
@@ -388,31 +433,48 @@ ipcMain.handle('start-color-picker', async () => {
 async function getColorAtPointer() {
   const { screen, desktopCapturer, nativeImage } = require('electron');
 
-  const display = screen.getPrimaryDisplay();
-  const { width, height } = display.workAreaSize;
+  // 1) Wybierz monitor pod kursorem
+  const point = screen.getCursorScreenPoint();
+  const display = screen.getDisplayNearestPoint(point);
+  const { bounds, size, scaleFactor } = display; // size = rozmiar logiczny całego ekranu
 
+  // 2) Pobierz zrzut TYLKO tego monitora z poprawną rozdzielczością (DPI!)
+  const thumbW = Math.max(1, Math.floor(size.width  * scaleFactor));
+  const thumbH = Math.max(1, Math.floor(size.height * scaleFactor));
   const sources = await desktopCapturer.getSources({
     types: ['screen'],
-    thumbnailSize: { width, height } // <- tu najważniejsza zmiana
+    thumbnailSize: { width: thumbW, height: thumbH }
   });
 
-  const screenShot = sources[0];
-  const image = nativeImage.createFromDataURL(screenShot.thumbnail.toDataURL());
-  const size = image.getSize();
+  // 3) Dopasuj source po display_id (w Electronie to jest string)
+  const src = sources.find(s => s.display_id === String(display.id)) || sources[0];
+  if (!src || src.thumbnail.isEmpty()) {
+    return null;
+  }
 
-  const mouse = screen.getCursorScreenPoint();
-  const scaleX = size.width / display.bounds.width;
-  const scaleY = size.height / display.bounds.height;
+  const image = src.thumbnail;            // nativeImage
+  const imgSize = image.getSize();        // w pikselach (po DPI)
+  const buf = image.toBitmap();           // BGRA
 
-  const imageBuffer = image.toBitmap();
-  const x = Math.floor(mouse.x * scaleX);
-  const y = Math.floor(mouse.y * scaleY);
-  const index = (y * size.width + x) * 4;
+  // 4) Licz współrzędne w BUFORZE (uwzględnij offset bounds + DPI)
+  const relX = (point.x - bounds.x);
+  const relY = (point.y - bounds.y);
+  let x = Math.floor(relX * scaleFactor);
+  let y = Math.floor(relY * scaleFactor);
 
-  const r = imageBuffer[index];
-  const g = imageBuffer[index + 1];
-  const b = imageBuffer[index + 2];
-  const hex = `#${[r, g, b].map(v => v.toString(16).padStart(2, '0')).join('')}`;
+  // 5) Clamp na wszelki wypadek (zapobiegnie undefined)
+  x = Math.min(Math.max(x, 0), imgSize.width  - 1);
+  y = Math.min(Math.max(y, 0), imgSize.height - 1);
+
+  // 6) Odczyt pikseli
+  const idx = (y * imgSize.width + x) * 4;   // BGRA
+  const b = buf[idx];
+  const g = buf[idx + 1];
+  const r = buf[idx + 2];
+  // const a = buf[idx + 3];
+
+  const toHex = (v) => v.toString(16).padStart(2, '0');
+  const hex = `#${toHex(r)}${toHex(g)}${toHex(b)}`;
   const rgb = `rgb(${r},${g},${b})`;
 
   return { hex, rgb };
