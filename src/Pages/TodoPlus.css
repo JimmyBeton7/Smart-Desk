@@ -161,3 +161,120 @@
 .select {
     font-size: 14px;
 }
+
+/*
+
+.react-datepicker {
+    background-color: var(--tile-bg) !important;
+    border: 1px solid var(--accent);
+    color: var(--text);
+}
+
+.react-datepicker__header {
+    background-color: var(--tile-bg);
+    border-bottom: 1px solid var(--accent);
+    color: var(--text);
+}
+
+.react-datepicker__day {
+    color: var(--text);
+}
+
+.react-datepicker__day:hover {
+    background-color: var(--bg-main);
+}
+
+.react-datepicker__day--selected {
+    background-color: var(--accent);
+    color: var(--bg-main);
+}
+
+
+ */
+
+
+/* Pudełko kalendarza i poppera (większa specyficzność dzięki klasie) */
+.sd-datepicker,
+.sd-datepicker-popper .react-datepicker {
+    background-color: var(--tile-bg);
+    border: 1px solid var(--accent);
+    color: var(--text);
+}
+
+/* Kontener miesiąca */
+.sd-datepicker .react-datepicker__month-container {
+    background-color: var(--tile-bg);
+    color: var(--text);
+}
+
+/* Header */
+.sd-datepicker .react-datepicker__header {
+    background-color: var(--bg-main);
+    border-bottom: 1px solid var(--accent);
+    color: var(--text);
+}
+
+/* Tytuł miesiąca / rok */
+.sd-datepicker .react-datepicker__current-month,
+.sd-datepicker .react-datepicker-year-header,
+.sd-datepicker .react-datepicker-time__header {
+    color: var(--text);
+}
+
+/* Nazwy dni (Pn, Wt...) */
+.sd-datepicker .react-datepicker__day-name {
+    color: var(--text);
+}
+
+/* Dni */
+.sd-datepicker .react-datepicker__day,
+.sd-datepicker .react-datepicker__time-name {
+    color: var(--text);
+}
+
+/* Hover na dniu */
+.sd-datepicker .react-datepicker__day:hover {
+    background-color: var(--hover);
+    color: var(--bg-main);
+}
+
+/* Dzień wybrany */
+.sd-datepicker .react-datepicker__day--selected,
+.sd-datepicker .react-datepicker__day--keyboard-selected {
+    background-color: var(--accent);
+    color: var(--bg-main);
+}
+
+/* Dzisiaj (obramowanie w stylu motywu) */
+.sd-datepicker .react-datepicker__day--today {
+    border: 1px solid var(--accent);
+}
+
+/* Strzałki nawigacji (kolor ikon) */
+.sd-datepicker .react-datepicker__navigation-icon::before {
+    border-color: var(--text);
+}
+
+/* Trójkąt poppera */
+.sd-datepicker-popper .react-datepicker__triangle {
+    stroke: var(--accent);
+    fill: var(--tile-bg);
+}
+
+/* Miesiące w trybie wybierania miesięcy/lat */
+.sd-datepicker .react-datepicker__month-text,
+.sd-datepicker .react-datepicker__quarter-text,
+.sd-datepicker .react-datepicker__year-text {
+    color: var(--text);
+}
+.sd-datepicker .react-datepicker__month-text:hover,
+.sd-datepicker .react-datepicker__quarter-text:hover,
+.sd-datepicker .react-datepicker__year-text:hover {
+    background-color: var(--hover);
+}
+
+/* Gdy coś nadal się przebija, możesz użyć !important punktowo: */
+.sd-datepicker .react-datepicker__header {
+    background-color: var(--bg-main) !important;
+}
+

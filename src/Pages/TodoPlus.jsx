@@ -1,17 +1,22 @@
 // src/Pages/TodoPlus.jsx
 
 import React, { useEffect, useState } from 'react';
+import "react-datepicker/dist/react-datepicker.css";
 import './TodoPlus.css';
 import { Calendar, Trash, Pen, ArrowUp } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Select from 'react-select';
+import DatePicker from "react-datepicker";
+
+
 
 function TodoPlus() {
   const { t } = useTranslation();
   const [tasks, setTasks] = useState([]);
   const [input, setInput] = useState('');
   const [priority, setPriority] = useState('medium');
-  const [deadline, setDeadline] = useState('');
+  const [deadlineYMD, setDeadlineYMD] = useState('');
+  const [deadlineDate, setDeadlineDate] = useState(null);
   const [editTaskId, setEditTaskId] = useState(null);
   const [sortMode, setSortMode] = useState('created');
 
@@ -54,7 +59,7 @@ function TodoPlus() {
     if (editTaskId) {
         setTasks(tasks.map(t =>
         t.id === editTaskId
-            ? { ...t, text, tags, priority, deadline }
+            ? { ...t, text, tags, priority, deadline: deadlineYMD }
             : t
         ));
         setEditTaskId(null);
@@ -64,7 +69,7 @@ function TodoPlus() {
         text,
         status: 'todo',
         tags,
-        deadline,
+            deadline: deadlineYMD,
         priority
         };
         setTasks([newTask, ...tasks]);
@@ -72,13 +77,20 @@ function TodoPlus() {
 
     setInput('');
     setPriority('medium');
-    setDeadline('');
+    setDeadlineYMD('');
+    setDeadlineDate(null);
     };
 
 const editTask = (task) => {
   setInput(task.text);
   setPriority(task.priority);
-  setDeadline(task.deadline || '');
+    setDeadlineYMD(task.deadline || '');
+    setDeadlineDate(task.deadline ? new Date(
+        Number(task.deadline.slice(0,4)),
+        Number(task.deadline.slice(5,7)) - 1,
+        Number(task.deadline.slice(8,10)),
+        12,0,0,0
+    ) : null);
   setEditTaskId(task.id);
 };
 
@@ -138,7 +150,54 @@ const editTask = (task) => {
         })
     };
 
-  return (
+    const pad = (n) => String(n).padStart(2, '0');
+    const toLocalNoon = (d) => {
+        const nd = new Date(d);
+        nd.setHours(12, 0, 0, 0);
+        return nd;
+    };
+    const dateToYMDLocal = (date) => {
+        const d = toLocalNoon(date);
+        const y = d.getFullYear();
+        const m = pad(d.getMonth() + 1);
+        const day = pad(d.getDate());
+        return `${y}-${m}-${day}`;
+    };
+
+
+    const CustomDateInput = React.forwardRef(({ value, onClick }, ref) => (
+        <div
+            onClick={onClick}
+            ref={ref}
+            style={{
+                backgroundColor: 'var(--tile-bg)',
+                border: `1px solid var(--accent)`,
+                borderRadius: 8,
+                padding: '6px 12px',
+                color: 'var(--text)',
+                cursor: 'pointer',
+                minWidth: '140px',
+                height: 35,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                textAlign: 'center',
+                lineHeight: 'normal',
+                fontSize: '13px',
+            }}
+            onMouseEnter={(e) => {
+                e.currentTarget.style.border = `1px solid var(--text)`;
+            }}
+            onMouseLeave={(e) => {
+                e.currentTarget.style.border = `1px solid var(--accent)`;
+            }}
+        >
+            {value || t('todo.deadlinePlaceholder')}
+        </div>
+    ));
+
+
+    return (
     <div className="tab-content">
     <div className="todo-container">
       <h2>{t('todo.title')}</h2>
@@ -184,12 +243,25 @@ const editTask = (task) => {
           />
 
 
-          <input
-            type="date"
-            value={deadline}
-            onChange={e => setDeadline(e.target.value)}
-        />
-        <button onClick={saveTask}>{editTaskId ? t('todo.save') : t('todo.add')}</button>
+          <DatePicker
+              selected={deadlineDate}
+              onChange={(date) => {
+                  if (!date) {
+                      setDeadlineDate(null);
+                      setDeadlineYMD('');
+                      return;
+                  }
+                  const noon = toLocalNoon(date);
+                  setDeadlineDate(noon);                 // dla DatePickera
+                  setDeadlineYMD(dateToYMDLocal(noon));  // zapis do JSON i UI listy
+              }}
+              dateFormat="yyyy-MM-dd"
+              customInput={<CustomDateInput />}
+              calendarClassName="sd-datepicker"   // <— NOWE
+              popperClassName="sd-datepicker-popper" // <— NOWE
+          />
+
+          <button onClick={saveTask}>{editTaskId ? t('todo.save') : t('todo.add')}</button>
 
      </div>
 
@@ -229,40 +301,3 @@ const editTask = (task) => {
 
 export default TodoPlus;
 
-
-/*
-// src/Pages/TodoPlus.jsx
-import React, { useState } from 'react';
-import TaskListView from '../Components/TaskListView';
-import {CalendarView} from '../Components/CalendarView';
-import { useTranslation } from 'react-i18next';
-
-function TodoPlus() {
-  const { t } = useTranslation();
-  const [tab, setTab] = useState('list'); // 'list' | 'calendar'
-
-  return (
-      <div className="tab-content">
-        <div className="tabs">
-          <button
-              className={tab === 'list' ? 'active' : ''}
-              onClick={() => setTab('list')}
-          >
-            {t('todo.tabList')}
-          </button>
-          <button
-              className={tab === 'calendar' ? 'active' : ''}
-              onClick={() => setTab('calendar')}
-          >
-            {t('todo.tabCalendar')}
-          </button>
-        </div>
-
-        {tab === 'list' && <TaskListView />}
-        {tab === 'calendar' && <CalendarView />}
-      </div>
-  );
-}
-
-export default TodoPlus;
-*/

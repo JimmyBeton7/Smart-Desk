@@ -1,5 +1,7 @@
 // UnitConverter.jsx
 import React, { useState } from 'react';
+import Select from 'react-select';
+import { useTranslation } from 'react-i18next';
 import './UnitConverter.css';
 
 const conversionData = {
@@ -325,6 +327,7 @@ const UnitConverter = () => {
   const [value, setValue] = useState('');
   const [fromUnit, setFromUnit] = useState('m');
   const [toUnit, setToUnit] = useState('km');
+  const { t } = useTranslation();
 
   const handleModeChange = (mode, defaultFrom, defaultTo) => {
     setSelectedMode(mode);
@@ -365,6 +368,50 @@ const UnitConverter = () => {
   const units = Object.keys(conversionData[selectedMode] || {});
   const result = convert(value, fromUnit, toUnit, selectedMode);
 
+  const customSelectStyles = {
+    control: (base, state) => ({
+      ...base,
+      width: 200,
+      backgroundColor: 'var(--tile-bg)',
+      borderColor: 'var(--accent)',
+      borderRadius: 8,
+      padding: '2px',
+      boxShadow: state.isFocused ? `0 0 0 2px var(--accent)` : 'none',
+      '&:hover': {
+        borderColor: 'var(--hover)'
+      }
+    }),
+    menu: base => ({
+      ...base,
+      backgroundColor: 'var(--tile-bg)',
+      borderRadius: 8,
+      zIndex: 100
+    }),
+    option: (base, state) => ({
+      ...base,
+      backgroundColor: state.isFocused
+          ? 'var(--bg-main)'
+          : 'transparent',
+      color: 'var(--text)',
+      cursor: 'pointer',
+      '&:active': {
+        backgroundColor: 'var(--active)'
+      }
+    }),
+    singleValue: base => ({
+      ...base,
+      color: 'var(--text)'
+    }),
+    placeholder: base => ({
+      ...base,
+      color: 'var(--text)'
+    }),
+    input: base => ({
+      ...base,
+      color: 'var(--text)'
+    })
+  };
+
   return (
     <div className="unit-converter">
       {/* Row 1: Physical dimensions */}
@@ -397,23 +444,39 @@ const UnitConverter = () => {
         <input type="number" value={value} onChange={e => setValue(e.target.value)} placeholder="Enter value" />
         <div className="unit-select">
 
-          <select value={fromUnit} onChange={e => setFromUnit(e.target.value)}>
-            {units.map(u => (
-              <option key={u} value={u} title={`${u} – ${unitLabels[selectedMode]?.[u] || ''}`}>
-                {u} – {unitLabels[selectedMode]?.[u] || ''}
-              </option>
-            ))}
-          </select>
+          <Select
+              className="select"
+              value={fromUnit ? {
+                value: fromUnit,
+                label: `${fromUnit} – ${unitLabels[selectedMode]?.[fromUnit] || ''}`
+              } : null}
+              onChange={option => setFromUnit(option?.value || '')}
+              options={units.map(u => ({
+                value: u,
+                label: `${u} – ${unitLabels[selectedMode]?.[u] || ''}`
+              }))}
+              placeholder={t('converter.from')}
+              styles={customSelectStyles}
+              isSearchable={false}
+          />
 
           <span>&rarr;</span>
 
-          <select value={toUnit} onChange={e => setToUnit(e.target.value)}>
-            {units.map(u => (
-              <option key={u} value={u} title={`${u} – ${unitLabels[selectedMode]?.[u] || ''}`}>
-                {u} – {unitLabels[selectedMode]?.[u] || ''}
-              </option>
-            ))}
-          </select>
+          <Select
+              className="select"
+              value={toUnit ? {
+                value: toUnit,
+                label: `${toUnit} – ${unitLabels[selectedMode]?.[toUnit] || ''}`
+              } : null}
+              onChange={option => setToUnit(option?.value || '')}
+              options={units.map(u => ({
+                value: u,
+                label: `${u} – ${unitLabels[selectedMode]?.[u] || ''}`
+              }))}
+              placeholder={t('converter.to')}
+              styles={customSelectStyles}
+              isSearchable={false}
+          />
 
         </div>
         <div className="result">{parseFloat(result || 0).toFixed(6)}</div>

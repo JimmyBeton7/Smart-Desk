@@ -31,7 +31,8 @@
     "deadline": "Fecha límite",
     "high": "🔴 Alta",
     "medium": "🟡 Media",
-    "low": "🟢 Baja"
+    "low": "🟢 Baja",
+    "deadlinePlaceholder": "Seleccionar fecha límite"
   },
   "converter": {
     "title": "Convertidor de archivos",

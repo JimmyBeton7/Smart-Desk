@@ -31,7 +31,8 @@
     "deadline": "Terminu",
     "high": "🔴 Wysoki",
     "medium": "🟡 Średni",
-    "low": "🟢 Niski"
+    "low": "🟢 Niski",
+    "deadlinePlaceholder": "Wybierz termin"
   },
   "converter": {
     "title": "Konwerter plików",

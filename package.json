@@ -50,6 +50,7 @@
     "@xterm/addon-unicode11": "^0.8.0",
     "@xterm/addon-web-links": "^0.11.0",
     "@xterm/xterm": "^5.5.0",
+    "date-fns": "^4.1.0",
     "dotenv": "^17.2.0",
     "electron-log": "^5.4.1",
     "electron-updater": "^6.6.2",
@@ -61,6 +62,7 @@
     "mathjs": "^14.5.3",
     "pdf-officegen": "^3.0.0",
     "react": "^19.1.0",
+    "react-datepicker": "^8.4.0",
     "react-dom": "^19.1.0",
     "react-i18next": "^15.6.0",
     "react-quill": "^2.0.0",
@@ -98,8 +100,17 @@
       "changelog.json"
     ],
     "extraResources": [
-      { "from": "data/", "to": "data/", "filter": ["**/*"] },
-      { "from": "assets", "to": "assets" }
+      {
+        "from": "data/",
+        "to": "data/",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "assets",
+        "to": "assets"
+      }
     ],
     "win": {
       "icon": "assets/logo.ico",
@@ -114,7 +125,9 @@
       "createStartMenuShortcut": true,
       "shortcutName": "Smart Desk"
     },
-    "asarUnpack": ["assets/**/*"],
+    "asarUnpack": [
+      "assets/**/*"
+    ],
     "mac": {
       "icon": "assets/logo.icns",
       "category": "public.app-category.productivity"

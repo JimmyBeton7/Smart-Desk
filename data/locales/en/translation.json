@@ -31,7 +31,8 @@
     "deadline": "Deadline",
     "high": "🔴 High",
     "medium": "🟡 Medium",
-    "low": "🟢 Low"
+    "low": "🟢 Low",
+    "deadlinePlaceholder": "Select deadline"
   },
   "converter": {
     "title": "File Converter",

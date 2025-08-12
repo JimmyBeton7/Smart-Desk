@@ -31,7 +31,8 @@
     "deadline": "Frist",
     "high": "🔴 Hoch",
     "medium": "🟡 Mittel",
-    "low": "🟢 Niedrig"
+    "low": "🟢 Niedrig",
+    "deadlinePlaceholder": "Fälligkeitsdatum auswählen"
   },
   "converter": {
     "title": "Dateikonverter",
